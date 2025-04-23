@@ -1,0 +1,355 @@
+import datetime
+import json
+import urllib.request
+
+from PIL import Image, ImageOps
+from dateutil import parser
+import discord
+from discord.ui import InputText, Modal
+
+from Helpers.database import DB
+from Helpers.functions import getPlayerUUID, getPlayerDatav3, urlify
+from discord.ext.pages import Page as _Page
+
+from Helpers.variables import wynn_ranks
+
+
+class Guild:
+
+    def __init__(self, guild):
+        if len(guild) <= 4:
+            url = f'https://api.wynncraft.com/v3/guild/prefix/{urlify(guild)}'
+        else:
+            url = f'https://api.wynncraft.com/v3/guild/{urlify(guild)}'
+
+        f = urllib.request.urlopen(url)
+        data = f.read().decode('utf-8')
+
+        guild_data = json.loads(data)
+
+        self.name = guild_data['name']
+        self.prefix = guild_data['prefix']
+        self.level = guild_data['level']
+        self.xpPercent = guild_data['xpPercent']
+        self.territories = guild_data['territories']
+        self.wars = guild_data['wars']
+        self.created = guild_data['created']
+
+        self.members = guild_data['members']
+
+        self.online = guild_data['online']
+
+        self.all_members = self.get_all_members(self.members)
+
+    def get_all_members(self, members):
+        member_list = []
+        for rank in members:
+            if rank != 'total':
+                for member in members[rank]:
+                    members[rank][member]['rank'] = rank
+                    members[rank][member]['name'] = member
+                    member_list.append(members[rank][member])
+        return member_list
+
+
+class PlayerStats:
+    def __init__(self, name, days):
+        db = DB()
+        db.connect()
+        player_data = getPlayerUUID(name)
+        if not player_data:
+            self.error = True
+            return
+        else:
+            self.error = False
+        self.UUID = player_data[1]
+        self.username = player_data[0]
+
+        # player data
+        pdata = getPlayerDatav3(self.UUID)
+        self.last_joined = parser.isoparse(pdata['lastJoin'])
+        self.characters = pdata['characters']
+        self.online = pdata['online']
+        self.server = pdata['server']
+        self.wars = pdata['globalData']['wars']
+        self.playtime = pdata['playtime']
+        self.rank = pdata['rank']
+        self.background = 0
+        self.backgrounds_owned = []
+        if self.rank == 'Player':
+            self.tag = pdata['supportRank'].upper() if pdata['supportRank'] is not None else 'Player'
+        else:
+            self.tag = self.rank
+        self.tag_color = wynn_ranks[self.tag.lower()]['color'] if self.tag != 'Player' else '#66ccff'
+        self.tag_display = wynn_ranks[self.tag.lower()]['display'] if self.tag != 'Player' else 'PLAYER'
+        self.total_level = pdata['globalData']['totalLevel']
+
+        # guild data
+        self.taq = self.isInTAq(self.UUID)
+        self.guild = 'The Aquarium' if self.taq else pdata['guild']
+        if self.guild is not None:
+            self.guild = 'The Aquarium' if self.taq else pdata['guild']['name']
+            gdata = Guild(self.guild)
+            for guildee in gdata.all_members:
+                if guildee['uuid'] == self.UUID:
+                    guild_stats = guildee
+                    break
+                else:
+                    pass
+            self.guild_rank = guild_stats['rank'] if self.taq else pdata['guild']['rank']
+            self.guild_contributed = guild_stats['contributed']
+            self.guild_joined = parser.isoparse(guild_stats['joined'])
+            self.in_guild_for = datetime.datetime.now() - self.guild_joined.replace(tzinfo=None)
+        else:
+            self.guild = None
+            self.guild_rank = None
+            self.guild_contributed = None
+            self.guild_joined = None
+            self.in_guild_for = None
+
+        # linked
+        db.cursor.execute(f'SELECT * FROM discord_links WHERE uuid = \'{self.UUID}\'')
+        rows = db.cursor.fetchall()
+        self.linked = True if len(rows) != 0 else False
+        if self.linked:
+            self.rank = rows[0][4]
+            self.discord = rows[0][0]
+
+            # profile_customization
+            db.cursor.execute(f'SELECT * FROM profile_customization WHERE user = \'{self.discord}\'')
+            row = db.cursor.fetchone()
+            if row:
+                self.background = row[1]
+                self.backgrounds_owned = json.loads(row[2])
+        # shells
+        if self.taq:
+            db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{self.discord}\'')
+            rows = db.cursor.fetchall()
+            self.shells = 0 if len(rows) == 0 else rows[0][1]
+            self.balance = 0 if len(rows) == 0 else rows[0][2]
+
+        # timed stats
+        if self.taq:
+            with open('activity2.json', 'r') as f:
+                old_data = json.loads(f.read())
+            if days > len(old_data):
+                days = len(old_data)
+            if days > self.in_guild_for.days:
+                days = self.in_guild_for.days
+            if days < 1:
+                days = 1
+            self.stats_days = days
+            for member in old_data[days - 1]['members']:
+                if self.UUID == member['uuid']:
+                    self.real_pt = int(self.playtime - int(member['playtime']))
+                    self.real_xp = self.guild_contributed - member['contributed']
+                    self.real_wars = self.wars - member['wars']
+        else:
+            self.real_pt = 0
+            self.real_xp = 0
+            self.real_wars = 0
+
+            db.close()
+
+    def isInTAq(self, uuid):
+        guild_members = []
+        for member in Guild('The Aquarium').all_members:
+            guild_members.append(member['uuid'])
+        return False if uuid not in guild_members else True
+
+    def unlock_background(self, background):
+        db = DB()
+        db.connect()
+
+        db.cursor.execute(f'SELECT * FROM profile_customization WHERE user = \'{self.discord}\'')
+        row = db.cursor.fetchone()
+
+        db.cursor.execute(f'SELECT id FROM profile_backgrounds WHERE name = \'{background}\'')
+        bg_id = db.cursor.fetchone()[0]
+
+        # Check if user owns any backgrounds, if not insert new entry to table
+        if not row:
+            db.cursor.execute(
+                f'INSERT INTO profile_customization(user,background,owned) VALUES (\'{self.discord}\', 0, \'{json.dumps([bg_id])}\')')
+            db.connection.commit()
+            db.close()
+            return True
+
+        bgs = json.loads(row[2])
+        # Check if user already owns selected background, if so return message
+        if bg_id in bgs:
+            db.close()
+            return True
+
+        bgs.append(bg_id)
+        db.cursor.execute(f'UPDATE profile_customization SET owned=\'{json.dumps(bgs)}\' WHERE user=\'{self.discord}\'')
+        db.connection.commit()
+        db.close()
+        return True
+
+
+class BasicPlayerStats:
+    def __init__(self, name):
+        player_data = getPlayerUUID(name)
+        if not player_data:
+            self.error = True
+            return
+        else:
+            self.error = False
+        self.UUID = player_data[1]
+        self.username = player_data[0]
+
+        # player data
+        pdata = getPlayerDatav3(self.UUID)
+        self.rank = pdata['rank']
+        if self.rank == 'Player':
+            self.tag = pdata['supportRank'].upper() if pdata['supportRank'] is not None else 'Player'
+        else:
+            self.tag = self.rank
+        self.tag_color = wynn_ranks[self.tag.lower()]['color'] if self.tag != 'Player' else '#66ccff'
+        self.wars = pdata['globalData']['wars']
+        self.total_level = pdata['globalData']['totalLevel']
+        self.completed_quests = pdata['globalData']['completedQuests']
+        self.playtime = pdata['playtime']
+        self.rank = pdata['rank']
+
+
+class PlayerShells:
+    def __init__(self, discord_id):
+        db = DB()
+        db.connect()
+        db.cursor.execute(f'SELECT uuid FROM discord_links WHERE discord_id = \'{discord_id}\'')
+        uuid = db.cursor.fetchone()[0]
+        player_data = getPlayerUUID(uuid)
+        if not player_data:
+            self.UUID = uuid
+            self.username = uuid
+        else:
+            self.UUID = player_data[1]
+            self.username = player_data[0]
+
+        db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{discord_id}\'')
+        rows = db.cursor.fetchall()
+        db.close()
+        if len(rows) != 0:
+            self.error = False
+            self.shells = 0 if len(rows) == 0 else rows[0][1]
+            self.balance = 0 if len(rows) == 0 else rows[0][2]
+        else:
+            self.error = True
+
+
+class LinkAccount(Modal):
+    def __init__(self, user, added, removed, rank, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.added = added
+        self.removed = removed
+        self.rank = rank
+        self.add_item(InputText(label="Player's Name", placeholder="Player's In-Game Name without rank"))
+
+    async def callback(self, interaction: discord.Interaction):
+        db = DB()
+        db.connect()
+        db.cursor.execute(
+            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', 0, \'{self.rank}\');')
+        db.connection.commit()
+        await self.user.edit(nick=f"{self.rank} {self.children[0].value}")
+        await interaction.response.send_message(f'{self.added}\n\n{self.removed}', ephemeral=True)
+        db.close()
+
+
+class NewMember(Modal):
+    def __init__(self, user, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.to_remove = ['Land Crab', 'Honored Fish', 'Ex-Member']
+        self.to_add = ['Member', 'The Aquarium [TAq]', '☆Reef', 'Starfish', '🥇 RANKS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+                       '🛠️ PROFESSIONS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '✨ COSMETIC ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀']
+        self.roles_to_add = []
+        self.roles_to_remove = []
+        self.add_item(InputText(label="Player's Name", placeholder="Player's In-Game Name without rank"))
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message('Working on it', ephemeral=True)
+        msg = await interaction.original_response()
+
+        db = DB()
+        db.connect()
+        db.cursor.execute(f'SELECT * FROM discord_links WHERE discord_id = \'{self.user.id}\'')
+        rows = db.cursor.fetchall()
+        pdata = BasicPlayerStats(self.children[0].value)
+        if pdata.error:
+            embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
+                                  description=f'Could not retrieve information of `{self.children[0].value}`.\nPlease check your spelling or try again later.',
+                                  color=0xe33232)
+            await msg.edit(embed=embed)
+            return
+
+        to_remove = ['Land Crab', 'Honored Fish', 'Ex-Member']
+        to_add = ['Member', 'The Aquarium [TAq]', '☆Reef', 'Starfish', '🥇 RANKS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+                  '🛠️ PROFESSIONS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '✨ COSMETIC ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀']
+        roles_to_add = []
+        roles_to_remove = []
+        all_roles = interaction.guild.roles
+        for add_role in to_add:
+            role = discord.utils.find(lambda r: r.name == add_role, all_roles)
+            roles_to_add.append(role)
+
+        await self.user.add_roles(*roles_to_add, reason=f"New member registration (ran by {interaction.user.name})",
+                                  atomic=True)
+
+        for remove_role in to_remove:
+            role = discord.utils.find(lambda r: r.name == remove_role, all_roles)
+            roles_to_remove.append(role)
+
+        await self.user.remove_roles(*roles_to_remove,
+                                     reason=f"New member registration (ran by {interaction.user.name})",
+                                     atomic=True)
+
+        if len(rows) != 0:
+            db.cursor.execute(
+                f'UPDATE discord_links SET rank = \'Starfish\', ign = \'{self.children[0].value}\', wars_on_join = {pdata.wars}, uuid= \'{pdata.UUID}\' WHERE discord_id = \'{self.user.id}\'')
+            db.connection.commit()
+        else:
+            db.cursor.execute(
+                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , 0, \'Starfish\', {pdata.wars});')
+            db.connection.commit()
+        db.close()
+        await self.user.edit(nick="Starfish " + self.children[0].value)
+        embed = discord.Embed(title=':white_check_mark: New member registered',
+                              description=f'<@{self.user.id}> was linked to `{pdata.username}`', color=0x3ed63e)
+        await msg.edit('', embed=embed)
+
+
+class PlaceTemplate:
+    def __init__(self, image):
+        self.loaded_image = Image.open(image)
+        self.divider = self.loaded_image.crop((0, 0, 2, 32))
+        self.filling = self.loaded_image.crop((2, 0, 3, 32))
+        self.ending = self.loaded_image.crop((3, 0, 8, 32))
+
+    def add(self, img, width, pos, start=False):
+        x, y = pos
+        end = 0
+        if not start:
+            for i in range(width - 5):
+                img.paste(self.filling, (x + i, y), self.filling)
+                end = i
+            img.paste(self.ending, (x + end + 1, y), self.ending)
+        else:
+            for i in range(width - 10):
+                img.paste(self.filling, (x + 5 + i, y), self.filling)
+                end = i
+            img.paste(ImageOps.mirror(self.ending), (x, y), ImageOps.mirror(self.ending))
+            img.paste(self.ending, (x + 5 + end + 1, y), self.ending)
+
+
+class Page(_Page):
+    def update_files(self) -> list[discord.File] | None:
+        for file in self._files:
+            if file.fp.closed and (fn := getattr(file.fp, "name", None)):
+                file.fp = open(fn, "rb")
+            file.reset()
+            file.fp.close = lambda: None
+        return self._files
