@@ -1,0 +1,13 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# Environment file
+.env
+
+Archive/theaquarium.json
+current_activity.json
+credentials.json
+token.json
