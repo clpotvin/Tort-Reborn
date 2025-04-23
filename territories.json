@@ -1,0 +1,7310 @@
+{
+    "Ragni": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:33:08.176000Z",
+        "location": {
+            "start": [
+                -955,
+                -1415
+            ],
+            "end": [
+                -756,
+                -1748
+            ]
+        }
+    },
+    "Ragni Main Entrance": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T23:04:19.662000Z",
+        "location": {
+            "start": [
+                -747,
+                -1530
+            ],
+            "end": [
+                -616,
+                -1652
+            ]
+        }
+    },
+    "Emerald Trail": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:25:18.996000Z",
+        "location": {
+            "start": [
+                -615,
+                -1530
+            ],
+            "end": [
+                -436,
+                -1652
+            ]
+        }
+    },
+    "Nivla Woods Entrance": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T18:11:09.890000Z",
+        "location": {
+            "start": [
+                -435,
+                -1530
+            ],
+            "end": [
+                -372,
+                -1652
+            ]
+        }
+    },
+    "Ragni North Entrance": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:42:41.237000Z",
+        "location": {
+            "start": [
+                -944,
+                -1761
+            ],
+            "end": [
+                -818,
+                -1859
+            ]
+        }
+    },
+    "Katoa Ranch": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:34:41.299000Z",
+        "location": {
+            "start": [
+                -914,
+                -1860
+            ],
+            "end": [
+                -748,
+                -1955
+            ]
+        }
+    },
+    "Ragni North Suburbs": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:22:07.614000Z",
+        "location": {
+            "start": [
+                -817,
+                -1859
+            ],
+            "end": [
+                -762,
+                -1761
+            ]
+        }
+    },
+    "Ragni East Suburbs": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:19:09.754000Z",
+        "location": {
+            "start": [
+                -747,
+                -1653
+            ],
+            "end": [
+                -616,
+                -1776
+            ]
+        }
+    },
+    "Ragni Plains": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:24:05.051000Z",
+        "location": {
+            "start": [
+                -747,
+                -1776
+            ],
+            "end": [
+                -605,
+                -1945
+            ]
+        }
+    },
+    "Coastal Trail": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:20:14.658000Z",
+        "location": {
+            "start": [
+                -747,
+                -1946
+            ],
+            "end": [
+                -565,
+                -2059
+            ]
+        }
+    },
+    "Maltic Coast": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:28:04.544000Z",
+        "location": {
+            "start": [
+                -564,
+                -2059
+            ],
+            "end": [
+                -400,
+                -1946
+            ]
+        }
+    },
+    "Maltic": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:36:41.686000Z",
+        "location": {
+            "start": [
+                -604,
+                -1945
+            ],
+            "end": [
+                -475,
+                -1884
+            ]
+        }
+    },
+    "Maltic Plains": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T05:58:48.567000Z",
+        "location": {
+            "start": [
+                -564,
+                -1883
+            ],
+            "end": [
+                -436,
+                -1653
+            ]
+        }
+    },
+    "Plains": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T06:10:30.785000Z",
+        "location": {
+            "start": [
+                -435,
+                -1883
+            ],
+            "end": [
+                -270,
+                -1653
+            ]
+        }
+    },
+    "Pigmen Ravines Entrance": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T23:13:07.779000Z",
+        "location": {
+            "start": [
+                -924,
+                -1398
+            ],
+            "end": [
+                -784,
+                -1307
+            ]
+        }
+    },
+    "Pigmen Ravines": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T23:18:31.863000Z",
+        "location": {
+            "start": [
+                -784,
+                -1398
+            ],
+            "end": [
+                -617,
+                -1317
+            ]
+        }
+    },
+    "South Pigmen Ravines": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T23:19:12.977000Z",
+        "location": {
+            "start": [
+                -898,
+                -1298
+            ],
+            "end": [
+                -678,
+                -1221
+            ]
+        }
+    },
+    "Little Wood": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T21:22:55.923000Z",
+        "location": {
+            "start": [
+                -812,
+                -1177
+            ],
+            "end": [
+                -636,
+                -1094
+            ]
+        }
+    },
+    "Time Valley": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T22:03:38.138000Z",
+        "location": {
+            "start": [
+                -563,
+                -1261
+            ],
+            "end": [
+                -406,
+                -1006
+            ]
+        }
+    },
+    "Abandoned Farm": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T22:11:45.365000Z",
+        "location": {
+            "start": [
+                -577,
+                -1395
+            ],
+            "end": [
+                -478,
+                -1335
+            ]
+        }
+    },
+    "Sanctuary Bridge": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T22:07:32.091000Z",
+        "location": {
+            "start": [
+                -324,
+                -1130
+            ],
+            "end": [
+                -192,
+                -993
+            ]
+        }
+    },
+    "Road to Time Valley": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:40:07.935000Z",
+        "location": {
+            "start": [
+                -461,
+                -1525
+            ],
+            "end": [
+                -359,
+                -1412
+            ]
+        }
+    },
+    "Elkurn Fields": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:45:35.190000Z",
+        "location": {
+            "start": [
+                -357,
+                -1325
+            ],
+            "end": [
+                -99,
+                -1141
+            ]
+        }
+    },
+    "Nemract Quarry": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:34:20.032000Z",
+        "location": {
+            "start": [
+                -105,
+                -2069
+            ],
+            "end": [
+                20,
+                -1960
+            ]
+        }
+    },
+    "Nivla Woods": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:38:10.689000Z",
+        "location": {
+            "start": [
+                -325,
+                -1624
+            ],
+            "end": [
+                -196,
+                -1460
+            ]
+        }
+    },
+    "Nivla Woods Exit": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:32:22.960000Z",
+        "location": {
+            "start": [
+                -175,
+                -1630
+            ],
+            "end": [
+                -105,
+                -1514
+            ]
+        }
+    },
+    "South Nivla Woods": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:39:47.066000Z",
+        "location": {
+            "start": [
+                -350,
+                -1440
+            ],
+            "end": [
+                -99,
+                -1330
+            ]
+        }
+    },
+    "North Nivla Woods": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T06:06:13.035000Z",
+        "location": {
+            "start": [
+                -194,
+                -1632
+            ],
+            "end": [
+                -86,
+                -1800
+            ]
+        }
+    },
+    "Elkurn": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T05:08:18.719000Z",
+        "location": {
+            "start": [
+                -98,
+                -1250
+            ],
+            "end": [
+                62,
+                -1080
+            ]
+        }
+    },
+    "Road to Elkurn": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:50:39.643000Z",
+        "location": {
+            "start": [
+                -89,
+                -1481
+            ],
+            "end": [
+                2,
+                -1267
+            ]
+        }
+    },
+    "Corrupted Road": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:05:42.474000Z",
+        "location": {
+            "start": [
+                22,
+                -1479
+            ],
+            "end": [
+                96,
+                -1261
+            ]
+        }
+    },
+    "Nether Gate": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:06:45.540000Z",
+        "location": {
+            "start": [
+                106,
+                -1341
+            ],
+            "end": [
+                342,
+                -1222
+            ]
+        }
+    },
+    "Detlas Far Suburbs": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:57:37.686000Z",
+        "location": {
+            "start": [
+                29,
+                -1657
+            ],
+            "end": [
+                188,
+                -1500
+            ]
+        }
+    },
+    "Detlas Suburbs": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T02:00:37.752000Z",
+        "location": {
+            "start": [
+                188,
+                -1657
+            ],
+            "end": [
+                300,
+                -1500
+            ]
+        }
+    },
+    "Detlas Close Suburbs": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T21:54:30.298000Z",
+        "location": {
+            "start": [
+                300,
+                -1657
+            ],
+            "end": [
+                389,
+                -1500
+            ]
+        }
+    },
+    "Detlas": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T21:48:39.032000Z",
+        "location": {
+            "start": [
+                402,
+                -1657
+            ],
+            "end": [
+                536,
+                -1518
+            ]
+        }
+    },
+    "South Farmers Valley": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T06:02:00.959000Z",
+        "location": {
+            "start": [
+                -472,
+                -1944
+            ],
+            "end": [
+                -255,
+                -1887
+            ]
+        }
+    },
+    "North Farmers Valley": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-27T20:27:15.841000Z",
+        "location": {
+            "start": [
+                -348,
+                -2060
+            ],
+            "end": [
+                -254,
+                -1954
+            ]
+        }
+    },
+    "Arachnid Route": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T06:05:44.117000Z",
+        "location": {
+            "start": [
+                -261,
+                -1881
+            ],
+            "end": [
+                -109,
+                -1808
+            ]
+        }
+    },
+    "Nivla Woods Edge": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:39:05.402000Z",
+        "location": {
+            "start": [
+                -74,
+                -1777
+            ],
+            "end": [
+                -3,
+                -1485
+            ]
+        }
+    },
+    "Tower of Ascension": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T08:34:57.629000Z",
+        "location": {
+            "start": [
+                -400,
+                -450
+            ],
+            "end": [
+                -315,
+                -330
+            ]
+        }
+    },
+    "Half Moon Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:20:44.012000Z",
+        "location": {
+            "start": [
+                900,
+                -2660
+            ],
+            "end": [
+                1100,
+                -2480
+            ]
+        }
+    },
+    "Mage Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:16:21.682000Z",
+        "location": {
+            "start": [
+                805,
+                -2960
+            ],
+            "end": [
+                983,
+                -2787
+            ]
+        }
+    },
+    "Twain Lake": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T04:54:59.315000Z",
+        "location": {
+            "start": [
+                0,
+                -330
+            ],
+            "end": [
+                80,
+                -530
+            ]
+        }
+    },
+    "Twain Mansion": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T05:01:40.052000Z",
+        "location": {
+            "start": [
+                95,
+                -407
+            ],
+            "end": [
+                140,
+                -310
+            ]
+        }
+    },
+    "Bob's Tomb": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T04:58:37.708000Z",
+        "location": {
+            "start": [
+                246,
+                -747
+            ],
+            "end": [
+                380,
+                -867
+            ]
+        }
+    },
+    "Nesaak Plains South East": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T04:58:07.135000Z",
+        "location": {
+            "start": [
+                76,
+                -757
+            ],
+            "end": [
+                230,
+                -660
+            ]
+        }
+    },
+    "Nesaak Plains South West": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:51:11.070000Z",
+        "location": {
+            "start": [
+                70,
+                -820
+            ],
+            "end": [
+                -110,
+                -625
+            ]
+        }
+    },
+    "Nesaak Plains North East": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T05:01:37.743000Z",
+        "location": {
+            "start": [
+                110,
+                -873
+            ],
+            "end": [
+                240,
+                -1035
+            ]
+        }
+    },
+    "Nesaak Plains Lower North West": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T05:06:37.833000Z",
+        "location": {
+            "start": [
+                70,
+                -834
+            ],
+            "end": [
+                -120,
+                -910
+            ]
+        }
+    },
+    "Nesaak Plains Upper North West": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T04:43:07.608000Z",
+        "location": {
+            "start": [
+                70,
+                -950
+            ],
+            "end": [
+                -140,
+                -1060
+            ]
+        }
+    },
+    "Nesaak Village": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:49:48.861000Z",
+        "location": {
+            "start": [
+                75,
+                -850
+            ],
+            "end": [
+                160,
+                -760
+            ]
+        }
+    },
+    "Nesaak Bridge Transition": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:58:41.538000Z",
+        "location": {
+            "start": [
+                -115,
+                -630
+            ],
+            "end": [
+                -240,
+                -780
+            ]
+        }
+    },
+    "Nesaak Plains Mid North West": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T05:19:24.082000Z",
+        "location": {
+            "start": [
+                -140,
+                -860
+            ],
+            "end": [
+                -180,
+                -980
+            ]
+        }
+    },
+    "Great Bridge Nesaak": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:49:54.217000Z",
+        "location": {
+            "start": [
+                -275,
+                -620
+            ],
+            "end": [
+                -390,
+                -790
+            ]
+        }
+    },
+    "Great Bridge Jungle": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:26:57.594000Z",
+        "location": {
+            "start": [
+                -395,
+                -790
+            ],
+            "end": [
+                -515,
+                -610
+            ]
+        }
+    },
+    "Jungle Lower": {
+        "guild": {
+            "uuid": "2acd535e-e217-4f17-99f8-a2acfcdd251c",
+            "name": "Bread INC",
+            "prefix": "Breh"
+        },
+        "acquired": "2024-03-02T17:29:07.683000Z",
+        "location": {
+            "start": [
+                -515,
+                -610
+            ],
+            "end": [
+                -600,
+                -790
+            ]
+        }
+    },
+    "Jungle Mid": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T18:52:38.453000Z",
+        "location": {
+            "start": [
+                -600,
+                -610
+            ],
+            "end": [
+                -670,
+                -780
+            ]
+        }
+    },
+    "Jungle Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:29:06.710000Z",
+        "location": {
+            "start": [
+                -671,
+                -779
+            ],
+            "end": [
+                -810,
+                -630
+            ]
+        }
+    },
+    "Jungle Lake": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:23:49.458000Z",
+        "location": {
+            "start": [
+                -601,
+                -791
+            ],
+            "end": [
+                -680,
+                -940
+            ]
+        }
+    },
+    "Temple of Legends": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-02T18:59:49.633000Z",
+        "location": {
+            "start": [
+                -631,
+                -973
+            ],
+            "end": [
+                -745,
+                -1093
+            ]
+        }
+    },
+    "City of Troms": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-03-01T00:27:41.589000Z",
+        "location": {
+            "start": [
+                -726,
+                -970
+            ],
+            "end": [
+                -899,
+                -826
+            ]
+        }
+    },
+    "Rymek East Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T16:08:25.158000Z",
+        "location": {
+            "start": [
+                1210,
+                -1270
+            ],
+            "end": [
+                1400,
+                -1390
+            ]
+        }
+    },
+    "Rymek East Mid": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:33:39.934000Z",
+        "location": {
+            "start": [
+                1211,
+                -1410
+            ],
+            "end": [
+                1480,
+                -1578
+            ]
+        }
+    },
+    "Rymek East Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:40:17.622000Z",
+        "location": {
+            "start": [
+                1479,
+                -1579
+            ],
+            "end": [
+                1210,
+                -1780
+            ]
+        }
+    },
+    "Rymek West Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-28T00:27:01.801000Z",
+        "location": {
+            "start": [
+                1209,
+                -1269
+            ],
+            "end": [
+                1020,
+                -1380
+            ]
+        }
+    },
+    "Rymek West Mid": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:42:59.843000Z",
+        "location": {
+            "start": [
+                1211,
+                -1410
+            ],
+            "end": [
+                1000,
+                -1530
+            ]
+        }
+    },
+    "Rymek West Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:34:57.316000Z",
+        "location": {
+            "start": [
+                1190,
+                -1665
+            ],
+            "end": [
+                975,
+                -1540
+            ]
+        }
+    },
+    "Desert East Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:36:09.881000Z",
+        "location": {
+            "start": [
+                1260,
+                -2170
+            ],
+            "end": [
+                1450,
+                -2370
+            ]
+        }
+    },
+    "Desert East Mid": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:50:06.196000Z",
+        "location": {
+            "start": [
+                1260,
+                -2170
+            ],
+            "end": [
+                1450,
+                -2020
+            ]
+        }
+    },
+    "Desert East Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:43:05.091000Z",
+        "location": {
+            "start": [
+                1450,
+                -2020
+            ],
+            "end": [
+                1270,
+                -1785
+            ]
+        }
+    },
+    "Desert Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:48:18.348000Z",
+        "location": {
+            "start": [
+                990,
+                -2270
+            ],
+            "end": [
+                1195,
+                -2120
+            ]
+        }
+    },
+    "Desert Mid-Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:46:15.479000Z",
+        "location": {
+            "start": [
+                1195,
+                -2120
+            ],
+            "end": [
+                1060,
+                -1935
+            ]
+        }
+    },
+    "Desert Mid-Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-27T23:31:30.927000Z",
+        "location": {
+            "start": [
+                1060,
+                -1935
+            ],
+            "end": [
+                1210,
+                -1810
+            ]
+        }
+    },
+    "Desert Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:53:10.297000Z",
+        "location": {
+            "start": [
+                1210,
+                -1810
+            ],
+            "end": [
+                1040,
+                -1680
+            ]
+        }
+    },
+    "Almuj City": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:34:24.958000Z",
+        "location": {
+            "start": [
+                1050,
+                -1900
+            ],
+            "end": [
+                840,
+                -2060
+            ]
+        }
+    },
+    "Mummy's Tomb": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:51:13.073000Z",
+        "location": {
+            "start": [
+                990,
+                -2270
+            ],
+            "end": [
+                1120,
+                -2400
+            ]
+        }
+    },
+    "Desert West Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:46:24.803000Z",
+        "location": {
+            "start": [
+                990,
+                -2270
+            ],
+            "end": [
+                895,
+                -2140
+            ]
+        }
+    },
+    "Desert West Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-03-01T12:56:00.582000Z",
+        "location": {
+            "start": [
+                1040,
+                -1681
+            ],
+            "end": [
+                900,
+                -1870
+            ]
+        }
+    },
+    "Savannah East Lower": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:26:17.445000Z",
+        "location": {
+            "start": [
+                775,
+                -1675
+            ],
+            "end": [
+                890,
+                -1860
+            ]
+        }
+    },
+    "Savannah East Upper": {
+        "guild": {
+            "uuid": "6175ef18-2a03-43e3-92a4-e246c1b73c1f",
+            "name": "The Broken Gasmask",
+            "prefix": "TBGM"
+        },
+        "acquired": "2024-02-29T15:30:04.457000Z",
+        "location": {
+            "start": [
+                750,
+                -2060
+            ],
+            "end": [
+                820,
+                -1895
+            ]
+        }
+    },
+    "Savannah West Lower": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:11:19.051000Z",
+        "location": {
+            "start": [
+                775,
+                -1675
+            ],
+            "end": [
+                630,
+                -1830
+            ]
+        }
+    },
+    "Savannah West Upper": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:08:45.988000Z",
+        "location": {
+            "start": [
+                750,
+                -2060
+            ],
+            "end": [
+                570,
+                -1870
+            ]
+        }
+    },
+    "Bremminglar": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:12:16.152000Z",
+        "location": {
+            "start": [
+                760,
+                -2070
+            ],
+            "end": [
+                615,
+                -2120
+            ]
+        }
+    },
+    "Lion Lair": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:14:31.590000Z",
+        "location": {
+            "start": [
+                890,
+                -2140
+            ],
+            "end": [
+                790,
+                -2320
+            ]
+        }
+    },
+    "Nemract Town": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:56:24.529000Z",
+        "location": {
+            "start": [
+                10,
+                -2070
+            ],
+            "end": [
+                210,
+                -2270
+            ]
+        }
+    },
+    "Plains Coast": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:31:08.240000Z",
+        "location": {
+            "start": [
+                5,
+                -2270
+            ],
+            "end": [
+                -320,
+                -2090
+            ]
+        }
+    },
+    "Nemract Road": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T22:02:04.473000Z",
+        "location": {
+            "start": [
+                20,
+                -2065
+            ],
+            "end": [
+                151,
+                -1871
+            ]
+        }
+    },
+    "Nemract Plains West": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:35:10.478000Z",
+        "location": {
+            "start": [
+                5,
+                -1960
+            ],
+            "end": [
+                -100,
+                -1810
+            ]
+        }
+    },
+    "Nemract Plains East": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:42:08.418000Z",
+        "location": {
+            "start": [
+                151,
+                -1870
+            ],
+            "end": [
+                20,
+                -1810
+            ]
+        }
+    },
+    "Ancient Nemract": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:43:29.582000Z",
+        "location": {
+            "start": [
+                152,
+                -1832
+            ],
+            "end": [
+                290,
+                -1999
+            ]
+        }
+    },
+    "Nemract Cathedral": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:45:45.308000Z",
+        "location": {
+            "start": [
+                385,
+                -2180
+            ],
+            "end": [
+                270,
+                -2030
+            ]
+        }
+    },
+    "Cathedral Harbour": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T21:56:45.781000Z",
+        "location": {
+            "start": [
+                385,
+                -2180
+            ],
+            "end": [
+                570,
+                -1950
+            ]
+        }
+    },
+    "The Bear Zoo": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-27T06:22:58.637000Z",
+        "location": {
+            "start": [
+                -409,
+                -2539
+            ],
+            "end": [
+                -283,
+                -2414
+            ]
+        }
+    },
+    "Rooster Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-28T19:43:26.333000Z",
+        "location": {
+            "start": [
+                -128,
+                -2448
+            ],
+            "end": [
+                -30,
+                -2538
+            ]
+        }
+    },
+    "Zhight Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-24T19:18:43.663000Z",
+        "location": {
+            "start": [
+                -727,
+                -2846
+            ],
+            "end": [
+                -440,
+                -2629
+            ]
+        }
+    },
+    "Selchar": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:03:34.537000Z",
+        "location": {
+            "start": [
+                -100,
+                -3070
+            ],
+            "end": [
+                210,
+                -3270
+            ]
+        }
+    },
+    "Durum Isles Center": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:11:25.764000Z",
+        "location": {
+            "start": [
+                405,
+                -2846
+            ],
+            "end": [
+                504,
+                -2972
+            ]
+        }
+    },
+    "Durum Isles Upper": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:06:33.163000Z",
+        "location": {
+            "start": [
+                537,
+                -2994
+            ],
+            "end": [
+                595,
+                -2924
+            ]
+        }
+    },
+    "Durum Isles East": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:16:00.512000Z",
+        "location": {
+            "start": [
+                482,
+                -2841
+            ],
+            "end": [
+                548,
+                -2785
+            ]
+        }
+    },
+    "Durum Isles Lower": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:12:40.552000Z",
+        "location": {
+            "start": [
+                390,
+                -2851
+            ],
+            "end": [
+                347,
+                -2791
+            ]
+        }
+    },
+    "Pirate Town": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:40:02.212000Z",
+        "location": {
+            "start": [
+                -750,
+                -3251
+            ],
+            "end": [
+                -580,
+                -3006
+            ]
+        }
+    },
+    "Skiens Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:06:04.280000Z",
+        "location": {
+            "start": [
+                527,
+                -3386
+            ],
+            "end": [
+                297,
+                -3644
+            ]
+        }
+    },
+    "Dujgon Nation": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:33:46.611000Z",
+        "location": {
+            "start": [
+                1000,
+                -3550
+            ],
+            "end": [
+                925,
+                -3380
+            ]
+        }
+    },
+    "Nodguj Nation": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:30:17.901000Z",
+        "location": {
+            "start": [
+                695,
+                -3210
+            ],
+            "end": [
+                880,
+                -3440
+            ]
+        }
+    },
+    "Dead Island North East": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:31:24.787000Z",
+        "location": {
+            "start": [
+                870,
+                -3920
+            ],
+            "end": [
+                1000,
+                -4040
+            ]
+        }
+    },
+    "Dead Island South East": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:27:46.169000Z",
+        "location": {
+            "start": [
+                870,
+                -3920
+            ],
+            "end": [
+                1000,
+                -3810
+            ]
+        }
+    },
+    "Dead Island North West": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:28:43.047000Z",
+        "location": {
+            "start": [
+                870,
+                -3920
+            ],
+            "end": [
+                745,
+                -4040
+            ]
+        }
+    },
+    "Dead Island South West": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:25:37.418000Z",
+        "location": {
+            "start": [
+                870,
+                -3920
+            ],
+            "end": [
+                745,
+                -3810
+            ]
+        }
+    },
+    "Maro Peaks": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:09:46.675000Z",
+        "location": {
+            "start": [
+                -41,
+                -4174
+            ],
+            "end": [
+                453,
+                -3793
+            ]
+        }
+    },
+    "Volcano Upper": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:26:34.859000Z",
+        "location": {
+            "start": [
+                -929,
+                -3831
+            ],
+            "end": [
+                -722,
+                -3530
+            ]
+        }
+    },
+    "Volcano Lower": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:43:06.015000Z",
+        "location": {
+            "start": [
+                -1164,
+                -3831
+            ],
+            "end": [
+                -930,
+                -3530
+            ]
+        }
+    },
+    "Tree Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:18:24.582000Z",
+        "location": {
+            "start": [
+                -454,
+                -3905
+            ],
+            "end": [
+                -323,
+                -3766
+            ]
+        }
+    },
+    "Ternaves": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:15:47.774000Z",
+        "location": {
+            "start": [
+                770,
+                -1675
+            ],
+            "end": [
+                880,
+                -1540
+            ]
+        }
+    },
+    "Ternaves Plains Upper": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T13:17:34.666000Z",
+        "location": {
+            "start": [
+                770,
+                -1675
+            ],
+            "end": [
+                655,
+                -1430
+            ]
+        }
+    },
+    "Ternaves Plains Lower": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:16:22.112000Z",
+        "location": {
+            "start": [
+                655,
+                -1430
+            ],
+            "end": [
+                880,
+                -1330
+            ]
+        }
+    },
+    "Mining Base Upper": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:15:04.068000Z",
+        "location": {
+            "start": [
+                880,
+                -1330
+            ],
+            "end": [
+                670,
+                -1225
+            ]
+        }
+    },
+    "Mining Base Lower": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:24:25.894000Z",
+        "location": {
+            "start": [
+                870,
+                -1130
+            ],
+            "end": [
+                670,
+                -1225
+            ]
+        }
+    },
+    "Nesaak Transition": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-01T04:45:16.781000Z",
+        "location": {
+            "start": [
+                330,
+                -1040
+            ],
+            "end": [
+                75,
+                -1145
+            ]
+        }
+    },
+    "Desolate Valley": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T00:31:44.159000Z",
+        "location": {
+            "start": [
+                330,
+                -1040
+            ],
+            "end": [
+                450,
+                -1170
+            ]
+        }
+    },
+    "Nether Plains Lower": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T00:24:46.248000Z",
+        "location": {
+            "start": [
+                75,
+                -1145
+            ],
+            "end": [
+                325,
+                -1210
+            ]
+        }
+    },
+    "Plains Lake": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:19:11.514000Z",
+        "location": {
+            "start": [
+                395,
+                -1365
+            ],
+            "end": [
+                550,
+                -1190
+            ]
+        }
+    },
+    "Mine Base Plains": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:29:56.975000Z",
+        "location": {
+            "start": [
+                550,
+                -1190
+            ],
+            "end": [
+                650,
+                -1430
+            ]
+        }
+    },
+    "Detlas Savannah Transition": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T01:18:08.948000Z",
+        "location": {
+            "start": [
+                545,
+                -1520
+            ],
+            "end": [
+                650,
+                -1670
+            ]
+        }
+    },
+    "Nether Plains Upper": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T22:00:54.769000Z",
+        "location": {
+            "start": [
+                115,
+                -1360
+            ],
+            "end": [
+                390,
+                -1495
+            ]
+        }
+    },
+    "Detlas Trail East Plains": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T21:54:43.743000Z",
+        "location": {
+            "start": [
+                200,
+                -1820
+            ],
+            "end": [
+                510,
+                -1675
+            ]
+        }
+    },
+    "Detlas Trail West Plains": {
+        "guild": {
+            "uuid": "2f5671c7-0fc8-4503-87fd-651d25db996a",
+            "name": "The Aquarium",
+            "prefix": "TAq"
+        },
+        "acquired": "2024-02-29T21:53:22.480000Z",
+        "location": {
+            "start": [
+                25,
+                -1660
+            ],
+            "end": [
+                200,
+                -1800
+            ]
+        }
+    },
+    "Llevigar Entrance": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:48:04.306000Z",
+        "location": {
+            "start": [
+                -2048,
+                -4250
+            ],
+            "end": [
+                -1932,
+                -4403
+            ]
+        }
+    },
+    "Llevigar Gate East": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:25:56.496000Z",
+        "location": {
+            "start": [
+                -1932,
+                -4648
+            ],
+            "end": [
+                -2059,
+                -4746
+            ]
+        }
+    },
+    "Llevigar Gate West": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:47:44.815000Z",
+        "location": {
+            "start": [
+                -2060,
+                -4746
+            ],
+            "end": [
+                -2171,
+                -4644
+            ]
+        }
+    },
+    "Llevigar Farm Plains East": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:29:23.754000Z",
+        "location": {
+            "start": [
+                -2059,
+                -4747
+            ],
+            "end": [
+                -1931,
+                -4828
+            ]
+        }
+    },
+    "Llevigar Farm Plains West": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:46:47.327000Z",
+        "location": {
+            "start": [
+                -2060,
+                -4746
+            ],
+            "end": [
+                -2171,
+                -4828
+            ]
+        }
+    },
+    "Hive": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:17:28.446000Z",
+        "location": {
+            "start": [
+                381,
+                -5413
+            ],
+            "end": [
+                286,
+                -5593
+            ]
+        }
+    },
+    "Cinfras": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:36:04.180000Z",
+        "location": {
+            "start": [
+                -534,
+                -4807
+            ],
+            "end": [
+                -375,
+                -5088
+            ]
+        }
+    },
+    "Llevigar Plains East Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T04:56:09.770000Z",
+        "location": {
+            "start": [
+                -2059,
+                -4831
+            ],
+            "end": [
+                -1937,
+                -4909
+            ]
+        }
+    },
+    "Llevigar Plains West Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:00:26.627000Z",
+        "location": {
+            "start": [
+                -2060,
+                -4831
+            ],
+            "end": [
+                -2171,
+                -4909
+            ]
+        }
+    },
+    "Llevigar Plains West Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:12:44.671000Z",
+        "location": {
+            "start": [
+                -2060,
+                -4912
+            ],
+            "end": [
+                -2171,
+                -5000
+            ]
+        }
+    },
+    "Llevigar Plains East Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:01:51.173000Z",
+        "location": {
+            "start": [
+                -2059,
+                -4912
+            ],
+            "end": [
+                -1940,
+                -5000
+            ]
+        }
+    },
+    "Swamp West Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:25:44.226000Z",
+        "location": {
+            "start": [
+                -2060,
+                -5003
+            ],
+            "end": [
+                -2171,
+                -5075
+            ]
+        }
+    },
+    "Swamp East Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:03:35.448000Z",
+        "location": {
+            "start": [
+                -2059,
+                -5003
+            ],
+            "end": [
+                -1956,
+                -5074
+            ]
+        }
+    },
+    "Swamp East Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:09:02.069000Z",
+        "location": {
+            "start": [
+                -1955,
+                -5081
+            ],
+            "end": [
+                -2059,
+                -5186
+            ]
+        }
+    },
+    "Swamp West Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:17:31.159000Z",
+        "location": {
+            "start": [
+                -2060,
+                -5082
+            ],
+            "end": [
+                -2171,
+                -5186
+            ]
+        }
+    },
+    "Swamp West Mid-Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:21:10.118000Z",
+        "location": {
+            "start": [
+                -2171,
+                -5190
+            ],
+            "end": [
+                -2060,
+                -5309
+            ]
+        }
+    },
+    "Swamp East Mid-Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:27:09.928000Z",
+        "location": {
+            "start": [
+                -2059,
+                -5188
+            ],
+            "end": [
+                -1955,
+                -5309
+            ]
+        }
+    },
+    "Swamp West Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:34:36.961000Z",
+        "location": {
+            "start": [
+                -2171,
+                -5312
+            ],
+            "end": [
+                -2060,
+                -5419
+            ]
+        }
+    },
+    "Swamp East Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:29:33.064000Z",
+        "location": {
+            "start": [
+                -1955,
+                -5311
+            ],
+            "end": [
+                -2059,
+                -5419
+            ]
+        }
+    },
+    "Swamp Dark Forest Transition Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T22:13:36.023000Z",
+        "location": {
+            "start": [
+                -1519,
+                -5134
+            ],
+            "end": [
+                -1631,
+                -5288
+            ]
+        }
+    },
+    "Swamp Dark Forest Transition Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T06:33:59.319000Z",
+        "location": {
+            "start": [
+                -1519,
+                -5291
+            ],
+            "end": [
+                -1626,
+                -5492
+            ]
+        }
+    },
+    "Swamp Dark Forest Transition Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:05:33.857000Z",
+        "location": {
+            "start": [
+                -1519,
+                -5492
+            ],
+            "end": [
+                -1626,
+                -5607
+            ]
+        }
+    },
+    "Swamp Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T02:25:36.017000Z",
+        "location": {
+            "start": [
+                -1649,
+                -5134
+            ],
+            "end": [
+                -1763,
+                -5241
+            ]
+        }
+    },
+    "Entrance to Olux": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T06:30:18.552000Z",
+        "location": {
+            "start": [
+                -1649,
+                -5246
+            ],
+            "end": [
+                -1764,
+                -5396
+            ]
+        }
+    },
+    "Olux": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:02:51.875000Z",
+        "location": {
+            "start": [
+                -1810,
+                -5397
+            ],
+            "end": [
+                -1668,
+                -5597
+            ]
+        }
+    },
+    "Swamp Mountain Base": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:07:47.791000Z",
+        "location": {
+            "start": [
+                -1776,
+                -5134
+            ],
+            "end": [
+                -1898,
+                -5240
+            ]
+        }
+    },
+    "Swamp Plains Basin": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:06:32.479000Z",
+        "location": {
+            "start": [
+                -1776,
+                -5246
+            ],
+            "end": [
+                -1898,
+                -5396
+            ]
+        }
+    },
+    "Swamp Mountain Transition Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:46:48.506000Z",
+        "location": {
+            "start": [
+                -2173,
+                -5466
+            ],
+            "end": [
+                -2128,
+                -5603
+            ]
+        }
+    },
+    "Swamp Mountain Transition Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:38:42.096000Z",
+        "location": {
+            "start": [
+                -2127,
+                -5466
+            ],
+            "end": [
+                -2066,
+                -5603
+            ]
+        }
+    },
+    "Swamp Mountain Transition Mid-Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:33:04.281000Z",
+        "location": {
+            "start": [
+                -2065,
+                -5466
+            ],
+            "end": [
+                -1982,
+                -5603
+            ]
+        }
+    },
+    "Swamp Mountain Transition Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:38:03.022000Z",
+        "location": {
+            "start": [
+                -1981,
+                -5466
+            ],
+            "end": [
+                -1889,
+                -5603
+            ]
+        }
+    },
+    "Quartz Mines South West": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:30:06.871000Z",
+        "location": {
+            "start": [
+                -1776,
+                -4352
+            ],
+            "end": [
+                -1609,
+                -4524
+            ]
+        }
+    },
+    "Quartz Mines South East": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:30:48.087000Z",
+        "location": {
+            "start": [
+                -1391,
+                -4352
+            ],
+            "end": [
+                -1607,
+                -4524
+            ]
+        }
+    },
+    "Quartz Mines North West": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:28:44.507000Z",
+        "location": {
+            "start": [
+                -1776,
+                -4664
+            ],
+            "end": [
+                -1609,
+                -4526
+            ]
+        }
+    },
+    "Quartz Mines North East": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:51:39.389000Z",
+        "location": {
+            "start": [
+                -1391,
+                -4664
+            ],
+            "end": [
+                -1607,
+                -4526
+            ]
+        }
+    },
+    "Sunspark Camp": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T04:51:34.914000Z",
+        "location": {
+            "start": [
+                -1930,
+                -5099
+            ],
+            "end": [
+                -1816,
+                -4968
+            ]
+        }
+    },
+    "Orc Lake": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T05:07:33.103000Z",
+        "location": {
+            "start": [
+                -1933,
+                -4962
+            ],
+            "end": [
+                -1816,
+                -4854
+            ]
+        }
+    },
+    "Orc Road": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T04:42:23.110000Z",
+        "location": {
+            "start": [
+                -1927,
+                -4852
+            ],
+            "end": [
+                -1815,
+                -4700
+            ]
+        }
+    },
+    "Meteor Crater": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T04:47:19.320000Z",
+        "location": {
+            "start": [
+                -1800,
+                -5099
+            ],
+            "end": [
+                -1690,
+                -4969
+            ]
+        }
+    },
+    "Sablestone Camp": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T04:43:49.059000Z",
+        "location": {
+            "start": [
+                -1800,
+                -4962
+            ],
+            "end": [
+                -1695,
+                -4854
+            ]
+        }
+    },
+    "Loamsprout Camp": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T04:42:26.739000Z",
+        "location": {
+            "start": [
+                -1800,
+                -4852
+            ],
+            "end": [
+                -1670,
+                -4684
+            ]
+        }
+    },
+    "Iron Road": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:03:31.281000Z",
+        "location": {
+            "start": [
+                -1688,
+                -5099
+            ],
+            "end": [
+                -1608,
+                -4969
+            ]
+        }
+    },
+    "Goblin Plains West": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:04:38.540000Z",
+        "location": {
+            "start": [
+                -1688,
+                -4962
+            ],
+            "end": [
+                -1611,
+                -4854
+            ]
+        }
+    },
+    "Llevigar Farm": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:12:19.507000Z",
+        "location": {
+            "start": [
+                -1663,
+                -4849
+            ],
+            "end": [
+                -1556,
+                -4714
+            ]
+        }
+    },
+    "Forgotten Path": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T06:38:34.822000Z",
+        "location": {
+            "start": [
+                -1603,
+                -4969
+            ],
+            "end": [
+                -1529,
+                -5100
+            ]
+        }
+    },
+    "Goblin Plains East": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:10:02.938000Z",
+        "location": {
+            "start": [
+                -1603,
+                -4963
+            ],
+            "end": [
+                -1527,
+                -4853
+            ]
+        }
+    },
+    "Pre-Light Forest Transition": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:11:12.001000Z",
+        "location": {
+            "start": [
+                -1553,
+                -4850
+            ],
+            "end": [
+                -1476,
+                -4719
+            ]
+        }
+    },
+    "Leadin Fortress": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:07:25.847000Z",
+        "location": {
+            "start": [
+                -1403,
+                -4869
+            ],
+            "end": [
+                -1284,
+                -4748
+            ]
+        }
+    },
+    "Road To Light Forest": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:29:35.348000Z",
+        "location": {
+            "start": [
+                -1387,
+                -4595
+            ],
+            "end": [
+                -1252,
+                -4713
+            ]
+        }
+    },
+    "Efilim Village": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T19:57:37.641000Z",
+        "location": {
+            "start": [
+                -1134,
+                -5078
+            ],
+            "end": [
+                -1020,
+                -4943
+            ]
+        }
+    },
+    "Efilim South Plains": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T09:58:21.006000Z",
+        "location": {
+            "start": [
+                -1030,
+                -4940
+            ],
+            "end": [
+                -1134,
+                -4847
+            ]
+        }
+    },
+    "Efilim East Plains": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-24T01:57:08.389000Z",
+        "location": {
+            "start": [
+                -1014,
+                -4944
+            ],
+            "end": [
+                -949,
+                -5079
+            ]
+        }
+    },
+    "Efilim South East Plains": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:08:10.725000Z",
+        "location": {
+            "start": [
+                -949,
+                -4942
+            ],
+            "end": [
+                -1014,
+                -4847
+            ]
+        }
+    },
+    "Light Forest North Entrance": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T22:46:11.480000Z",
+        "location": {
+            "start": [
+                -1134,
+                -4708
+            ],
+            "end": [
+                -1030,
+                -4845
+            ]
+        }
+    },
+    "Light Forest Entrance": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T22:57:09.583000Z",
+        "location": {
+            "start": [
+                -1040,
+                -4706
+            ],
+            "end": [
+                -1134,
+                -4552
+            ]
+        }
+    },
+    "Light Forest South Entrance": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-01T23:01:00.981000Z",
+        "location": {
+            "start": [
+                -1134,
+                -4548
+            ],
+            "end": [
+                -1038,
+                -4426
+            ]
+        }
+    },
+    "Aldorei Valley West Entrance": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:42:51.711000Z",
+        "location": {
+            "start": [
+                -736,
+                -4428
+            ],
+            "end": [
+                -802,
+                -4553
+            ]
+        }
+    },
+    "Light Forest South Exit": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:16:10.172000Z",
+        "location": {
+            "start": [
+                -646,
+                -4699
+            ],
+            "end": [
+                -733,
+                -4559
+            ]
+        }
+    },
+    "Light Forest North Exit": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:10:21.883000Z",
+        "location": {
+            "start": [
+                -733,
+                -4707
+            ],
+            "end": [
+                -654,
+                -4848
+            ]
+        }
+    },
+    "Light Forest West Lower": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-03-01T21:50:18.816000Z",
+        "location": {
+            "start": [
+                -1014,
+                -4428
+            ],
+            "end": [
+                -929,
+                -4549
+            ]
+        }
+    },
+    "Light Forest West Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:53:14.045000Z",
+        "location": {
+            "start": [
+                -929,
+                -4552
+            ],
+            "end": [
+                -1014,
+                -4706
+            ]
+        }
+    },
+    "Light Forest West Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:54:18.607000Z",
+        "location": {
+            "start": [
+                -1014,
+                -4708
+            ],
+            "end": [
+                -935,
+                -4845
+            ]
+        }
+    },
+    "Light Forest East Upper": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T22:58:22.184000Z",
+        "location": {
+            "start": [
+                -926,
+                -4842
+            ],
+            "end": [
+                -831,
+                -4945
+            ]
+        }
+    },
+    "Light Forest East Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:55:29.037000Z",
+        "location": {
+            "start": [
+                -834,
+                -4839
+            ],
+            "end": [
+                -926,
+                -4708
+            ]
+        }
+    },
+    "Light Forest East Lower": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T18:42:30.077000Z",
+        "location": {
+            "start": [
+                -926,
+                -4700
+            ],
+            "end": [
+                -805,
+                -4552
+            ]
+        }
+    },
+    "Hobbit River": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:38:24.110000Z",
+        "location": {
+            "start": [
+                -926,
+                -4550
+            ],
+            "end": [
+                -806,
+                -4428
+            ]
+        }
+    },
+    "Mantis Nest": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:18:43.650000Z",
+        "location": {
+            "start": [
+                -736,
+                -4559
+            ],
+            "end": [
+                -802,
+                -4698
+            ]
+        }
+    },
+    "Light Forest Canyon": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T18:40:22.013000Z",
+        "location": {
+            "start": [
+                -738,
+                -4708
+            ],
+            "end": [
+                -818,
+                -4840
+            ]
+        }
+    },
+    "Path to Cinfras": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-26T08:47:39.925000Z",
+        "location": {
+            "start": [
+                -734,
+                -4842
+            ],
+            "end": [
+                -818,
+                -4953
+            ]
+        }
+    },
+    "Lone Farmstead": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:04:06.809000Z",
+        "location": {
+            "start": [
+                -942,
+                -5227
+            ],
+            "end": [
+                -1050,
+                -5116
+            ]
+        }
+    },
+    "Gelibord": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:27:32.246000Z",
+        "location": {
+            "start": [
+                -1050,
+                -5244
+            ],
+            "end": [
+                -958,
+                -5342
+            ]
+        }
+    },
+    "Gelibord Corrupted Farm": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:09:56.446000Z",
+        "location": {
+            "start": [
+                -1056,
+                -5355
+            ],
+            "end": [
+                -1179,
+                -5448
+            ]
+        }
+    },
+    "Gelibord Castle": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:20:37.417000Z",
+        "location": {
+            "start": [
+                -1027,
+                -5470
+            ],
+            "end": [
+                -1180,
+                -5600
+            ]
+        }
+    },
+    "Taproot Descent": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:08:52.545000Z",
+        "location": {
+            "start": [
+                -1425,
+                -5407
+            ],
+            "end": [
+                -1194,
+                -5589
+            ]
+        }
+    },
+    "Fortress North": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T06:41:21.229000Z",
+        "location": {
+            "start": [
+                -1452,
+                -5211
+            ],
+            "end": [
+                -1272,
+                -5395
+            ]
+        }
+    },
+    "Fortress South": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T06:36:23.971000Z",
+        "location": {
+            "start": [
+                -1460,
+                -5025
+            ],
+            "end": [
+                -1272,
+                -5210
+            ]
+        }
+    },
+    "Mansion of Insanity": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:07:39.606000Z",
+        "location": {
+            "start": [
+                -1237,
+                -5116
+            ],
+            "end": [
+                -1144,
+                -5268
+            ]
+        }
+    },
+    "Twisted Housing": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T19:54:41.505000Z",
+        "location": {
+            "start": [
+                -1133,
+                -5116
+            ],
+            "end": [
+                -1053,
+                -5272
+            ]
+        }
+    },
+    "Lexdales Prison": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:47:35.545000Z",
+        "location": {
+            "start": [
+                -873,
+                -5518
+            ],
+            "end": [
+                -772,
+                -5585
+            ]
+        }
+    },
+    "Viscera Pits West": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-24T02:16:58.500000Z",
+        "location": {
+            "start": [
+                -771,
+                -5504
+            ],
+            "end": [
+                -899,
+                -5412
+            ]
+        }
+    },
+    "Entrance to Kander": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:23:41.423000Z",
+        "location": {
+            "start": [
+                -896,
+                -5408
+            ],
+            "end": [
+                -792,
+                -5233
+            ]
+        }
+    },
+    "Abandoned Manor": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:02:38.140000Z",
+        "location": {
+            "start": [
+                -896,
+                -5232
+            ],
+            "end": [
+                -802,
+                -5102
+            ]
+        }
+    },
+    "Mesquis Tower": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:03:37.662000Z",
+        "location": {
+            "start": [
+                -834,
+                -5078
+            ],
+            "end": [
+                -727,
+                -4999
+            ]
+        }
+    },
+    "Kander Mines": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:15:06.904000Z",
+        "location": {
+            "start": [
+                -785,
+                -5229
+            ],
+            "end": [
+                -725,
+                -5102
+            ]
+        }
+    },
+    "Path to Talor": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:32:16.031000Z",
+        "location": {
+            "start": [
+                -653,
+                -5231
+            ],
+            "end": [
+                -785,
+                -5401
+            ]
+        }
+    },
+    "Viscera Pits East": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:25:01.430000Z",
+        "location": {
+            "start": [
+                -659,
+                -5424
+            ],
+            "end": [
+                -766,
+                -5508
+            ]
+        }
+    },
+    "Dark Forest Village": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:21:55.579000Z",
+        "location": {
+            "start": [
+                -723,
+                -5229
+            ],
+            "end": [
+                -574,
+                -5147
+            ]
+        }
+    },
+    "Old Crossroads South": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:18:07.226000Z",
+        "location": {
+            "start": [
+                -648,
+                -5311
+            ],
+            "end": [
+                -567,
+                -5234
+            ]
+        }
+    },
+    "Old Crossroads North": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:28:15.902000Z",
+        "location": {
+            "start": [
+                -648,
+                -5314
+            ],
+            "end": [
+                -567,
+                -5400
+            ]
+        }
+    },
+    "Lexdale": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T03:15:42.748000Z",
+        "location": {
+            "start": [
+                -650,
+                -5511
+            ],
+            "end": [
+                -562,
+                -5406
+            ]
+        }
+    },
+    "Fungal Grove": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T03:08:01.254000Z",
+        "location": {
+            "start": [
+                -489,
+                -5279
+            ],
+            "end": [
+                -549,
+                -5398
+            ]
+        }
+    },
+    "Decayed Basin": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:00:48.747000Z",
+        "location": {
+            "start": [
+                -471,
+                -5405
+            ],
+            "end": [
+                -549,
+                -5512
+            ]
+        }
+    },
+    "Heart of Decay": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T19:59:42.500000Z",
+        "location": {
+            "start": [
+                -598,
+                -5580
+            ],
+            "end": [
+                -454,
+                -5518
+            ]
+        }
+    },
+    "Cinfras Entrance": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-29T21:21:16.733000Z",
+        "location": {
+            "start": [
+                -555,
+                -4996
+            ],
+            "end": [
+                -717,
+                -4868
+            ]
+        }
+    },
+    "Mushroom Hill": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:02:05.593000Z",
+        "location": {
+            "start": [
+                -288,
+                -5411
+            ],
+            "end": [
+                -392,
+                -5601
+            ]
+        }
+    },
+    "Fallen Village": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:03:05.096000Z",
+        "location": {
+            "start": [
+                -288,
+                -5409
+            ],
+            "end": [
+                -392,
+                -5294
+            ]
+        }
+    },
+    "Dark Forest Cinfras Transition": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:54:12.792000Z",
+        "location": {
+            "start": [
+                -290,
+                -5292
+            ],
+            "end": [
+                -392,
+                -5116
+            ]
+        }
+    },
+    "Guild Hall": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:40:05.011000Z",
+        "location": {
+            "start": [
+                -349,
+                -5093
+            ],
+            "end": [
+                -137,
+                -4814
+            ]
+        }
+    },
+    "Aldorei Valley South Entrance": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T18:55:52.327000Z",
+        "location": {
+            "start": [
+                -130,
+                -4641
+            ],
+            "end": [
+                -222,
+                -4509
+            ]
+        }
+    },
+    "Cinfras's Small Farm": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T02:07:46.837000Z",
+        "location": {
+            "start": [
+                -224,
+                -4793
+            ],
+            "end": [
+                -130,
+                -4643
+            ]
+        }
+    },
+    "Cinfras County Lower": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T18:41:45.717000Z",
+        "location": {
+            "start": [
+                3,
+                -4760
+            ],
+            "end": [
+                -127,
+                -4640
+            ]
+        }
+    },
+    "Cinfras County Mid-Lower": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T23:59:06.100000Z",
+        "location": {
+            "start": [
+                -127,
+                -4761
+            ],
+            "end": [
+                3,
+                -4895
+            ]
+        }
+    },
+    "Cinfras County Mid-Upper": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-26T05:13:33.135000Z",
+        "location": {
+            "start": [
+                -127,
+                -4896
+            ],
+            "end": [
+                3,
+                -5050
+            ]
+        }
+    },
+    "Cinfras County Upper": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-24T20:42:36.206000Z",
+        "location": {
+            "start": [
+                -127,
+                -5155
+            ],
+            "end": [
+                3,
+                -5051
+            ]
+        }
+    },
+    "Gylia Lake South East": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-24T20:39:26.220000Z",
+        "location": {
+            "start": [
+                30,
+                -5157
+            ],
+            "end": [
+                -127,
+                -5271
+            ]
+        }
+    },
+    "Gylia Lake South West": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T19:50:25.236000Z",
+        "location": {
+            "start": [
+                -130,
+                -5173
+            ],
+            "end": [
+                -241,
+                -5271
+            ]
+        }
+    },
+    "Gylia Lake North West": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T19:54:58.719000Z",
+        "location": {
+            "start": [
+                -218,
+                -5427
+            ],
+            "end": [
+                -130,
+                -5273
+            ]
+        }
+    },
+    "Gylia Lake North East": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T03:04:47.924000Z",
+        "location": {
+            "start": [
+                -128,
+                -5416
+            ],
+            "end": [
+                21,
+                -5273
+            ]
+        }
+    },
+    "Gert Camp": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:11:20.052000Z",
+        "location": {
+            "start": [
+                30,
+                -5447
+            ],
+            "end": [
+                -83,
+                -5605
+            ]
+        }
+    },
+    "Jitak's Farm": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T19:59:53.880000Z",
+        "location": {
+            "start": [
+                -122,
+                -5430
+            ],
+            "end": [
+                -218,
+                -5567
+            ]
+        }
+    },
+    "Aldorei Valley Lower": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:20:49.758000Z",
+        "location": {
+            "start": [
+                -714,
+                -4395
+            ],
+            "end": [
+                -559,
+                -4499
+            ]
+        }
+    },
+    "Aldorei Valley Mid": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:22:46.899000Z",
+        "location": {
+            "start": [
+                -322,
+                -4499
+            ],
+            "end": [
+                -557,
+                -4395
+            ]
+        }
+    },
+    "Aldorei Valley Upper": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:52:11.213000Z",
+        "location": {
+            "start": [
+                -557,
+                -4501
+            ],
+            "end": [
+                -322,
+                -4656
+            ]
+        }
+    },
+    "Aldorei's River": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:45:15.230000Z",
+        "location": {
+            "start": [
+                -437,
+                -4656
+            ],
+            "end": [
+                -338,
+                -4756
+            ]
+        }
+    },
+    "Aldorei's Waterfall": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:55:19.191000Z",
+        "location": {
+            "start": [
+                -237,
+                -4514
+            ],
+            "end": [
+                -321,
+                -4648
+            ]
+        }
+    },
+    "Aldorei's North Exit": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T10:58:25.791000Z",
+        "location": {
+            "start": [
+                -127,
+                -4639
+            ],
+            "end": [
+                3,
+                -4509
+            ]
+        }
+    },
+    "Aldorei's Arch": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T19:01:13.040000Z",
+        "location": {
+            "start": [
+                33,
+                -4367
+            ],
+            "end": [
+                107,
+                -4519
+            ]
+        }
+    },
+    "Path To The Arch": {
+        "guild": {
+            "uuid": "75ba3bb7-d220-42a8-abd5-abad0b6a7def",
+            "name": "Tea The Party",
+            "prefix": "TTPT"
+        },
+        "acquired": "2024-03-02T18:56:20.228000Z",
+        "location": {
+            "start": [
+                35,
+                -4521
+            ],
+            "end": [
+                107,
+                -4641
+            ]
+        }
+    },
+    "Ghostly Path": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T19:08:32.916000Z",
+        "location": {
+            "start": [
+                35,
+                -4643
+            ],
+            "end": [
+                107,
+                -4753
+            ]
+        }
+    },
+    "Burning Farm": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T19:07:40.476000Z",
+        "location": {
+            "start": [
+                107,
+                -4755
+            ],
+            "end": [
+                35,
+                -4857
+            ]
+        }
+    },
+    "Burning Airship": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:37:14.960000Z",
+        "location": {
+            "start": [
+                35,
+                -4859
+            ],
+            "end": [
+                107,
+                -4955
+            ]
+        }
+    },
+    "Cinfras Thanos Transition": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:28:05.038000Z",
+        "location": {
+            "start": [
+                98,
+                -4957
+            ],
+            "end": [
+                35,
+                -5046
+            ]
+        }
+    },
+    "Thanos": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:43:59.311000Z",
+        "location": {
+            "start": [
+                51,
+                -5189
+            ],
+            "end": [
+                194,
+                -5295
+            ]
+        }
+    },
+    "Path To Thanos": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T02:59:42.460000Z",
+        "location": {
+            "start": [
+                98,
+                -5049
+            ],
+            "end": [
+                35,
+                -5149
+            ]
+        }
+    },
+    "Path To Military Base": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:23:51.801000Z",
+        "location": {
+            "start": [
+                51,
+                -5297
+            ],
+            "end": [
+                166,
+                -5391
+            ]
+        }
+    },
+    "Military Base": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:12:30.866000Z",
+        "location": {
+            "start": [
+                104,
+                -5393
+            ],
+            "end": [
+                166,
+                -5518
+            ]
+        }
+    },
+    "Military Base Upper": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:13:41.658000Z",
+        "location": {
+            "start": [
+                168,
+                -5408
+            ],
+            "end": [
+                250,
+                -5518
+            ]
+        }
+    },
+    "Military Base Lower": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:14:53.145000Z",
+        "location": {
+            "start": [
+                244,
+                -5407
+            ],
+            "end": [
+                168,
+                -5315
+            ]
+        }
+    },
+    "Path To Ozoth's Spire Lower": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-02-23T20:27:52.806000Z",
+        "location": {
+            "start": [
+                260,
+                -5298
+            ],
+            "end": [
+                199,
+                -5169
+            ]
+        }
+    },
+    "Path To Ozoth's Spire Mid": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-29T16:17:57.400000Z",
+        "location": {
+            "start": [
+                199,
+                -5164
+            ],
+            "end": [
+                260,
+                -5042
+            ]
+        }
+    },
+    "Path To Ozoth's Spire Upper": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T15:01:36.298000Z",
+        "location": {
+            "start": [
+                194,
+                -5165
+            ],
+            "end": [
+                111,
+                -5045
+            ]
+        }
+    },
+    "Bandit Cave Lower": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-29T16:20:21.958000Z",
+        "location": {
+            "start": [
+                111,
+                -5043
+            ],
+            "end": [
+                194,
+                -4958
+            ]
+        }
+    },
+    "Bandit Cave Upper": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:17:40.622000Z",
+        "location": {
+            "start": [
+                194,
+                -4956
+            ],
+            "end": [
+                111,
+                -4872
+            ]
+        }
+    },
+    "Canyon Entrance Waterfall": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T18:26:46.565000Z",
+        "location": {
+            "start": [
+                110,
+                -4869
+            ],
+            "end": [
+                194,
+                -4741
+            ]
+        }
+    },
+    "Canyon Path North West": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T18:22:23.455000Z",
+        "location": {
+            "start": [
+                110,
+                -4736
+            ],
+            "end": [
+                194,
+                -4651
+            ]
+        }
+    },
+    "Canyon Path South East": {
+        "guild": {
+            "uuid": "d683e2b9-3ddf-4760-8d40-fab09b163f43",
+            "name": "Limited",
+            "prefix": "LMD"
+        },
+        "acquired": "2024-03-02T18:54:12.381000Z",
+        "location": {
+            "start": [
+                194,
+                -4649
+            ],
+            "end": [
+                115,
+                -4521
+            ]
+        }
+    },
+    "Canyon Waterfall North": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T19:01:24.768000Z",
+        "location": {
+            "start": [
+                115,
+                -4380
+            ],
+            "end": [
+                194,
+                -4518
+            ]
+        }
+    },
+    "Canyon Upper North West": {
+        "guild": {
+            "uuid": "d683e2b9-3ddf-4760-8d40-fab09b163f43",
+            "name": "Limited",
+            "prefix": "LMD"
+        },
+        "acquired": "2024-03-02T18:58:41.239000Z",
+        "location": {
+            "start": [
+                200,
+                -4380
+            ],
+            "end": [
+                265,
+                -4518
+            ]
+        }
+    },
+    "Canyon Lower South East": {
+        "guild": {
+            "uuid": "d683e2b9-3ddf-4760-8d40-fab09b163f43",
+            "name": "Limited",
+            "prefix": "LMD"
+        },
+        "acquired": "2024-03-02T19:06:18.519000Z",
+        "location": {
+            "start": [
+                265,
+                -4521
+            ],
+            "end": [
+                199,
+                -4649
+            ]
+        }
+    },
+    "Canyon Path South West": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:23:37.315000Z",
+        "location": {
+            "start": [
+                265,
+                -4652
+            ],
+            "end": [
+                200,
+                -4741
+            ]
+        }
+    },
+    "Canyon Path North Mid": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T19:10:10.118000Z",
+        "location": {
+            "start": [
+                200,
+                -4743
+            ],
+            "end": [
+                264,
+                -4875
+            ]
+        }
+    },
+    "Bandit Camp Exit": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T06:07:35.702000Z",
+        "location": {
+            "start": [
+                264,
+                -4877
+            ],
+            "end": [
+                203,
+                -4971
+            ]
+        }
+    },
+    "Canyon Valley South": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T19:03:26.299000Z",
+        "location": {
+            "start": [
+                263,
+                -4973
+            ],
+            "end": [
+                199,
+                -5035
+            ]
+        }
+    },
+    "Thanos Valley West": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T22:23:54.049000Z",
+        "location": {
+            "start": [
+                250,
+                -5401
+            ],
+            "end": [
+                311,
+                -5315
+            ]
+        }
+    },
+    "Thanos Exit": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:20:00.987000Z",
+        "location": {
+            "start": [
+                338,
+                -5310
+            ],
+            "end": [
+                262,
+                -5168
+            ]
+        }
+    },
+    "Canyon Walk Way": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:47:49.118000Z",
+        "location": {
+            "start": [
+                271,
+                -5165
+            ],
+            "end": [
+                338,
+                -5041
+            ]
+        }
+    },
+    "Canyon Mountain East": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:22:01.958000Z",
+        "location": {
+            "start": [
+                271,
+                -5039
+            ],
+            "end": [
+                337,
+                -4948
+            ]
+        }
+    },
+    "Canyon Mountain South": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T19:17:04.480000Z",
+        "location": {
+            "start": [
+                271,
+                -4946
+            ],
+            "end": [
+                337,
+                -4857
+            ]
+        }
+    },
+    "Canyon Waterfall Mid North": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-01T19:13:19.096000Z",
+        "location": {
+            "start": [
+                337,
+                -4855
+            ],
+            "end": [
+                271,
+                -4741
+            ]
+        }
+    },
+    "Canyon Fortress": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T14:57:07.708000Z",
+        "location": {
+            "start": [
+                271,
+                -4739
+            ],
+            "end": [
+                338,
+                -4630
+            ]
+        }
+    },
+    "Canyon Survivor": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:05:09.660000Z",
+        "location": {
+            "start": [
+                338,
+                -4628
+            ],
+            "end": [
+                269,
+                -4522
+            ]
+        }
+    },
+    "Canyon Dropoff": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:35:24.341000Z",
+        "location": {
+            "start": [
+                334,
+                -4518
+            ],
+            "end": [
+                269,
+                -4395
+            ]
+        }
+    },
+    "Thanos Exit Upper": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:38:01.123000Z",
+        "location": {
+            "start": [
+                347,
+                -5313
+            ],
+            "end": [
+                438,
+                -5183
+            ]
+        }
+    },
+    "Bandits Toll": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T05:34:43.557000Z",
+        "location": {
+            "start": [
+                439,
+                -5038
+            ],
+            "end": [
+                345,
+                -5181
+            ]
+        }
+    },
+    "Wizard Tower North": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:46:58.094000Z",
+        "location": {
+            "start": [
+                438,
+                -5037
+            ],
+            "end": [
+                345,
+                -4966
+            ]
+        }
+    },
+    "Mountain Path": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:10:49.257000Z",
+        "location": {
+            "start": [
+                334,
+                -4393
+            ],
+            "end": [
+                276,
+                -4314
+            ]
+        }
+    },
+    "Mountain Edge": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:33:37.588000Z",
+        "location": {
+            "start": [
+                437,
+                -4314
+            ],
+            "end": [
+                336,
+                -4392
+            ]
+        }
+    },
+    "Cliff Side of the Lost": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T14:40:58.675000Z",
+        "location": {
+            "start": [
+                340,
+                -4395
+            ],
+            "end": [
+                437,
+                -4508
+            ]
+        }
+    },
+    "Valley of the Lost": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T14:56:40.371000Z",
+        "location": {
+            "start": [
+                435,
+                -4511
+            ],
+            "end": [
+                341,
+                -4670
+            ]
+        }
+    },
+    "Temple of the Lost East": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T14:40:23.950000Z",
+        "location": {
+            "start": [
+                440,
+                -4672
+            ],
+            "end": [
+                341,
+                -4838
+            ]
+        }
+    },
+    "Krolton's Cave": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:56:21.224000Z",
+        "location": {
+            "start": [
+                341,
+                -4841
+            ],
+            "end": [
+                438,
+                -4962
+            ]
+        }
+    },
+    "Hive South": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:13:08.010000Z",
+        "location": {
+            "start": [
+                440,
+                -5315
+            ],
+            "end": [
+                560,
+                -5449
+            ]
+        }
+    },
+    "Canyon High Path": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:11:53.742000Z",
+        "location": {
+            "start": [
+                562,
+                -5313
+            ],
+            "end": [
+                440,
+                -5191
+            ]
+        }
+    },
+    "Cliffside Waterfall": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:08:34.416000Z",
+        "location": {
+            "start": [
+                440,
+                -5183
+            ],
+            "end": [
+                563,
+                -5080
+            ]
+        }
+    },
+    "Cliffside Valley": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:44:03.864000Z",
+        "location": {
+            "start": [
+                563,
+                -5079
+            ],
+            "end": [
+                440,
+                -4975
+            ]
+        }
+    },
+    "Air Temple Lower": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:21:05.785000Z",
+        "location": {
+            "start": [
+                445,
+                -4972
+            ],
+            "end": [
+                563,
+                -4835
+            ]
+        }
+    },
+    "Air Temple Upper": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-02-28T13:15:59.976000Z",
+        "location": {
+            "start": [
+                570,
+                -4833
+            ],
+            "end": [
+                445,
+                -4692
+            ]
+        }
+    },
+    "Cliffside Lake": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:04:13.767000Z",
+        "location": {
+            "start": [
+                445,
+                -4689
+            ],
+            "end": [
+                570,
+                -4568
+            ]
+        }
+    },
+    "Canyon Of The Lost": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:03:24.446000Z",
+        "location": {
+            "start": [
+                443,
+                -4566
+            ],
+            "end": [
+                570,
+                -4392
+            ]
+        }
+    },
+    "Kandon-Beda": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:06:05.534000Z",
+        "location": {
+            "start": [
+                607,
+                -4579
+            ],
+            "end": [
+                760,
+                -4372
+            ]
+        }
+    },
+    "Kandon Farm": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:45:53.690000Z",
+        "location": {
+            "start": [
+                710,
+                -4587
+            ],
+            "end": [
+                614,
+                -4682
+            ]
+        }
+    },
+    "Cliffside Passage": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:00:04.944000Z",
+        "location": {
+            "start": [
+                699,
+                -4817
+            ],
+            "end": [
+                572,
+                -4691
+            ]
+        }
+    },
+    "Cliffside Passage North": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:57:50.134000Z",
+        "location": {
+            "start": [
+                572,
+                -4818
+            ],
+            "end": [
+                700,
+                -4933
+            ]
+        }
+    },
+    "Entrance to Thesead North": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T14:55:24.993000Z",
+        "location": {
+            "start": [
+                572,
+                -4935
+            ],
+            "end": [
+                700,
+                -5028
+            ]
+        }
+    },
+    "Entrance to Thesead South": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:08:04.492000Z",
+        "location": {
+            "start": [
+                700,
+                -5030
+            ],
+            "end": [
+                574,
+                -5181
+            ]
+        }
+    },
+    "Chained House": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:19:53.439000Z",
+        "location": {
+            "start": [
+                574,
+                -5375
+            ],
+            "end": [
+                699,
+                -5242
+            ]
+        }
+    },
+    "Cherry Blossom Forest": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:01:16.731000Z",
+        "location": {
+            "start": [
+                699,
+                -5378
+            ],
+            "end": [
+                575,
+                -5551
+            ]
+        }
+    },
+    "Ranol's Farm": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:12:18.951000Z",
+        "location": {
+            "start": [
+                810,
+                -5551
+            ],
+            "end": [
+                701,
+                -5377
+            ]
+        }
+    },
+    "Thesead Suburbs": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:15:08.114000Z",
+        "location": {
+            "start": [
+                703,
+                -5374
+            ],
+            "end": [
+                810,
+                -5216
+            ]
+        }
+    },
+    "Thesead": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:07:22.349000Z",
+        "location": {
+            "start": [
+                747,
+                -5104
+            ],
+            "end": [
+                872,
+                -4964
+            ]
+        }
+    },
+    "Entrance to Rodoroc": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:17:17.891000Z",
+        "location": {
+            "start": [
+                854,
+                -5257
+            ],
+            "end": [
+                1113,
+                -5367
+            ]
+        }
+    },
+    "Eltom": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:15:20.787000Z",
+        "location": {
+            "start": [
+                1029,
+                -5581
+            ],
+            "end": [
+                828,
+                -5376
+            ]
+        }
+    },
+    "Molten Heights Portal": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:32:20.988000Z",
+        "location": {
+            "start": [
+                1535,
+                -5067
+            ],
+            "end": [
+                1387,
+                -5366
+            ]
+        }
+    },
+    "Lava Lake": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:35:47.998000Z",
+        "location": {
+            "start": [
+                1531,
+                -5553
+            ],
+            "end": [
+                1387,
+                -5369
+            ]
+        }
+    },
+    "Lava Lake Bridge": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:31:42.430000Z",
+        "location": {
+            "start": [
+                1230,
+                -5240
+            ],
+            "end": [
+                1379,
+                -5366
+            ]
+        }
+    },
+    "Crater Descent": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:26:30.350000Z",
+        "location": {
+            "start": [
+                1383,
+                -5238
+            ],
+            "end": [
+                1230,
+                -5067
+            ]
+        }
+    },
+    "Active Volcano": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:37:47.427000Z",
+        "location": {
+            "start": [
+                1233,
+                -5553
+            ],
+            "end": [
+                1379,
+                -5369
+            ]
+        }
+    },
+    "Volcanic Slope": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:44:00.967000Z",
+        "location": {
+            "start": [
+                1531,
+                -5637
+            ],
+            "end": [
+                1221,
+                -5555
+            ]
+        }
+    },
+    "Ahmsord": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:15:15.494000Z",
+        "location": {
+            "start": [
+                1163,
+                -4462
+            ],
+            "end": [
+                942,
+                -4604
+            ]
+        }
+    },
+    "Temple Island": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:29:19.308000Z",
+        "location": {
+            "start": [
+                991,
+                -4643
+            ],
+            "end": [
+                1124,
+                -4750
+            ]
+        }
+    },
+    "Snail Island": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:40:25.253000Z",
+        "location": {
+            "start": [
+                949,
+                -4885
+            ],
+            "end": [
+                1057,
+                -4804
+            ]
+        }
+    },
+    "Dernel Jungle Lower": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:31:03.997000Z",
+        "location": {
+            "start": [
+                -737,
+                -317
+            ],
+            "end": [
+                -502,
+                -530
+            ]
+        }
+    },
+    "Dernel Jungle Mid": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:31:38.273000Z",
+        "location": {
+            "start": [
+                -744,
+                -528
+            ],
+            "end": [
+                -965,
+                -264
+            ]
+        }
+    },
+    "Dernel Jungle Upper": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:33:10.599000Z",
+        "location": {
+            "start": [
+                -970,
+                -795
+            ],
+            "end": [
+                -900,
+                -547
+            ]
+        }
+    },
+    "Corkus City": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:33:54.259000Z",
+        "location": {
+            "start": [
+                -1557,
+                -2835
+            ],
+            "end": [
+                -1680,
+                -3010
+            ]
+        }
+    },
+    "Corkus Castle": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:12:59.820000Z",
+        "location": {
+            "start": [
+                -1555,
+                -2968
+            ],
+            "end": [
+                -1452,
+                -2835
+            ]
+        }
+    },
+    "Corkus City South": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T13:54:06.333000Z",
+        "location": {
+            "start": [
+                -1559,
+                -2662
+            ],
+            "end": [
+                -1679,
+                -2833
+            ]
+        }
+    },
+    "Fallen Factory": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T15:39:37.620000Z",
+        "location": {
+            "start": [
+                -1579,
+                -2662
+            ],
+            "end": [
+                -1681,
+                -2518
+            ]
+        }
+    },
+    "Road To Mine": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T16:25:24.955000Z",
+        "location": {
+            "start": [
+                -1467,
+                -2834
+            ],
+            "end": [
+                -1557,
+                -2691
+            ]
+        }
+    },
+    "Corkus City Mine": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T16:31:44.087000Z",
+        "location": {
+            "start": [
+                -1394,
+                -2750
+            ],
+            "end": [
+                -1466,
+                -2831
+            ]
+        }
+    },
+    "Legendary Island": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T13:03:40.936000Z",
+        "location": {
+            "start": [
+                -1212,
+                -2576
+            ],
+            "end": [
+                -1001,
+                -2342
+            ]
+        }
+    },
+    "Factory Entrance": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T13:43:31.886000Z",
+        "location": {
+            "start": [
+                -1683,
+                -2571
+            ],
+            "end": [
+                -1798,
+                -2730
+            ]
+        }
+    },
+    "Corkus Forest South": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T13:57:05.260000Z",
+        "location": {
+            "start": [
+                -1681,
+                -2732
+            ],
+            "end": [
+                -1883,
+                -2861
+            ]
+        }
+    },
+    "Corkus Forest North": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:11:07.846000Z",
+        "location": {
+            "start": [
+                -1888,
+                -2862
+            ],
+            "end": [
+                -1682,
+                -2995
+            ]
+        }
+    },
+    "Corkus Mountain": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:23:38.754000Z",
+        "location": {
+            "start": [
+                -1888,
+                -2997
+            ],
+            "end": [
+                -1683,
+                -3175
+            ]
+        }
+    },
+    "Avos Workshop": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:53:38.943000Z",
+        "location": {
+            "start": [
+                -1681,
+                -3178
+            ],
+            "end": [
+                -1888,
+                -3375
+            ]
+        }
+    },
+    "Corkus Docks": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:31:05.109000Z",
+        "location": {
+            "start": [
+                -1891,
+                -2997
+            ],
+            "end": [
+                -2022,
+                -3274
+            ]
+        }
+    },
+    "Corkus Countryside": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T14:03:00.850000Z",
+        "location": {
+            "start": [
+                -1503,
+                -3191
+            ],
+            "end": [
+                -1680,
+                -3012
+            ]
+        }
+    },
+    "Corkus Sea Port": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T15:34:01.749000Z",
+        "location": {
+            "start": [
+                -1680,
+                -2512
+            ],
+            "end": [
+                -1437,
+                -2307
+            ]
+        }
+    },
+    "Ruined Houses": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T15:22:02.115000Z",
+        "location": {
+            "start": [
+                -1684,
+                -2569
+            ],
+            "end": [
+                -1793,
+                -2453
+            ]
+        }
+    },
+    "Corkus Statue": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:32:39.782000Z",
+        "location": {
+            "start": [
+                -1322,
+                -2917
+            ],
+            "end": [
+                -1393,
+                -2836
+            ]
+        }
+    },
+    "Avos Temple": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:44:00.400000Z",
+        "location": {
+            "start": [
+                -1526,
+                -3225
+            ],
+            "end": [
+                -1378,
+                -3426
+            ]
+        }
+    },
+    "Bloody Beach": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T13:19:51.660000Z",
+        "location": {
+            "start": [
+                -1376,
+                -3225
+            ],
+            "end": [
+                -1097,
+                -3426
+            ]
+        }
+    },
+    "Corkus Outskirts": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:22:30.530000Z",
+        "location": {
+            "start": [
+                -1502,
+                -2976
+            ],
+            "end": [
+                -1230,
+                -3224
+            ]
+        }
+    },
+    "Frozen Fort": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:41:47.129000Z",
+        "location": {
+            "start": [
+                1501,
+                -4513
+            ],
+            "end": [
+                1586,
+                -4789
+            ]
+        }
+    },
+    "Sky Castle": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:46:00.219000Z",
+        "location": {
+            "start": [
+                954,
+                -4425
+            ],
+            "end": [
+                854,
+                -4340
+            ]
+        }
+    },
+    "Path to Ahmsord Lower": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:18:40.006000Z",
+        "location": {
+            "start": [
+                779,
+                -4480
+            ],
+            "end": [
+                885,
+                -4570
+            ]
+        }
+    },
+    "Path to Ahmsord Upper": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:13:26.525000Z",
+        "location": {
+            "start": [
+                885,
+                -4571
+            ],
+            "end": [
+                779,
+                -4639
+            ]
+        }
+    },
+    "Kandon Ridge": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:43:36.569000Z",
+        "location": {
+            "start": [
+                885,
+                -4640
+            ],
+            "end": [
+                719,
+                -4777
+            ]
+        }
+    },
+    "Old Coal Mine": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:52:35.078000Z",
+        "location": {
+            "start": [
+                719,
+                -4778
+            ],
+            "end": [
+                885,
+                -4900
+            ]
+        }
+    },
+    "Dragonling Nests": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:42:10.471000Z",
+        "location": {
+            "start": [
+                925,
+                -4916
+            ],
+            "end": [
+                1101,
+                -5016
+            ]
+        }
+    },
+    "Astraulus' Tower": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:53:10.650000Z",
+        "location": {
+            "start": [
+                1102,
+                -5016
+            ],
+            "end": [
+                1250,
+                -4916
+            ]
+        }
+    },
+    "Molten Reach": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:48:23.156000Z",
+        "location": {
+            "start": [
+                1251,
+                -4894
+            ],
+            "end": [
+                1500,
+                -4964
+            ]
+        }
+    },
+    "Ahmsord Outskirts": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:28:07.697000Z",
+        "location": {
+            "start": [
+                1336,
+                -4893
+            ],
+            "end": [
+                1179,
+                -4730
+            ]
+        }
+    },
+    "Swamp Island": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:43:33.147000Z",
+        "location": {
+            "start": [
+                1178,
+                -4754
+            ],
+            "end": [
+                1101,
+                -4915
+            ]
+        }
+    },
+    "Angel Refuge": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T12:25:39.800000Z",
+        "location": {
+            "start": [
+                1354,
+                -4727
+            ],
+            "end": [
+                1484,
+                -4877
+            ]
+        }
+    },
+    "Wybel Island": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:30:10.918000Z",
+        "location": {
+            "start": [
+                1355,
+                -4700
+            ],
+            "end": [
+                1253,
+                -4595
+            ]
+        }
+    },
+    "Central Islands": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:35:46.447000Z",
+        "location": {
+            "start": [
+                1250,
+                -4718
+            ],
+            "end": [
+                1183,
+                -4535
+            ]
+        }
+    },
+    "Sky Island Ascent": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:32:30.570000Z",
+        "location": {
+            "start": [
+                1180,
+                -4524
+            ],
+            "end": [
+                1379,
+                -4355
+            ]
+        }
+    },
+    "Sky Falls": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:16:31.167000Z",
+        "location": {
+            "start": [
+                1380,
+                -4458
+            ],
+            "end": [
+                1466,
+                -4653
+            ]
+        }
+    },
+    "Raider's Base Upper": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:40:22.087000Z",
+        "location": {
+            "start": [
+                1380,
+                -4457
+            ],
+            "end": [
+                1551,
+                -4316
+            ]
+        }
+    },
+    "Raider's Base Lower": {
+        "guild": {
+            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
+            "name": "Aequitas",
+            "prefix": "Aeq"
+        },
+        "acquired": "2024-03-02T09:48:06.636000Z",
+        "location": {
+            "start": [
+                1558,
+                -4316
+            ],
+            "end": [
+                1305,
+                -4253
+            ]
+        }
+    },
+    "Jofash Tunnel": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:39:16.755000Z",
+        "location": {
+            "start": [
+                1304,
+                -4354
+            ],
+            "end": [
+                1126,
+                -4176
+            ]
+        }
+    },
+    "Jofash Docks": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:35:07.349000Z",
+        "location": {
+            "start": [
+                1178,
+                -4175
+            ],
+            "end": [
+                1445,
+                -4012
+            ]
+        }
+    },
+    "Santa's Hideout": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:23:29.271000Z",
+        "location": {
+            "start": [
+                1057,
+                -3077
+            ],
+            "end": [
+                1221,
+                -3209
+            ]
+        }
+    },
+    "Lusuco": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T08:32:34.498000Z",
+        "location": {
+            "start": [
+                -267,
+                -348
+            ],
+            "end": [
+                -91,
+                -250
+            ]
+        }
+    },
+    "Icy Descent": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T08:28:43.311000Z",
+        "location": {
+            "start": [
+                -311,
+                -358
+            ],
+            "end": [
+                -104,
+                -496
+            ]
+        }
+    },
+    "Phinas Farm": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T16:02:31.148000Z",
+        "location": {
+            "start": [
+                -1633,
+                -2162
+            ],
+            "end": [
+                -1842,
+                -2058
+            ]
+        }
+    },
+    "Aldorei Lowlands": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:53:04.106000Z",
+        "location": {
+            "start": [
+                -337,
+                -4756
+            ],
+            "end": [
+                -225,
+                -4657
+            ]
+        }
+    },
+    "Cinfras Outskirts": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:50:29.598000Z",
+        "location": {
+            "start": [
+                -392,
+                -5116
+            ],
+            "end": [
+                -534,
+                -5278
+            ]
+        }
+    },
+    "Rodoroc": {
+        "guild": {
+            "uuid": "266c9cf8-df07-41b0-b927-ce3402b88abe",
+            "name": "KongoBoys",
+            "prefix": "DUDE"
+        },
+        "acquired": "2024-03-02T15:34:54.366000Z",
+        "location": {
+            "start": [
+                1200,
+                -5067
+            ],
+            "end": [
+                965,
+                -5238
+            ]
+        }
+    },
+    "Llevigar": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:26:54.424000Z",
+        "location": {
+            "start": [
+                -1800,
+                -4643
+            ],
+            "end": [
+                -2171,
+                -4405
+            ]
+        }
+    },
+    "Regular Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:42:53.373000Z",
+        "location": {
+            "start": [
+                1202,
+                -3764
+            ],
+            "end": [
+                1458,
+                -3597
+            ]
+        }
+    },
+    "Herb Cave": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T18:47:17.902000Z",
+        "location": {
+            "start": [
+                -448,
+                -813
+            ],
+            "end": [
+                -557,
+                -876
+            ]
+        }
+    },
+    "Twisted Ridge": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-01T20:35:10.568000Z",
+        "location": {
+            "start": [
+                -1020,
+                -5603
+            ],
+            "end": [
+                -910,
+                -5343
+            ]
+        }
+    },
+    "Icy Island": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:37:34.855000Z",
+        "location": {
+            "start": [
+                1001,
+                -3274
+            ],
+            "end": [
+                1172,
+                -3430
+            ]
+        }
+    },
+    "Royal Gate": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T13:14:19.333000Z",
+        "location": {
+            "start": [
+                -1822,
+                -1995
+            ],
+            "end": [
+                -2015,
+                -1725
+            ]
+        }
+    },
+    "Fleris Trail": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:30:43.228000Z",
+        "location": {
+            "start": [
+                -1390,
+                -4594
+            ],
+            "end": [
+                -1254,
+                -4351
+            ]
+        }
+    },
+    "Orc Battlegrounds": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-02-29T23:06:15.265000Z",
+        "location": {
+            "start": [
+                -1460,
+                -5024
+            ],
+            "end": [
+                -1282,
+                -4870
+            ]
+        }
+    },
+    "Abandoned Pass": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-02-29T00:15:42.932000Z",
+        "location": {
+            "start": [
+                881,
+                -1225
+            ],
+            "end": [
+                1019,
+                -1380
+            ]
+        }
+    },
+    "Lost Atoll": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:25:40.474000Z",
+        "location": {
+            "start": [
+                -472,
+                -3590
+            ],
+            "end": [
+                -688,
+                -3385
+            ]
+        }
+    },
+    "Southern Outpost": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T12:59:22.769000Z",
+        "location": {
+            "start": [
+                -1258,
+                -2204
+            ],
+            "end": [
+                -1444,
+                -2306
+            ]
+        }
+    },
+    "Lighthouse Plateau": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T15:54:31.807000Z",
+        "location": {
+            "start": [
+                -1633,
+                -2162
+            ],
+            "end": [
+                -1445,
+                -2306
+            ]
+        }
+    },
+    "Corkus Sea Cove": {
+        "guild": {
+            "uuid": "519b8d0d-b487-4b60-b58d-f3a97ac2bfa5",
+            "name": "Calvish",
+            "prefix": "bean"
+        },
+        "acquired": "2024-03-02T16:46:24.405000Z",
+        "location": {
+            "start": [
+                -1578,
+                -2662
+            ],
+            "end": [
+                -1330,
+                -2513
+            ]
+        }
+    },
+    "The Silent Road": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T13:01:53.267000Z",
+        "location": {
+            "start": [
+                540,
+                -1088
+            ],
+            "end": [
+                704,
+                -961
+            ]
+        }
+    },
+    "The Broken Road": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T12:58:28.351000Z",
+        "location": {
+            "start": [
+                686,
+                -923
+            ],
+            "end": [
+                493,
+                -783
+            ]
+        }
+    },
+    "Worm Tunnel": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T12:48:45.249000Z",
+        "location": {
+            "start": [
+                641,
+                -767
+            ],
+            "end": [
+                543,
+                -640
+            ]
+        }
+    },
+    "Grey Ruins": {
+        "guild": {
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
+        },
+        "acquired": "2024-03-02T12:56:43.360000Z",
+        "location": {
+            "start": [
+                683,
+                -619
+            ],
+            "end": [
+                462,
+                -515
+            ]
+        }
+    },
+    "Forgotten Town": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-03-02T04:13:45.867000Z",
+        "location": {
+            "start": [
+                480,
+                -493
+            ],
+            "end": [
+                734,
+                -355
+            ]
+        }
+    },
+    "Forest of Eyes": {
+        "guild": {
+            "uuid": "2a9fc9e1-d8d6-4f6d-9a0e-7c96c628c9e6",
+            "name": "Anime Lovers",
+            "prefix": "Zamn"
+        },
+        "acquired": "2024-03-02T10:46:27.771000Z",
+        "location": {
+            "start": [
+                813,
+                -333
+            ],
+            "end": [
+                1043,
+                -504
+            ]
+        }
+    },
+    "Sinister Forest": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T21:46:54.942000Z",
+        "location": {
+            "start": [
+                815,
+                -506
+            ],
+            "end": [
+                1059,
+                -629
+            ]
+        }
+    },
+    "Lutho": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T06:55:26.871000Z",
+        "location": {
+            "start": [
+                936,
+                -654
+            ],
+            "end": [
+                1027,
+                -754
+            ]
+        }
+    },
+    "Paths of Sludge": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T06:52:37.337000Z",
+        "location": {
+            "start": [
+                1040,
+                -767
+            ],
+            "end": [
+                892,
+                -870
+            ]
+        }
+    },
+    "Toxic Drip": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T06:59:48.758000Z",
+        "location": {
+            "start": [
+                893,
+                -876
+            ],
+            "end": [
+                1086,
+                -992
+            ]
+        }
+    },
+    "Toxic Caves": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T07:03:07.854000Z",
+        "location": {
+            "start": [
+                1017,
+                -1146
+            ],
+            "end": [
+                844,
+                -993
+            ]
+        }
+    },
+    "Gateway to Nothing": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T07:01:53.379000Z",
+        "location": {
+            "start": [
+                1120,
+                -882
+            ],
+            "end": [
+                1244,
+                -1058
+            ]
+        }
+    },
+    "Void Valley": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T07:20:42.735000Z",
+        "location": {
+            "start": [
+                1082,
+                -1161
+            ],
+            "end": [
+                1250,
+                -1078
+            ]
+        }
+    },
+    "Final Step": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T07:07:26.710000Z",
+        "location": {
+            "start": [
+                1388,
+                -869
+            ],
+            "end": [
+                1254,
+                -932
+            ]
+        }
+    },
+    "Bizarre Passage": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T07:10:34.418000Z",
+        "location": {
+            "start": [
+                1187,
+                -680
+            ],
+            "end": [
+                1388,
+                -530
+            ]
+        }
+    },
+    "The Gate": {
+        "guild": {
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
+        },
+        "acquired": "2024-02-28T07:18:37.042000Z",
+        "location": {
+            "start": [
+                1350,
+                -520
+            ],
+            "end": [
+                1265,
+                -410
+            ]
+        }
+    },
+    "Heavenly Ingress": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T19:05:42.517000Z",
+        "location": {
+            "start": [
+                -814,
+                -6015
+            ],
+            "end": [
+                -894,
+                -5928
+            ]
+        }
+    },
+    "Luminous Plateau": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:45:22.375000Z",
+        "location": {
+            "start": [
+                -894,
+                -5957
+            ],
+            "end": [
+                -962,
+                -6066
+            ]
+        }
+    },
+    "Primal Fen": {
+        "guild": {
+            "uuid": "b250f587-ab5e-48cd-bf90-71e65d6dc9e7",
+            "name": "Idiot Co",
+            "prefix": "ICo"
+        },
+        "acquired": "2024-03-02T19:08:18.533000Z",
+        "location": {
+            "start": [
+                -894,
+                -6244
+            ],
+            "end": [
+                -1026,
+                -6066
+            ]
+        }
+    },
+    "Azure Frontier": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:50:34.852000Z",
+        "location": {
+            "start": [
+                -894,
+                -6164
+            ],
+            "end": [
+                -684,
+                -6313
+            ]
+        }
+    },
+    "Otherwordly Monolith": {
+        "guild": {
+            "uuid": "705c25a5-7fb3-4977-be26-099e43798a4c",
+            "name": "Chiefs Of Corkus",
+            "prefix": "HOC"
+        },
+        "acquired": "2024-03-02T18:46:53.896000Z",
+        "location": {
+            "start": [
+                -775,
+                -6164
+            ],
+            "end": [
+                -662,
+                -6003
+            ]
+        }
+    },
+    "Path to Light": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:47:44.641000Z",
+        "location": {
+            "start": [
+                -775,
+                -6164
+            ],
+            "end": [
+                -827,
+                -6010
+            ]
+        }
+    },
+    "Nexus of Light": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T18:59:59.974000Z",
+        "location": {
+            "start": [
+                -645,
+                -6384
+            ],
+            "end": [
+                -855,
+                -6561
+            ]
+        }
+    },
+    "Light Peninsula": {
+        "guild": {
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
+        },
+        "acquired": "2024-02-23T19:36:23.081000Z",
+        "location": {
+            "start": [
+                -951,
+                -4421
+            ],
+            "end": [
+                -802,
+                -4108
+            ]
+        }
+    },
+    "Field of Life": {
+        "guild": {
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
+        },
+        "acquired": "2024-03-02T19:01:46.720000Z",
+        "location": {
+            "start": [
+                -894,
+                -6010
+            ],
+            "end": [
+                -827,
+                -6164
+            ]
+        }
+    }
+}
