@@ -1,6 +1,6 @@
 import datetime
 import json
-import urllib.request
+import requests
 
 from PIL import Image, ImageOps
 from dateutil import parser
@@ -22,10 +22,9 @@ class Guild:
         else:
             url = f'https://api.wynncraft.com/v3/guild/{urlify(guild)}'
 
-        f = urllib.request.urlopen(url)
-        data = f.read().decode('utf-8')
-
-        guild_data = json.loads(data)
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        guild_data = resp.json()
 
         self.name = guild_data['name']
         self.prefix = guild_data['prefix']

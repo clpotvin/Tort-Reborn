@@ -2,7 +2,6 @@ import colorsys
 import datetime
 import math
 import os
-import urllib.request
 import json
 import re
 from io import BytesIO
@@ -33,79 +32,78 @@ def date_diff(time=False):
 
 
 def getPlayerData(name):
-    if name.lower() == 'woodcreature': name = 'aa7402cc-bf1c-4aed-838b-fd8897d38836'
-    url = 'https://api.wynncraft.com/v2/player/' + name + '/stats'
+    if name.lower() == 'woodcreature':
+        name = 'aa7402cc-bf1c-4aed-838b-fd8897d38836'
+    url = f'https://api.wynncraft.com/v2/player/{name}/stats'
     try:
-        f = urllib.request.urlopen(url)
-    except:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
         return False
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    return jsondata
 
 
 def getPlayerDatav3(uuid):
     url = f'https://api.wynncraft.com/v3/player/{uuid}?fullResult'
     try:
-        f = urllib.request.urlopen(url)
-    except:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
         return False
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    return jsondata
 
 
 def getGuildFromShort(short):
-    url = 'https://api.wynncraft.com/public_api.php?action=statsLeaderboard&type=guild&timeframe=alltime'
+    url = ('https://api.wynncraft.com/public_api.php'
+           '?action=statsLeaderboard&type=guild&timeframe=alltime')
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return False
 
-    f = urllib.request.urlopen(url)
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    for guild in jsondata['data']:
+    for guild in data.get('data', []):
         if guild['prefix'].lower() == short.lower():
             return guild['name']
 
+    # fallback to local cache
     with open('guild_prefix.json', 'r') as f:
         guilds = json.load(f)
-        f.close()
+    return guilds.get(short.lower(), False)
 
-    if short.lower() in guilds:
-        return guilds[short.lower()]
-
-    return False
 
 
 def search(item, type):
     try_prefix = getGuildFromShort(item)
-
-    if not try_prefix:
-        searchurl = 'https://api.wynncraft.com/public_api.php?action=statsSearch&search=' + urlify(item)
-        f = urllib.request.urlopen(searchurl)
-
-        data = f.read().decode('utf-8')
-
-        jsondata = json.loads(data)
-
-        for datum in jsondata[type]:
-            if item.lower() == datum.lower():
-                return [True, datum]
-    else:
+    if try_prefix:
         return [True, try_prefix]
+
+    searchurl = (
+      'https://api.wynncraft.com/public_api.php'
+      f'?action=statsSearch&search={urlify(item)}'
+    )
+    try:
+        resp = requests.get(searchurl, timeout=10)
+        resp.raise_for_status()
+        jsondata = resp.json()
+    except requests.RequestException:
+        return [False]
+
+    for datum in jsondata.get(type, []):
+        if item.lower() == datum.lower():
+            return [True, datum]
     return [False]
 
 
 def getData(guild):
     url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
-    f = urllib.request.urlopen(url)
-    data = f.read().decode('utf-8')
-    jsondata = json.loads(data)
-    return jsondata
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
+        return False
 
 
 def urlify(in_string):
@@ -173,14 +171,16 @@ def calcPercentage(p, m):
 
 
 def getGuildMembers(guild):
-    url = 'https://api.wynncraft.com/public_api.php?action=guildStats&command=' + urlify(guild)
-
-    f = urllib.request.urlopen(url)
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    return jsondata['members']
+    url = (
+      'https://api.wynncraft.com/public_api.php'
+      f'?action=guildStats&command={urlify(guild)}'
+    )
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json().get('members', [])
+    except requests.RequestException:
+        return []
 
 
 def savePlayers(data):
@@ -316,9 +316,12 @@ def generate_rank_badge(text, colour, scale=4):
 
 def generate_banner(guild, scale, style=''):
     url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
-
-    f = urllib.request.urlopen(url)
-    data = json.loads(f.read().decode('utf-8'))
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return Image.open(f'images/banner{style}/base.png')
 
     if data['banner']:
         banner = data['banner']

@@ -1,5 +1,5 @@
 import datetime
-import urllib.request
+import requests
 import json
 import time
 
@@ -9,17 +9,15 @@ from Helpers.variables import test
 
 
 def getTerritoryData():
+    url = 'https://api.wynncraft.com/v3/guild/list/territory'
     try:
-        url = 'https://api.wynncraft.com/v3/guild/list/territory'
-        f = urllib.request.urlopen(url)
-    except:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
         return False
-
-    data = f.read().decode('utf-8')
-
-    json_data = json.loads(data)
-
-    return json_data
+    except ValueError:
+        return False
 
 
 def saveTerritoryData(data):

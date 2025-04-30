@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 import random
 import json
-import urllib.request
+import requests
 import re
 
 
@@ -16,8 +16,9 @@ class Fish(commands.Cog):
         await message.defer()
         url = 'https://www.fishwatch.gov/api/species'
 
-        f = urllib.request.urlopen(url)
-        data = f.read().decode('utf-8')
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
 
         fish = json.loads(data)
         randfish = random.randint(0, len(fish))

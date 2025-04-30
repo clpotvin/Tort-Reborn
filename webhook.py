@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import urllib.request
 from io import BytesIO
 
 import flask
@@ -168,8 +167,9 @@ def guild_members(guild):
     members = []
     url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
 
-    f = urllib.request.urlopen(url)
-    data = json.loads(f.read().decode('utf-8'))
+    resp = requests.get(url, timeout=10)
+    resp.raise_for_status()
+    data = resp.json()
 
     for rank in data['members']:
         if rank != 'total':

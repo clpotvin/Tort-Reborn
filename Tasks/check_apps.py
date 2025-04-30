@@ -18,7 +18,7 @@ class CheckApps(commands.Cog):
         db = DB()
         db.connect()
 
-        db.cursor.execute('SELECT * FROM new_app WHERE status = \':green_circle: Opened\' AND reminder = 0 AND posted = 1')
+        db.cursor.execute('SELECT * FROM new_app WHERE status = \':green_circle: Opened\' AND reminder = FALSE AND posted = TRUE')
         rows = db.cursor.fetchall()
 
         if len(rows) != 0:

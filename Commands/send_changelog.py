@@ -3,7 +3,6 @@ from discord.ext import commands
 from discord.commands import slash_command
 import random
 import json
-import urllib.request
 import re
 
 from Helpers.variables import changelog_channel

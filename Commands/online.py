@@ -1,5 +1,4 @@
 import time
-import urllib.request
 import json
 from io import BytesIO
 

@@ -1,6 +1,5 @@
 import json
 import time
-import urllib.request
 from datetime import datetime
 
 import schedule
