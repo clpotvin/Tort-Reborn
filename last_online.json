@@ -1,1 +1,1 @@
-{"type": "<class 'discord.errors.ExtensionFailed'>", "value": "Extension 'Commands.build' raised an error: ModuleNotFoundError: No module named 'google'", "tb": "<traceback object at 0x0000019DF653A7C0>", "timestamp": 1745447996}
+{"type": "Disconnected", "value": "Bot disconnected from Discord", "tb": "Bot disconnected from Discord", "timestamp": 1746061848}

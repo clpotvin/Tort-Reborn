@@ -12,9 +12,9 @@ class RankCheck(commands.Cog):
         self.client = client
 
     if test:
-        guilds = [1053447772302479421]
+        guilds = [1364751619018850405]
     else:
-        guilds = [784795827808763904, 1053447772302479421]
+        guilds = [784795827808763904, 1364751619018850405]
 
     @slash_command(description='Check for game/discord rank mismatch', guild_ids=guilds)
     async def rankcheck(self, message):

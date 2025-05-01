@@ -12,7 +12,7 @@ class SendChangelog(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(description='Sends changelog', guild_ids=[1053447772302479421])
+    @slash_command(description='Sends changelog', guild_ids=[1364751619018850405])
     async def send_changelog(self, message):
         with open('version.txt', 'r') as f:
             version = f.readline()

@@ -56,7 +56,8 @@ async def on_ready():
                                                                             f'```\n{crash_report["type"]}\n{crash_report["value"]}```',
                       colour=0x1cd641)
 
-        ch = client.get_channel(1053736331404120114)
+        # ch = client.get_channel(1053736331404120114) CHANGE TO UNKNOWN
+        ch = client.get_channel(1367285315236008036)
         await ch.send(embed=embed)
 
 
@@ -68,7 +69,7 @@ async def on_disconnect():
         json.dump(crash, f)
 
 
-if not test:
+if not test or test:
     @client.event
     async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
         options = ''
@@ -81,7 +82,9 @@ if not test:
             for message in tb:
                 traceback_string += f'{message}'
 
-        ch = client.get_channel(1212881770505043999)
+        ch = client.get_channel(1367285315236008036)
+        if len(traceback_string) > 1500:
+            traceback_string = "…(truncated)…\n" + traceback_string[-1500:]
         await ch.send(f'## {ctx.author} in <#{ctx.channel_id}>:\n```\n/{ctx.command.qualified_name}{options}\n```\n## Traceback:\n```\n{traceback_string}\n```')
         raise error
 

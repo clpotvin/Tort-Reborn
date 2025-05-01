@@ -22,7 +22,7 @@ class GuildLog(commands.Cog):
         if test:
             guild_log = 'lunarity.json'
             new_data = Guild('Lunarity').all_members
-            channel = self.client.get_channel(1200549765469978674)
+            channel = self.client.get_channel(1367285315236008036)
         else:
             channel = self.client.get_channel(936679740385931414)
             guild_log = 'theaquarium.json'
@@ -110,7 +110,7 @@ class GuildLog(commands.Cog):
                     messages.pop()
 
                     if test:
-                        guild_general = self.client.get_channel(1200549765469978674)
+                        guild_general = self.client.get_channel(1367285315236008036)
                     else:
                         guild_general = self.client.get_channel(748900470575071293)
                     embed = discord.Embed(title='',

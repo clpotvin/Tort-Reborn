@@ -11,7 +11,7 @@ class CheckApp(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guild_ids=[1053447772302479421])
+    @slash_command(guild_ids=[1364751619018850405])
     async def check_app(self, message, ticket_number: int):
         db = DB()
         db.connect()

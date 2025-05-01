@@ -11,7 +11,7 @@ class Restart(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guild_ids=[1053447772302479421])
+    @slash_command(guild_ids=[1364751619018850405])
     async def restart(self, message):
         crash = {"type": 'Restart', "value": str(message.user) + ' ran the restart command', "timestamp": int(time.time())}
         with open('last_online.json', 'w') as f:

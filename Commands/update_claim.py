@@ -37,7 +37,7 @@ class UpdateClaim(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(description='Updates the guild claim in the territory tracker', guild_ids=[729147655875199017,784795827808763904,1053447772302479421])
+    @slash_command(description='Updates the guild claim in the territory tracker', guild_ids=[729147655875199017,784795827808763904,1364751619018850405])
     @default_permissions(administrator=True)
     async def update_claim(self, message, hq: discord.Option(str, name='hq', required=True, description='Location of the guild headquarters'), link: discord.Option(str, name='long_link', required=True, description='The long link from map maker')):
         await message.defer()

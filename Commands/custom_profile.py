@@ -17,7 +17,7 @@ class Custom_Profile(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(description='Displays a guild profile of guild member', guild_ids=[1053447772302479421])
+    @slash_command(description='Displays a guild profile of guild member', guild_ids=[1364751619018850405])
     async def custom_profile(self, message, player: discord.Option(str, require=True), guild_rank: discord.Option(str,
                                                                                                                   choices=[
                                                                                                                       'RECRUIT',

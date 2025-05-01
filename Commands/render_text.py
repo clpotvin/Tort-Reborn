@@ -13,7 +13,7 @@ class RenderText(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guild_ids=[1053447772302479421])
+    @slash_command(guild_ids=[1364751619018850405])
     async def render_text(self, message, text: discord.Option(str, require=True)):
 
         img = Image.new('RGBA', (1000, 20), (255, 0, 0, 0))

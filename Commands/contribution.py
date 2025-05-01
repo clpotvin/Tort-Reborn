@@ -21,7 +21,7 @@ class Contribution(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(description='Displays contribution of members', guild_ids=[te, 1053447772302479421])
+    @slash_command(description='Displays contribution of members', guild_ids=[te, 1364751619018850405])
     async def contribution(self, message,
                        dayss: discord.Option(int, name="days", min_value=1, max_value=30, default=7)):
         await message.defer()

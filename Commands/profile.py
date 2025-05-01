@@ -11,7 +11,7 @@ import json
 
 from Helpers.classes import PlayerStats
 from Helpers.functions import pretty_date, generate_rank_badge, generate_banner, getData, format_number, addLine
-from Helpers.variables import discord_ranks, main_guild, minecraft_colors
+from Helpers.variables import discord_ranks, minecraft_colors
 
 
 class Profile(commands.Cog):
@@ -21,14 +21,15 @@ class Profile(commands.Cog):
     @slash_command(description='Displays a guild profile of guild member')
     async def profile(self, message, name: discord.Option(str, require=True),
                       days: discord.Option(int, min=1, max=30, default=7)):
-        await message.defer()
+        # await message.defer()
         player = PlayerStats(name, days)
 
         if player.error:
+            print
             embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
                                   description=f'Could not retrieve information of `{name}`.\nPlease check your spelling or try again later.',
                                   color=0xe33232)
-            await message.respond(embed=embed, ephemeral=True)
+            await message.followup.send(embed=embed, ephemeral=True)
             return
         if player.guild:
             bg = Image.open('images/profile/bg_taq.png')
@@ -115,11 +116,11 @@ class Profile(commands.Cog):
             draw.text((230, 1022), format_number(player.guild_contributed), font=data_font)
             if player.taq and player.in_guild_for.days >= 1:
                 draw.text((480, 840), f'{player.stats_days}-day Playtime', font=title_font, fill='#fad51e')
-                draw.text((480, 872), f'{player.real_pt} hrs', font=data_font)
+                # draw.text((480, 872), f'{player.real_pt} hrs', font=data_font)
                 draw.text((480, 915), f'{player.stats_days}-day Wars', font=title_font, fill='#fad51e')
-                draw.text((480, 947), '{:,}'.format(player.real_wars), font=data_font)
+                # draw.text((480, 947), '{:,}'.format(player.real_wars), font=data_font)
                 draw.text((480, 990), f'{player.stats_days}-day Guild XP', font=title_font, fill='#fad51e')
-                draw.text((480, 1022), format_number(player.real_xp), font=data_font)
+                # draw.text((480, 1022), format_number(player.real_xp), font=data_font)
 
                 # shells
                 shells_img = Image.open('images/profile/shells.png')
@@ -146,7 +147,7 @@ class Profile(commands.Cog):
             profile_card = discord.File(file, filename=f"profile{t}.png")
             embed.set_image(url=f"attachment://profile{t}.png")
 
-        await message.respond(embed=embed, file=profile_card)
+        await message.followup.send(embed=embed, file=profile_card)
 
         if player.linked:
             # 1 Year background unlock

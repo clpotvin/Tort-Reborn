@@ -30,7 +30,7 @@ class itemViewTaken(View):
         if not test:
             log_channel = 992819067943665774
         else:
-            log_channel = 1213217302770880573
+            log_channel = 1367285315236008036
         with open('guild_bank.json', 'r') as f:
             mythics = json.load(f)
             f.close()
@@ -55,7 +55,7 @@ class Withdraw(commands.Cog):
             self.gbank_channel = 1213462757069033503
             self.log_channel = 1213217302770880573
 
-    @slash_command(description="Withdraw item from guild bank", guild_ids=[729147655875199017, 1053447772302479421])
+    @slash_command(description="Withdraw item from guild bank", guild_ids=[729147655875199017, 1364751619018850405])
     @default_permissions(manage_roles=True)
     @option("item", description="Pick item to withdraw", autocomplete=get_mythics)
     async def withdraw(self, message, item: str):

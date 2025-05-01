@@ -67,9 +67,9 @@ class SuggestPromotion(commands.Cog):
         if not test:
             self.promo_channel = 1033401698695262379
         else:
-            self.promo_channel = 1053699411823308972
+            self.promo_channel = 1367285315236008036
 
-    @slash_command(description="Suggest promotion of a member", guild_ids=[te, 1053447772302479421])
+    @slash_command(description="Suggest promotion of a member", guild_ids=[te, 1364751619018850405])
     @option("member", description="In-Game name (case-sensitive)", autocomplete=get_members)
     async def suggest_promotion(self, message, member: str, description: str):
         await message.defer(ephemeral=True)

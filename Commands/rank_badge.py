@@ -12,7 +12,7 @@ class RankBadge(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guild_ids=[1053447772302479421])
+    @slash_command(guild_ids=[1364751619018850405])
     async def rank_badge(self, message, text: discord.Option(str, require=True),
                          colour: discord.Option(str, require=True),
                          scale: discord.Option(int, require=False, default=4, min_value=1, max_value=6)):

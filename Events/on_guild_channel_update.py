@@ -23,7 +23,8 @@ class OnGuildChannelUpdate(commands.Cog):
         rows = db.cursor.fetchall()
         if len(rows) > 0:
             if test:
-                channel = self.client.get_channel(1004096609333817375)
+                # UPDATED 4/30/2025
+                channel = self.client.get_channel(1367283441850122330)
             else:
                 channel = self.client.get_channel(889162191150931978)
             player_uuid = rows[0][9]

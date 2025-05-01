@@ -12,7 +12,7 @@ class ProgressBar(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guilds=[1053447772302479421])
+    @slash_command(guilds=[1364751619018850405])
     async def progress_bar(self, message, width: discord.Option(int, require=True),
                            percentage: discord.Option(int, min_value=0, max_value=100, require=True)):
         img = create_progress_bar(width, percentage)

@@ -37,7 +37,8 @@ class OnMessage(commands.Cog):
             if result:
                 if result[1] == 0:
                     if message.guild.id != 729147655875199017:
-                        ch = self.client.get_channel(1210928455663751228)  # test
+                        # Updated 4/30/2025
+                        ch = self.client.get_channel(1367283441850122330)  # test
                     else:
                         ch = self.client.get_channel(889162191150931978)
 
