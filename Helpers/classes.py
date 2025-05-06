@@ -319,7 +319,7 @@ class NewMember(Modal):
             db.connection.commit()
         else:
             db.cursor.execute(
-                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , 0, \'Starfish\', {pdata.wars});')
+                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , False, \'Starfish\', {pdata.wars});')
             db.connection.commit()
         db.close()
         await self.user.edit(nick="Starfish " + self.children[0].value)
