@@ -122,7 +122,7 @@ class PlayerStats:
                 self.backgrounds_owned = json.loads(row[2])
         # shells
         if self.taq:
-            db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{self.discord}\'')
+            db.cursor.execute(f'SELECT * FROM shells WHERE \"user\" = \'{self.discord}\'')
             rows = db.cursor.fetchall()
             self.shells = 0 if len(rows) == 0 else rows[0][1]
             self.balance = 0 if len(rows) == 0 else rows[0][2]

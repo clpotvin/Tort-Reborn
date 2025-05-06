@@ -10,7 +10,7 @@ from discord.commands import slash_command
 import json
 
 from Helpers.classes import PlayerStats
-from Helpers.functions import pretty_date, generate_rank_badge, generate_banner, getData, format_number, addLine
+from Helpers.functions import pretty_date, generate_rank_badge, generate_banner, getData, format_number, addLine, vertical_gradient, round_corners
 from Helpers.variables import discord_ranks, minecraft_colors
 
 
@@ -31,16 +31,25 @@ class Profile(commands.Cog):
                                   color=0xe33232)
             await message.followup.send(embed=embed, ephemeral=True)
             return
-        if player.guild:
-            bg = Image.open('images/profile/bg_taq.png')
-        else:
-            bg = Image.open('images/profile/bg_guildless.png')
+
+        bg = vertical_gradient(colour=player.tag_color)
+        bg = round_corners(bg)
         color = '#ffffff'
+        text_color = '#ffffff'
+        text_drop_shadow = '#3f3f3f'
         draw = ImageDraw.Draw(bg)
+
+        bg_fg = vertical_gradient(width=850, height=1130, colour="#222f72")
+        bg.paste(bg_fg, (25, 25), bg_fg)
+
+        fg_bg = vertical_gradient(width=820, height=545, colour=player.tag_color, reverse=True)
+        fg_bg = round_corners(fg_bg)
+        bg.paste(fg_bg, (40, 100), fg_bg)
 
         # background
         background = Image.open(f"images/profile_backgrounds/{player.background}.png")
-        bg.paste(background, (0, 0), background)
+        background = round_corners(background)
+        bg.paste(background, (50, 110), background)
 
         # skin
         try:
@@ -51,11 +60,11 @@ class Profile(commands.Cog):
         except Exception as e:
             print(e)
             skin = Image.open('images/profile/x-steve500.png')
-        bg.paste(skin, (150, 26), skin)
+        bg.paste(skin, (150+50, 26+110), skin)
 
         rank = generate_rank_badge(player.tag_display, player.tag_color)
         rank_w, rank_h = rank.size
-        bg.paste(rank, (400 - int(rank_w / 2), 483 - int(rank_h / 2)), rank)
+        bg.paste(rank, (400 - int(rank_w / 2)+50, 483 - int(rank_h / 2)+110), rank)
 
         # guild and rank
         if player.guild:
@@ -81,73 +90,73 @@ class Profile(commands.Cog):
             bg.paste(banner, (50, 800))
 
         # name
-        name_font = ImageFont.truetype('images/profile/minecraft_font.ttf', 64)
+        name_font = ImageFont.truetype('images/profile/game.ttf', 50)
         _, _, w, h = draw.textbbox((0, 0), player.username, font=name_font)
-        draw.text(((800 - w) / 2, 520), player.username, font=name_font, fill=player.tag_color)
+        name_img = Image.new("RGBA", (800, 100), (0, 0, 0, 0))
+        name_draw = ImageDraw.Draw(name_img)
+        name_draw.text((7, 7), player.username, font=name_font, fill=text_drop_shadow)
+        name_draw.text((0, 0), player.username, font=name_font, fill=text_color)
+        bg.paste(name_img, (50, 40), name_img)
 
         # profile stats
         title_font = ImageFont.truetype('images/profile/5x5.ttf', 35)
         data_font = ImageFont.truetype('images/profile/minecraft_font.ttf', 42)
         if player.online:
-            draw.text((50, 590), 'World', font=title_font, fill='#fad51e')
-            draw.text((50, 620), player.server, font=data_font)
+            draw.text((50+50, 590+110), 'World', font=title_font, fill='#fad51e')
+            draw.text((50+50, 620+110), player.server, font=data_font)
         else:
-            draw.text((50, 590), 'Last seen', font=title_font, fill='#fad51e')
-            draw.text((50, 620), pretty_date(player.last_joined), font=data_font)
-        draw.text((450, 590), 'Wars', font=title_font, fill='#fad51e')
-        draw.text((450, 620), str(player.wars), font=data_font)
-        draw.text((50, 680), 'Playtime', font=title_font, fill='#fad51e')
-        draw.text((50, 710), f'{int(player.playtime)} hrs', font=data_font)
-        draw.text((450, 680), 'Total Level', font=title_font, fill='#fad51e')
-        draw.text((450, 710), f'{player.total_level}', font=data_font)
+            draw.text((50+50, 590+110), 'Last seen', font=title_font, fill='#fad51e')
+            draw.text((50+50, 620+110), pretty_date(player.last_joined), font=data_font)
+        draw.text((450+50, 590+110), 'Wars', font=title_font, fill='#fad51e')
+        draw.text((450+50, 620+110), str(player.wars), font=data_font)
+        draw.text((50+50, 680+110), 'Playtime', font=title_font, fill='#fad51e')
+        draw.text((50+50, 710+110), f'{int(player.playtime)} hrs', font=data_font)
+        draw.text((450+50, 680+110), 'Total Level', font=title_font, fill='#fad51e')
+        draw.text((450+50, 710+110), f'{player.total_level}', font=data_font)
 
         if player.guild:
             title_font = ImageFont.truetype('images/profile/5x5.ttf', 35)
             data_font = ImageFont.truetype('images/profile/minecraft_font.ttf', 32)
-            draw.text((230, 840), 'Rank', font=title_font, fill='#fad51e')
+            draw.text((230+50, 840+110), 'Rank', font=title_font, fill='#fad51e')
             if player.taq and player.linked:
-                draw.text((230, 872), player.rank.upper(), font=data_font, fill=discord_ranks[player.rank]['color'])
+                draw.text((230+50, 872+110), player.rank.upper(), font=data_font, fill=discord_ranks[player.rank]['color'])
                 color = discord_ranks[player.rank]['color']
             else:
-                draw.text((230, 872), player.guild_rank.upper(), font=data_font)
-            draw.text((230, 915), 'Member for', font=title_font, fill='#fad51e')
-            draw.text((230, 947), f'{player.in_guild_for.days} days', font=data_font)
-            draw.text((230, 990), 'Guild XP', font=title_font, fill='#fad51e')
-            draw.text((230, 1022), format_number(player.guild_contributed), font=data_font)
+                draw.text((230+50, 872+110), player.guild_rank.upper(), font=data_font)
+            draw.text((230+50, 915+110), 'Member for', font=title_font, fill='#fad51e')
+            draw.text((230+50, 947+110), f'{player.in_guild_for.days} days', font=data_font)
+            draw.text((230+50, 990+110), 'Guild XP', font=title_font, fill='#fad51e')
+            draw.text((230+50, 1022+110), format_number(player.guild_contributed), font=data_font)
             if player.taq and player.in_guild_for.days >= 1:
-                draw.text((480, 840), f'{player.stats_days}-day Playtime', font=title_font, fill='#fad51e')
+                draw.text((480+50, 840+110), f'{player.stats_days}-day Playtime', font=title_font, fill='#fad51e')
                 # draw.text((480, 872), f'{player.real_pt} hrs', font=data_font)
-                draw.text((480, 915), f'{player.stats_days}-day Wars', font=title_font, fill='#fad51e')
+                draw.text((480+50, 915+110), f'{player.stats_days}-day Wars', font=title_font, fill='#fad51e')
                 # draw.text((480, 947), '{:,}'.format(player.real_wars), font=data_font)
-                draw.text((480, 990), f'{player.stats_days}-day Guild XP', font=title_font, fill='#fad51e')
+                draw.text((480+50, 990+110), f'{player.stats_days}-day Guild XP', font=title_font, fill='#fad51e')
                 # draw.text((480, 1022), format_number(player.real_xp), font=data_font)
 
                 # shells
                 shells_img = Image.open('images/profile/shells.png')
                 shells_img.thumbnail((50, 50))
-                data_font = ImageFont.truetype('images/profile/minecraft_font.ttf', 42)
+                data_font = ImageFont.truetype('images/profile/game.ttf', 50)
                 _, _, w, h = draw.textbbox((0, 0), '{:,}'.format(player.balance), font=data_font)
-                addLine('&f{:,}'.format(player.balance), draw, data_font, 780 - w, 10)
-                bg.paste(shells_img, (718 - w, 13), shells_img)
+                bal_img = Image.new("RGBA", (800, 100), (0, 0, 0, 0))
+                bal_draw = ImageDraw.Draw(bal_img)
+                bal_draw.text((7, 7), str(player.balance), font=data_font, fill=text_drop_shadow)
+                bal_draw.text((0, 0), str(player.balance), font=data_font, fill=text_color)
+                bg.paste(bal_img, (780 - (30 * len(str(player.balance))), 40), bal_img)
+                # addLine('&f{:,}'.format(player.balance), draw, data_font, 780 - w, 40)
+                bg.paste(shells_img, (800, 38), shells_img)
 
         # embed
         possessive_noun = '\'s' if player.username[-1] != 's' else '\''
-        embed = discord.Embed(title=player.username.replace("_", "\\_") + f'{possessive_noun} playercard',
-                              description=f'<:discordlinked:1023567645817188402> <@{player.discord}>' if player.linked else '',
-                              color=int(color[1:], 16))
-        if player.taq and not player.linked:
-            embed.set_footer(
-                text='Some information could be more accurate.\nAsk our moderators to link it for you.',
-                icon_url='https://media.discordapp.net/attachments/1004096609686143008/1039684902754455612/image.png'
-                         '?width=671&height=671')
         with BytesIO() as file:
             bg.save(file, format="PNG")
             file.seek(0)
             t = int(time.time())
             profile_card = discord.File(file, filename=f"profile{t}.png")
-            embed.set_image(url=f"attachment://profile{t}.png")
 
-        await message.followup.send(embed=embed, file=profile_card)
+        await message.followup.send(file=profile_card)
 
         if player.linked:
             # 1 Year background unlock
