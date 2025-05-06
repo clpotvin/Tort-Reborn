@@ -7,7 +7,7 @@ test = os.getenv("TEST_MODE").lower() in ('true', '1', 't')
 unknown_channel_redirect = 1367285315236008036
 
 if test:
-    guilds = [1364751619018850405, 1364751619018850405]
+    guilds = [1364751619018850405, 1369134564450107412]
     te = 1364751619018850405
     changelog_channel = 1367276640207507617
     guildbank_channel = unknown_channel_redirect
@@ -29,7 +29,7 @@ else:
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 
-banned_words = ['uwu', 'owo']
+banned_words = []
 
 rank_map = {'recruit': '', 'recruiter': '*', 'captain': '**', 'strategist': '***', 'chief': '****', 'owner': '*****'}
 class_map = {'archer': '<:bow:966079566189842482>', 'hunter': '<:bow2:966079565791363162>',
