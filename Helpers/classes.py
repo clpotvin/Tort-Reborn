@@ -217,25 +217,32 @@ class PlayerShells:
     def __init__(self, discord_id):
         db = DB()
         db.connect()
-        db.cursor.execute(f'SELECT uuid FROM discord_links WHERE discord_id = \'{discord_id}\'')
-        uuid = db.cursor.fetchone()[0]
-        player_data = getPlayerUUID(uuid)
-        if not player_data:
-            self.UUID = uuid
-            self.username = uuid
-        else:
-            self.UUID = player_data[1]
-            self.username = player_data[0]
 
-        db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{discord_id}\'')
-        rows = db.cursor.fetchall()
-        db.close()
-        if len(rows) != 0:
+        db.cursor.execute(
+            "SELECT ign, uuid FROM discord_links WHERE discord_id = %s",
+            (discord_id,)
+        )
+        link = db.cursor.fetchone()
+        if link:
+            self.username, self.UUID = link[0], link[1]
             self.error = False
-            self.shells = 0 if len(rows) == 0 else rows[0][1]
-            self.balance = 0 if len(rows) == 0 else rows[0][2]
         else:
+            self.username, self.UUID = None, None
             self.error = True
+
+        self.shells = 0
+        self.balance = 0
+
+        if not self.error:
+            db.cursor.execute(
+                "SELECT shells, balance FROM shells WHERE \"user\" = %s",
+                (str(discord_id),)
+            )
+            row = db.cursor.fetchone()
+            if row:
+                self.shells, self.balance = row
+
+        db.close()
 
 
 class LinkAccount(Modal):

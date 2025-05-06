@@ -21,7 +21,7 @@ class Profile(commands.Cog):
     @slash_command(description='Displays a guild profile of guild member')
     async def profile(self, message, name: discord.Option(str, require=True),
                       days: discord.Option(int, min=1, max=30, default=7)):
-        # await message.defer()
+        await message.defer()
         player = PlayerStats(name, days)
 
         if player.error:

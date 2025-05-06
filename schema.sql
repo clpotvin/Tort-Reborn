@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS shells (
 
 CREATE TABLE IF NOT EXISTS new_app (
   id        SERIAL    PRIMARY KEY,
-  channel   BIGINT    NOT NULL    UNIQUE,
+  channel   BIGINT    NOT NULL,
   ticket    VARCHAR(100) NOT NULL,
   webhook   TEXT      NOT NULL,
   posted    BOOLEAN   NOT NULL    DEFAULT FALSE,

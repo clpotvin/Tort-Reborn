@@ -9,7 +9,7 @@ from discord import SlashCommandGroup, option
 from discord.ext import commands
 from discord.ui import View
 
-from Helpers.variables import test
+from Helpers.variables import test, guildbank_channel, log_channel
 
 
 class itemViewTaken(View):
@@ -31,12 +31,8 @@ async def get_messages(message: discord.AutocompleteContext):
 class WelcomeMessages(commands.Cog):
     def __init__(self, client):
         self.client = client
-        if not test:
-            self.gbank_channel = 1213515243041595442
-            self.log_channel = 992819067943665774
-        else:
-            self.gbank_channel = 1213462757069033503
-            self.log_channel = 1213217302770880573
+        self.gbank_channel = guildbank_channel
+        self.log_channel = log_channel
 
     welcome_group = SlashCommandGroup('welcome_admin', 'Welcome message admin commands',
                                       default_member_permissions=discord.Permissions(administrator=True),

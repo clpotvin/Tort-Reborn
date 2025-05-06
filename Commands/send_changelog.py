@@ -5,14 +5,14 @@ import random
 import json
 import re
 
-from Helpers.variables import changelog_channel
+from Helpers.variables import changelog_channel, guilds
 
 
 class SendChangelog(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(description='Sends changelog', guild_ids=[1364751619018850405])
+    @slash_command(description='Sends changelog', guild_ids=[guilds[1]])
     async def send_changelog(self, message):
         with open('version.txt', 'r') as f:
             version = f.readline()

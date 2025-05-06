@@ -50,9 +50,9 @@ class TerritoryTracker(commands.Cog):
                 military_channel = self.client.get_channel(729162690760671244)
                 spearhead = 857589881689210950
             else:
-                channel = self.client.get_channel(1205563363812450445)  # test
-                military_channel = self.client.get_channel(1205563363812450445)  # test
-                spearhead = 1210717913481347102  # test
+                channel = self.client.get_channel(1367287144682487828)  # test
+                military_channel = self.client.get_channel(1367287144682487828)  # test
+                spearhead = 1367287262068342804  # test
         except:
             pass
 
@@ -109,6 +109,7 @@ class TerritoryTracker(commands.Cog):
                     if time_since_ping > 1800:
                         last_ping = called
                         try:
+                            print("Spearhead Ping")
                             await military_channel.send(f"<@&{spearhead}> {terr} has been taken by {owner_changes[terr]['new']['owner']} [{owner_changes[terr]['new']['prefix']}]!")
                         except Exception as e:
                             print(e)
@@ -117,6 +118,7 @@ class TerritoryTracker(commands.Cog):
                 if owner_changes[terr]['old']['owner'] == 'The Aquarium' or owner_changes[terr]['new']['owner'] == 'The Aquarium' or (owner_changes[terr] in claim['territories']):
                     held_for = timeHeld(owner_changes[terr]['old']['acquired'], owner_changes[terr]['new']['acquired'])
                     try:
+                        print("Updating Territory")
                         await channel.send(f'**{terr}**: {owner_changes[terr]["old"]["owner"]} ({str(terr_count["old"][terr_count["old"].index(owner_changes[terr]["old"]["owner"]) + 1])}) → {owner_changes[terr]["new"]["owner"]} ({str(terr_count["new"][terr_count["new"].index(owner_changes[terr]["new"]["owner"]) + 1])}) \n\tTerritory held for {held_for}')
                     except Exception as e:
                         print("Could not output to tracking channel.")

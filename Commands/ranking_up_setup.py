@@ -6,7 +6,7 @@ from discord import option, default_permissions, slash_command
 from discord.ext import commands
 from discord.ui import View
 
-from Helpers.variables import test, guilds
+from Helpers.variables import test, guilds, rank_up_channel
 
 
 class buttonView(View):
@@ -27,7 +27,7 @@ class buttonView(View):
 
         if user_id in cd:
             if t - 604800 > cd[user_id]:
-                await self.client.get_channel(1220832526906425356).send(
+                await self.client.get_channel(rank_up_channel).send(
                     f'**{ctx.user.name}** is interested in ranking up!')
                 cd[ctx.user.id] = t
                 with open('button_cd.json', 'w') as f:
@@ -43,7 +43,7 @@ class buttonView(View):
                                       color=0xbf2828)
                 await ctx.followup.send(embed=embed, delete_after=5, ephemeral=True)
         else:
-            await self.client.get_channel(1225165243056001234).send(
+            await self.client.get_channel(rank_up_channel).send(
                f'**{ctx.user.name}** is interested in ranking up!')
             cd[user_id] = t
             with open('button_cd.json', 'w') as f:

@@ -4,14 +4,28 @@ from dotenv import load_dotenv
 load_dotenv()
 test = os.getenv("TEST_MODE").lower() in ('true', '1', 't')
 
+unknown_channel_redirect = 1367285315236008036
+
 if test:
-    guilds = [1364751619018850405]
+    guilds = [1364751619018850405, 1364751619018850405]
     te = 1364751619018850405
     changelog_channel = 1367276640207507617
+    guildbank_channel = unknown_channel_redirect
+    log_channel = unknown_channel_redirect
+    attention_channel = unknown_channel_redirect
+    eco_learning_channel = unknown_channel_redirect
+    rank_up_channel = unknown_channel_redirect
+    promotion_channel = unknown_channel_redirect
 else:
     guilds = [729147655875199017, 1364751619018850405]
     te = 784795827808763904
     changelog_channel = 1367276640207507617
+    guildbank_channel = None
+    log_channel = None
+    attention_channel = None
+    eco_learning_channel = None
+    rank_up_channel = None
+    promotion_channel = None
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 

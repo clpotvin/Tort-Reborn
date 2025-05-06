@@ -55,7 +55,7 @@ class OnMessage(commands.Cog):
                                 break
                     # else search for stats link in message content
                     else:
-                        stats_link = re.findall("wynncraft\.com\/stats\/player.*", message.content)
+                        stats_link = re.findall("wynncraft\\.com\\/stats\\/player.*", message.content)
                         if stats_link:
                             mc_name = stats_link[0].split('/')[-1]
 

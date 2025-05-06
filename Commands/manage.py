@@ -4,11 +4,11 @@ from datetime import datetime
 from io import BytesIO
 
 import discord
-import requests
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-from discord import SlashCommandGroup, default_permissions
+from discord import SlashCommandGroup, ApplicationContext
 from discord.ext import commands
 from discord.ui import Modal, InputText
+from PIL import Image, ImageDraw, ImageFont, ImageOps
+import requests
 
 from Helpers.classes import LinkAccount, PlayerStats, PlayerShells
 from Helpers.database import DB
@@ -17,245 +17,241 @@ from Helpers.variables import guilds, discord_ranks, discord_rank_roles
 
 
 class ShellModalName(Modal):
-    def __init__(self, user, operation, amount, reason, *args, **kwargs) -> None:
+    def __init__(self, user: discord.Member, operation: str, amount: int, reason: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
         self.operation = operation
         self.amount = amount
         self.reason = reason
-        self.add_item(InputText(label="Player's Name", placeholder="Player's In-Game Name without rank"))
+        self.add_item(
+            InputText(
+                label="Player's Name", 
+                placeholder="Player's In-Game Name without rank"
+            )
+        )
 
     async def callback(self, interaction: discord.Interaction):
-        db = DB()
-        db.connect()
+        db = DB(); db.connect()
+        img = Image.new('RGBA', (375, 95), '#100010e2')
+        draw = ImageDraw.Draw(img); draw.fontmode = '1'
+        font = ImageFont.truetype('images/profile/game.ttf', 19)
 
-        img = Image.new('RGBA', (375, 95), color='#100010e2')
-        d = ImageDraw.Draw(img)
-        d.fontmode = '1'
-        gameFont = ImageFont.truetype('images/profile/game.ttf', 19)
         player = PlayerStats(self.children[0].value, 1)
-        # skin
         try:
             url = f"https://visage.surgeplay.com/bust/75/{player.UUID}"
-            response = requests.get(url)
-            skin = Image.open(BytesIO(response.content))
+            skin = Image.open(BytesIO(requests.get(url).content))
         except:
             skin = Image.open('images/profile/x-steve.webp')
         img.paste(skin, (10, 10), skin)
 
         if self.operation == 'add':
-            new_amount = self.amount
-            difference = f'&a+{self.amount}' if self.amount > 0 else f'&c{self.amount}'
-            addLine(f'&7All-Time: &f{new_amount} &7({difference}&7)', d, gameFont, 95, 61)
+            new_amount = player.shells + self.amount
+            diff = f'+{self.amount}'
         else:
-            new_amount = self.amount * -1
-            difference = f'&c-{self.amount}' if self.amount > 0 else f'&a+{self.amount * -1}'
-            addLine(f'&7All-Time: 0', d, gameFont, 95, 61)
+            new_amount = player.shells - self.amount
+            diff = f'-{self.amount}'
+        addLine(f'&7All-Time: &f{new_amount} &7({diff}&7)', draw, font, 95, 61)
+
         db.cursor.execute(
-            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', 0, \'\');')
+            "INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES (%s, %s, 0, '') ON CONFLICT (discord_id) DO UPDATE SET ign=EXCLUDED.ign;",
+            (self.user.id, self.children[0].value)
+        )
         db.cursor.execute(
-            f'INSERT INTO shells (user, shells) VALUES (\'{self.children[0].value}\', {new_amount});')
+            "INSERT INTO shells (\"user\", shells) VALUES (%s, %s) ON CONFLICT (\"user\") DO UPDATE SET shells=EXCLUDED.shells;",
+            (str(self.user.id), new_amount)
+        )
         db.connection.commit()
 
-        addLine(f'&f{player.username}', d, gameFont, 95, 15)
-        addLine(f'&7Balance: &f{new_amount} &7({difference}&7)', d, gameFont, 95, 40)
+        addLine(f'&f{player.username}', draw, font, 95, 15)
+        addLine(f'&7Balance: &f{new_amount} &7({diff}&7)', draw, font, 95, 40)
 
-        if self.reason != '':
-            reasonLines = split_sentence(self.reason)
-            for line in reasonLines:
-                img, d = expand_image(img)
-                addLine(f'&3{line}', d, gameFont, 10, img.height - 25)
+        if self.reason:
+            for line in split_sentence(self.reason):
+                img, draw = expand_image(img)
+                addLine(f'&3{line}', draw, font, 10, img.height - 25)
 
-        # await interaction.response.send_message(
-        #     f'Added {self.amount} shells to {self.children[0].value}', ephemeral=True)
+        img = ImageOps.expand(img, border=(2,2), fill='#100010e2')
+        draw = ImageDraw.Draw(img)
+        draw.rectangle((2,2,img.width-3,img.height-3), outline='#240059', width=2)
 
-        img = ImageOps.expand(img, border=(2, 2), fill='#100010e2')
-        d = ImageDraw.Draw(img)
-
-        d.rectangle((2, 2, img.width - 3, img.height - 3), outline='#240059', width=2)
-        d.rectangle((0, 0, 1, 1), fill='#00000000')
-        d.rectangle((img.width - 2, 0, img.width, 1), fill='#00000000')
-        d.rectangle((0, img.height - 2, 1, img.height), fill='#00000000')
-        d.rectangle((img.width - 2, img.height - 2, img.width, img.height), fill='#00000000')
-
-        with BytesIO() as file:
-            img.save(file, format="PNG")
-            file.seek(0)
-            t = int(time.time())
-            shell_img = discord.File(file, filename=f"shell{t}.png")
-
-        await interaction.response.send_message(file=shell_img)
-
+        buf = BytesIO(); img.save(buf, 'PNG'); buf.seek(0)
+        file = discord.File(buf, filename=f"shell_{int(time.time())}.png")
+        await interaction.response.send_message(file=file)
         db.close()
 
 
 class Manage(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
-    manage_group = SlashCommandGroup('manage', 'Guild management commands', guild_ids=guilds, default_member_permissions=discord.Permissions(manage_roles=True))
+    manage_group = SlashCommandGroup(
+        'manage', 'Guild management commands',
+        guild_ids=guilds,
+        default_member_permissions=discord.Permissions(manage_roles=True)
+    )
 
-    @manage_group.command()
-    async def rank(self, message, user: discord.Member,
-                   rank: discord.Option(str, choices=['Starfish', 'Manatee', 'Piranha',
-                                                      'Barracuda', 'Angler',
-                                                      'Hammerhead',
-                                                      'Sailfish', 'Dolphin',
-                                                      'Narwhal'])):
-        db = DB()
-        db.connect()
-        removed = 'Removed Roles:'
-        added = 'Added Roles:'
-        all_roles = message.interaction.guild.roles
-
-        await message.defer(ephemeral=True)
-
-        for add_role in discord_ranks[rank]['roles']:
-            role = discord.utils.find(lambda r: r.name == add_role, all_roles)
-            if role not in user.roles:
-                curr_role = discord.utils.get(all_roles, name=add_role)
-                await user.add_roles(curr_role)
-                added = f'{added}\n - {add_role}'
-
-        remove_roles = [x for x in discord_rank_roles if x not in discord_ranks[rank]['roles']]
-        for remove_role in remove_roles:
-            role = discord.utils.find(lambda r: r.name == remove_role, all_roles)
-            if role in user.roles:
-                curr_role = discord.utils.get(all_roles, name=remove_role)
-                await user.remove_roles(curr_role)
-                removed = f'{removed}\n - {remove_role}'
-
-        db.cursor.execute(f'SELECT * FROM discord_links WHERE discord_id = {user.id}')
+    @manage_group.command(name='rank', description='Assign or update a user’s guild rank')
+    async def rank(
+        self,
+        ctx: ApplicationContext,
+        user: discord.Member,
+        rank: discord.Option(str, choices=[
+            'Starfish','Manatee','Piranha','Barracuda','Angler',
+            'Hammerhead','Sailfish','Dolphin','Narwhal'
+        ])
+    ):
+        db = DB(); db.connect()
+        db.cursor.execute(
+            "SELECT ign FROM discord_links WHERE discord_id = %s", (user.id,)
+        )
         rows = db.cursor.fetchall()
-        if len(rows) != 0:
-            db.cursor.execute(f'UPDATE discord_links SET rank = \'{rank}\' WHERE discord_id = {user.id}')
+        added = 'Added Roles:'
+        removed = 'Removed Roles:'
+        all_roles = ctx.guild.roles
+
+        if rows:
+            await ctx.defer(ephemeral=True)
+            for role_name in discord_ranks[rank]['roles']:
+                role_obj = discord.utils.get(all_roles, name=role_name)
+                if role_obj and role_obj not in user.roles:
+                    await user.add_roles(role_obj)
+                    added += f"\n - {role_name}"
+            for role_name in [r for r in discord_rank_roles if r not in discord_ranks[rank]['roles']]:
+                role_obj = discord.utils.get(all_roles, name=role_name)
+                if role_obj and role_obj in user.roles:
+                    await user.remove_roles(role_obj)
+                    removed += f"\n - {role_name}"
+            db.cursor.execute(
+                "UPDATE discord_links SET rank = %s WHERE discord_id = %s",
+                (rank, user.id)
+            )
             db.connection.commit()
-            await user.edit(nick=f'{rank} {rows[0][1]}')
+            try:
+                base = user.nick.split(' ')[0]
+                await user.edit(nick=f"{rank} {base}")
+            except:
+                pass
+            await ctx.followup.send(f"{added}\n\n{removed}", ephemeral=True)
         else:
-            modal = LinkAccount(title="Link User to Minecraft IGN", user=user, rank=rank, added=added, removed=removed)
-            await message.interaction.response.send_modal(modal)
-        await message.respond(f'{added}\n\n{removed}')
+            modal = LinkAccount(
+                title="Link User to Minecraft IGN",
+                user=user,
+                rank=rank,
+                added=added,
+                removed=removed
+            )
+            await ctx.interaction.response.send_modal(modal)
         db.close()
 
-    @manage_group.command()
-    async def shells(self, message, operation: discord.Option(str, choices=['add', 'remove']), user: discord.Member,
-                     amount: int, reason: discord.Option(str, required=False, default='')):
-        db = DB()
-        db.connect()
-        db.cursor.execute(f'SELECT * FROM discord_links WHERE discord_id = \'{user.id}\'')
+    @manage_group.command(name='shells', description='Add or remove shells from a user')
+    async def shells(
+        self,
+        ctx: ApplicationContext,
+        operation: discord.Option(str, choices=['add','remove']),
+        user: discord.Member,
+        amount: int,
+        reason: discord.Option(str, required=False, default='')
+    ):
+        db = DB(); db.connect()
+        db.cursor.execute(
+            "SELECT ign FROM discord_links WHERE discord_id = %s", (user.id,)
+        )
         rows = db.cursor.fetchall()
-        if len(rows) != 0:
+
+        if rows:
+            await ctx.defer()
             player = PlayerShells(user.id)
-            await message.defer()
-            img = Image.new('RGBA', (375, 95), color='#100010e2')
-            d = ImageDraw.Draw(img)
-            d.fontmode = '1'
-            gameFont = ImageFont.truetype('images/profile/game.ttf', 19)
-            # skin
+            img = Image.new('RGBA', (375,95), '#100010e2')
+            draw = ImageDraw.Draw(img); draw.fontmode='1'
+            font = ImageFont.truetype('images/profile/game.ttf',19)
             try:
                 headers = {'User-Agent': os.getenv("visage_UA")}
                 url = f"https://visage.surgeplay.com/bust/75/{player.UUID}"
-                response = requests.get(url, headers=headers)
-                skin = Image.open(BytesIO(response.content))
+                skin = Image.open(BytesIO(requests.get(url, headers=headers).content))
             except:
                 skin = Image.open('images/profile/X-Steve.webp')
-            img.paste(skin, (10, 10), skin)
-
-            if not player.error:
-                if operation == 'add':
-                    difference = f'&a+{amount}' if amount > 0 else f'&c{amount}'
-                    new_total = player.shells + amount
-                    new_amount = player.balance + amount
-                    db.cursor.execute(f'UPDATE shells SET shells = {new_total}, bal = {new_amount} WHERE user = \'{user.id}\'')
-                    addLine(f'&7All-Time: &f{new_total} &7({difference}&7)', d, gameFont, 95, 61)
-                else:
-                    difference = f'&c-{amount}' if amount > 0 else f'&a+{amount*-1}'
-                    new_amount = player.balance - amount
-                    db.cursor.execute(f'UPDATE shells SET bal = {new_amount} WHERE user = \'{user.id}\'')
-                    addLine(f'&7All-Time: &f{player.shells}', d, gameFont, 95, 61)
-
-                addLine(f'&f{player.username}', d, gameFont, 95, 15)
-                addLine(f'&7Balance: &f{new_amount} &7({difference}&7)', d, gameFont, 95, 40)
-
+            img.paste(skin,(10,10),skin)
+            if operation == 'add':
+                new_total = player.shells + amount
+                new_bal = player.balance + amount
+                diff = f'+{amount}'
+                db.cursor.execute(
+                    "UPDATE shells SET shells = %s, balance = %s WHERE \"user\" = %s",
+                    (new_total, new_bal, str(user.id))
+                )
+                addLine(f'&7All-Time: &f{new_total} &7({diff}&7)', draw, font, 95, 61)
             else:
-                if operation == 'add':
-                    new_amount = amount
-                    difference = f'&a+{amount}' if amount > 0 else f'&c{amount}'
-                    db.cursor.execute(
-                        f'INSERT INTO shells (user, shells, bal) VALUES (\'{user.id}\', {new_amount}, {new_amount});')
-                    addLine(f'&7All-Time: &f{new_amount} &7({difference}&7)', d, gameFont, 95, 61)
-                else:
-                    new_amount = amount*-1
-                    difference = f'&c-{amount}' if amount > 0 else f'&a+{amount * -1}'
-                    db.cursor.execute(
-                        f'INSERT INTO shells (user, shells, bal) VALUES (\'{user.id}\', 0, {new_amount});')
-                    addLine(f'&7All-Time: 0', d, gameFont, 95, 61)
-
-                addLine(f'&f{player.username}', d, gameFont, 95, 15)
-                addLine(f'&7Balance: &f{new_amount} &7({difference}&7)', d, gameFont, 95, 40)
-
-            if reason != '':
-                reasonLines = split_sentence(reason)
-                for line in reasonLines:
-                    img, d = expand_image(img)
-                    addLine(f'&3{line}', d, gameFont, 10, img.height - 25)
-
+                new_bal = player.balance - amount
+                diff = f'-{amount}'
+                db.cursor.execute(
+                    "UPDATE shells SET balance = %s WHERE \"user\" = %s",
+                    (new_bal, str(user.id))
+                )
+                addLine(f'&7All-Time: &f{player.shells}', draw, font, 95, 61)
+            addLine(f'&f{player.username}', draw, font, 95, 15)
+            addLine(f'&7Balance: &f{new_bal} &7({diff}&7)', draw, font, 95, 40)
+            if reason:
+                for line in split_sentence(reason):
+                    img, draw = expand_image(img)
+                    addLine(f'&3{line}', draw, font, 10, img.height-25)
             db.connection.commit()
-            preposition = 'to' if operation == 'add' else 'from'
-            with open('shell.log', 'a') as f:
-                curr_datetime = datetime.now()
-                curr_datetime_str = curr_datetime.strftime("%d/%m/%Y, %H:%M:%S")
-                f.write(
-                    f'[{curr_datetime_str}] {message.author.name} {operation[:5]}ed {amount} shells {preposition} {player.username}. Reason: {reason}\n')
-                f.close()
-
-            img = ImageOps.expand(img, border=(2, 2), fill='#100010e2')
-            d = ImageDraw.Draw(img)
-
-            d.rectangle((2, 2, img.width - 3, img.height - 3), outline='#240059', width=2)
-            d.rectangle((0, 0, 1, 1), fill='#00000000')
-            d.rectangle((img.width - 2, 0, img.width, 1), fill='#00000000')
-            d.rectangle((0, img.height - 2, 1, img.height), fill='#00000000')
-            d.rectangle((img.width - 2, img.height - 2, img.width, img.height), fill='#00000000')
-
-            with BytesIO() as file:
-                img.save(file, format="PNG")
-                file.seek(0)
-                t = int(time.time())
-                shell_img = discord.File(file, filename=f"shell{t}.png")
-
-            await message.respond(file=shell_img)
+            # Log
+            with open('shell.log','a') as f:
+                ts = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+                f.write(f'[{ts}] {ctx.user.name} {operation}ed {amount} to {player.username}. Reason: {reason}\n')
+            img = ImageOps.expand(img,border=(2,2),fill='#100010e2')
+            draw = ImageDraw.Draw(img)
+            draw.rectangle((2,2,img.width-3,img.height-3),outline='#240059',width=2)
+            buf = BytesIO(); img.save(buf,'PNG'); buf.seek(0)
+            file = discord.File(buf, filename=f"shells_{int(time.time())}.png")
+            await ctx.followup.send(file=file)
         else:
-            modal = ShellModalName(title="Link User to Minecraft IGN", user=user, operation=operation, amount=amount, reason=reason)
-            await message.interaction.response.send_modal(modal)
+            modal = ShellModalName(
+                title="Link User to Minecraft IGN",
+                user=user,
+                operation=operation,
+                amount=amount,
+                reason=reason
+            )
+            await ctx.interaction.response.send_modal(modal)
         db.close()
 
-    @manage_group.command()
-    async def link(self, message, user: discord.Member, ign):
-        db = DB()
-        db.connect()
-        db.cursor.execute(f'SELECT * FROM discord_links WHERE discord_id = {user.id}')
-        rows = db.cursor.fetchall()
-        player_uuid = getPlayerUUID(ign)
-        if len(rows) != 0:
-            db.cursor.execute(f'UPDATE discord_links SET ign = \'{ign}\', uuid = \'{player_uuid[1]}\' WHERE discord_id = {user.id}')
-            db.connection.commit()
-            db.cursor.execute(f'UPDATE shells SET user = \'{ign}\' WHERE user = \'{rows[0][0]}\'')
+    @manage_group.command(name='link', description='Link a user to an IGN')
+    async def link(
+        self,
+        ctx: ApplicationContext,
+        user: discord.Member,
+        ign: str
+    ):
+        db = DB(); db.connect()
+        uuid = getPlayerUUID(ign)[1]
+        db.cursor.execute(
+            "SELECT * FROM discord_links WHERE discord_id = %s", (user.id,)
+        )
+        if db.cursor.fetchone():
+            db.cursor.execute(
+                "UPDATE discord_links SET ign = %s, uuid = %s WHERE discord_id = %s",
+                (ign, uuid, user.id)
+            )
+            db.cursor.execute(
+                "UPDATE shells SET user = %s WHERE \"user\" = %s",
+                (ign, str(user.id))
+            )
             db.connection.commit()
             try:
-                current_nick = user.nick.split(' ')
-                await user.edit(nick=f'{current_nick[0]} {ign}')
+                base = user.nick.split(' ')[0]
+                await user.edit(nick=f"{base} {ign}")
             except:
                 pass
+            await ctx.respond(f'Updated link for **{user.name}** to **{ign}**', ephemeral=True)
         else:
-            try:
-                current_nick = user.nick.split(' ')
-            except:
-                current_nick = ['']
+            base = (user.nick.split(' ')[0] if user.nick else '')
             db.cursor.execute(
-                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES ({user.id}, \'{ign}\', \'{player_uuid[0]}\', 0, \'{current_nick[0]}\');')
+                "INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES (%s,%s,%s,0,%s)",
+                (user.id, ign, uuid, base)
+            )
             db.connection.commit()
-        await message.respond(f'Linked **{user.name}** to **{ign}**', ephemeral=True)
+            await ctx.respond(f'Linked **{user.name}** to **{ign}**', ephemeral=True)
         db.close()
 
     @commands.Cog.listener()

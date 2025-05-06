@@ -12,6 +12,17 @@ def main():
     )
     cur = conn.cursor()
 
+    discord_id = '170719819715313665'
+    ign        = 'Thundderr'
+    uuid       = 'ea7ca108-8e11-4a4e-9cd6-03d1c5cd2484'
+    linked     = True
+    rank       = 'Sailfish'
+    wars_on_join = 0
+
+    shell_user = discord_id
+    shells_amt = 50
+    balance_amt = 20
+
     try:
         # Begin transaction
         cur.execute("BEGIN;")
@@ -30,12 +41,12 @@ def main():
             )
             ON CONFLICT (discord_id) DO NOTHING;
         """, (
-            '170719819715313665',
-            'Thundderr',
-            'ea7ca108-8e11-4a4e-9cd6-03d1c5cd2484',
-            True,
-            'Sailfish',
-            0
+            discord_id,
+            ign,
+            uuid,
+            linked,
+            rank,
+            wars_on_join
         ))
 
         # Insert into shells
@@ -49,18 +60,44 @@ def main():
             )
             ON CONFLICT ("user") DO NOTHING;
         """, (
-            '170719819715313665',
-            50,
-            20
+            shell_user,
+            shells_amt,
+            balance_amt
         ))
 
         # Commit transaction
         conn.commit()
         print("Rows inserted successfully.")
 
+        # Now fetch & print to verify
+
+        print("\n-- discord_links row:")
+        cur.execute("""
+            SELECT discord_id, ign, uuid, linked, rank, wars_on_join
+              FROM discord_links
+             WHERE discord_id = %s;
+        """, (discord_id,))
+        row = cur.fetchone()
+        if row:
+            print("discord_links:", row)
+        else:
+            print("No row found in discord_links for", discord_id)
+
+        print("\n-- shells row:")
+        cur.execute("""
+            SELECT "user", shells, balance
+              FROM shells
+             WHERE "user" = %s;
+        """, (shell_user,))
+        row = cur.fetchone()
+        if row:
+            print("shells:", row)
+        else:
+            print("No row found in shells for", shell_user)
+
     except Exception as e:
         conn.rollback()
-        print("Error inserting rows:", e)
+        print("Error inserting or fetching rows:", e)
 
     finally:
         cur.close()

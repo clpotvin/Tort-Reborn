@@ -13,7 +13,7 @@ from discord.ui import View, Modal, InputText
 
 from Helpers.database import DB
 from Helpers.functions import getPlayerUUID
-from Helpers.variables import test, te
+from Helpers.variables import test, te, promotion_channel, guilds
 
 
 async def get_members(message: discord.AutocompleteContext):
@@ -64,12 +64,9 @@ class LockConfirmation(Modal):
 class SuggestPromotion(commands.Cog):
     def __init__(self, client):
         self.client = client
-        if not test:
-            self.promo_channel = 1033401698695262379
-        else:
-            self.promo_channel = 1367285315236008036
+        self.promo_channel = promotion_channel
 
-    @slash_command(description="Suggest promotion of a member", guild_ids=[te, 1364751619018850405])
+    @slash_command(description="Suggest promotion of a member", guild_ids=[te, guilds[1]])
     @option("member", description="In-Game name (case-sensitive)", autocomplete=get_members)
     async def suggest_promotion(self, message, member: str, description: str):
         await message.defer(ephemeral=True)

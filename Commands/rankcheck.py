@@ -4,7 +4,7 @@ from discord.ext import commands
 from Helpers.classes import Guild
 from Helpers.database import DB
 from Helpers.functions import getGuildMembers
-from Helpers.variables import test, discord_ranks
+from Helpers.variables import test, discord_ranks, guilds, te
 
 
 class RankCheck(commands.Cog):
@@ -12,9 +12,9 @@ class RankCheck(commands.Cog):
         self.client = client
 
     if test:
-        guilds = [1364751619018850405]
+        guilds = [guilds[1]]
     else:
-        guilds = [784795827808763904, 1364751619018850405]
+        guilds = [te, guilds[1]]
 
     @slash_command(description='Check for game/discord rank mismatch', guild_ids=guilds)
     async def rankcheck(self, message):

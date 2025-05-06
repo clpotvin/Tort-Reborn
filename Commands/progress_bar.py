@@ -6,13 +6,14 @@ from discord.commands import slash_command
 import discord
 
 from Helpers.functions import generate_rank_badge, create_progress_bar
+from Helpers.variables import guilds
 
 
 class ProgressBar(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guilds=[1364751619018850405])
+    @slash_command(guilds=[guilds[1]])
     async def progress_bar(self, message, width: discord.Option(int, require=True),
                            percentage: discord.Option(int, min_value=0, max_value=100, require=True)):
         img = create_progress_bar(width, percentage)

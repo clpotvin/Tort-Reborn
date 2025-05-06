@@ -37,10 +37,12 @@ class OnGuildChannelCreate(commands.Cog):
                     if not overwrite.bot:
                         user_name = overwrite.name
                         break
-            img = Image.open('images/profile/welcome.png')
+            # img = Image.open('images/profile/welcome.png')
+            img = Image.open('images/profile/angler.png')
             draw = ImageDraw.Draw(img)
             gameFont = ImageFont.truetype('images/profile/game.ttf', 38)
             draw.text((198, 13), user_name, font=gameFont, fill='#ffba02')
+            draw.text((198, 13), user_name, fill='#ffba02')
 
             with BytesIO() as file:
                 img.save(file, format="PNG")

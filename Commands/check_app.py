@@ -5,13 +5,14 @@ from discord.ext import commands
 from discord.commands import slash_command
 
 from Helpers.database import DB
+from Helpers.variables import guilds
 
 
 class CheckApp(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(guild_ids=[1364751619018850405])
+    @slash_command(guild_ids=[guilds[1]])
     async def check_app(self, message, ticket_number: int):
         db = DB()
         db.connect()
