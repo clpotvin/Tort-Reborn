@@ -234,8 +234,8 @@ class Manage(commands.Cog):
                 (ign, uuid, user.id)
             )
             db.cursor.execute(
-                "UPDATE shells SET user = %s WHERE \"user\" = %s",
-                (ign, str(user.id))
+                "INSERT INTO shells (\"user\") VALUES (%s) ON CONFLICT DO NOTHING",
+                (str(user.id),)
             )
             db.connection.commit()
             try:
@@ -247,7 +247,7 @@ class Manage(commands.Cog):
         else:
             base = (user.nick.split(' ')[0] if user.nick else '')
             db.cursor.execute(
-                "INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES (%s,%s,%s,0,%s)",
+                "INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES (%s,%s,%s,False,%s)",
                 (user.id, ign, uuid, base)
             )
             db.connection.commit()

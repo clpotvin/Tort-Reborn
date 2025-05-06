@@ -65,7 +65,7 @@ class Profile(commands.Cog):
                 color = rank_color_map[guildstats['rank']]
                 description = ''
 
-            cur.execute(f'SELECT * FROM shells WHERE user = \'{pdata["username"]}\'')
+            cur.execute(f'SELECT * FROM shells WHERE \"user\" = \'{pdata["username"]}\'')
             rows = cur.fetchall()
 
             if len(rows) == 0:

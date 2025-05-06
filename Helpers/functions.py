@@ -8,7 +8,7 @@ from io import BytesIO
 from uuid import UUID
 
 import requests
-from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont, ImageOps, ImageColor
 
 from Helpers.variables import minecraft_colors, colours, shadows, test
 
@@ -311,6 +311,40 @@ def generate_rank_badge(text, colour, scale=4):
 
     img = img.resize((img.width * scale, img.height * scale), resample=Image.Resampling.NEAREST)
 
+    return img
+
+
+def vertical_gradient(width=900, height=1180, colour='#66ccff', reverse=False):
+    if colour[0] != '#':
+        colour = '#' + colour
+    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', colour)
+    if not match:
+        return False
+    color = Color(colour)
+    if not reverse:
+        top_color = ImageColor.getrgb(color.light)
+        bottom_color = ImageColor.getrgb(color.shadow)
+    else:
+        top_color = ImageColor.getrgb(color.shadow)
+        bottom_color = ImageColor.getrgb(color.light)
+
+    img = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    for y in range(height):
+        ratio = y / height
+        r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+        g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+        b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+        for x in range(width):
+            img.putpixel((x, y), (r, g, b))
+    return img
+
+
+def round_corners(img, radius=25):
+    img = img.convert("RGBA")
+    rounded_mask = Image.new("L", img.size, 0)
+    draw = ImageDraw.Draw(rounded_mask)
+    draw.rounded_rectangle([(0, 0), img.size], radius=radius, fill=255)
+    img.putalpha(rounded_mask)
     return img
 
 

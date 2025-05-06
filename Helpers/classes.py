@@ -122,7 +122,7 @@ class PlayerStats:
                 self.backgrounds_owned = json.loads(row[2])
         # shells
         if self.taq:
-            db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{self.discord}\'')
+            db.cursor.execute(f'SELECT * FROM shells WHERE \"user\" = \'{self.discord}\'')
             rows = db.cursor.fetchall()
             self.shells = 0 if len(rows) == 0 else rows[0][1]
             self.balance = 0 if len(rows) == 0 else rows[0][2]
@@ -319,7 +319,7 @@ class NewMember(Modal):
             db.connection.commit()
         else:
             db.cursor.execute(
-                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , 0, \'Starfish\', {pdata.wars});')
+                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , False, \'Starfish\', {pdata.wars});')
             db.connection.commit()
         db.close()
         await self.user.edit(nick="Starfish " + self.children[0].value)
