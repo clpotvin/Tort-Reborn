@@ -32,19 +32,31 @@ class Profile(commands.Cog):
             await message.followup.send(embed=embed, ephemeral=True)
             return
 
-        bg = vertical_gradient(colour=player.tag_color)
-        bg = round_corners(bg)
         color = '#ffffff'
-        text_color = '#ffffff'
-        text_drop_shadow = '#3f3f3f'
+        basic_text_color = '#ffffff'
+        basic_text_drop_shadow = '#3f3f3f'
+
+        # Temporary while I work on implementing the rest of the profile card customizations
+        # Also I have bad variable names...
+        ###
+        custom_bg_fg = True
+        custom_bg_fg_color_1 = '#4585db'
+        custom_bg_fg_color_2 = '#2f2b73'
+        ###
+
+        bg = vertical_gradient(main_color=player.tag_color)
+        bg = round_corners(bg)
         draw = ImageDraw.Draw(bg)
 
-        bg_fg = vertical_gradient(width=850, height=1130, colour="#222f72")
+        if custom_bg_fg:
+            bg_fg = vertical_gradient(width=850, height=1130, main_color=custom_bg_fg_color_1, secondary_color=custom_bg_fg_color_2)
+        else:
+            bg_fg = vertical_gradient(width=850, height=1130, main_color="#222f72")
         bg.paste(bg_fg, (25, 25), bg_fg)
 
-        fg_bg = vertical_gradient(width=820, height=545, colour=player.tag_color, reverse=True)
+        fg_bg = vertical_gradient(width=818, height=545, main_color=player.tag_color, reverse=True)
         fg_bg = round_corners(fg_bg)
-        bg.paste(fg_bg, (40, 100), fg_bg)
+        bg.paste(fg_bg, (41, 100), fg_bg)
 
         # background
         background = Image.open(f"images/profile_backgrounds/{player.background}.png")
@@ -60,11 +72,11 @@ class Profile(commands.Cog):
         except Exception as e:
             print(e)
             skin = Image.open('images/profile/x-steve500.png')
-        bg.paste(skin, (150+50, 26+110), skin)
+        bg.paste(skin, (200, 136), skin)
 
         rank = generate_rank_badge(player.tag_display, player.tag_color)
         rank_w, rank_h = rank.size
-        bg.paste(rank, (400 - int(rank_w / 2)+50, 483 - int(rank_h / 2)+110), rank)
+        bg.paste(rank, (450 - int(rank_w / 2), 483 - int(rank_h / 2)+110), rank)
 
         # guild and rank
         if player.guild:
@@ -86,16 +98,16 @@ class Profile(commands.Cog):
             draw.text((230, 790), player.guild, font=guild_font, fill=minecraft_colors[guild_colour])
 
             banner = generate_banner(player.guild, 15, "2")
-            banner.thumbnail((260, 260))
-            bg.paste(banner, (50, 800))
+            banner.thumbnail((157, 157))
+            bg.paste(banner, (41, 562))
 
         # name
         name_font = ImageFont.truetype('images/profile/game.ttf', 50)
         _, _, w, h = draw.textbbox((0, 0), player.username, font=name_font)
         name_img = Image.new("RGBA", (800, 100), (0, 0, 0, 0))
         name_draw = ImageDraw.Draw(name_img)
-        name_draw.text((7, 7), player.username, font=name_font, fill=text_drop_shadow)
-        name_draw.text((0, 0), player.username, font=name_font, fill=text_color)
+        name_draw.text((7, 7), player.username, font=name_font, fill=basic_text_drop_shadow)
+        name_draw.text((0, 0), player.username, font=name_font, fill=basic_text_color)
         bg.paste(name_img, (50, 40), name_img)
 
         # profile stats
@@ -142,14 +154,12 @@ class Profile(commands.Cog):
                 _, _, w, h = draw.textbbox((0, 0), '{:,}'.format(player.balance), font=data_font)
                 bal_img = Image.new("RGBA", (800, 100), (0, 0, 0, 0))
                 bal_draw = ImageDraw.Draw(bal_img)
-                bal_draw.text((7, 7), str(player.balance), font=data_font, fill=text_drop_shadow)
-                bal_draw.text((0, 0), str(player.balance), font=data_font, fill=text_color)
+                bal_draw.text((7, 7), str(player.balance), font=data_font, fill=basic_text_drop_shadow)
+                bal_draw.text((0, 0), str(player.balance), font=data_font, fill=basic_text_color)
                 bg.paste(bal_img, (780 - (30 * len(str(player.balance))), 40), bal_img)
                 # addLine('&f{:,}'.format(player.balance), draw, data_font, 780 - w, 40)
                 bg.paste(shells_img, (800, 38), shells_img)
 
-        # embed
-        possessive_noun = '\'s' if player.username[-1] != 's' else '\''
         with BytesIO() as file:
             bg.save(file, format="PNG")
             file.seek(0)

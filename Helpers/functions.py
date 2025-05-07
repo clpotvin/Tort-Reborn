@@ -10,7 +10,7 @@ from uuid import UUID
 import requests
 from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont, ImageOps, ImageColor
 
-from Helpers.variables import minecraft_colors, colours, shadows, test
+from Helpers.variables import minecraft_colors, minecraft_banner_colors, colours, shadows, test
 
 
 def isInCurrDay(data, uuid):
@@ -314,19 +314,28 @@ def generate_rank_badge(text, colour, scale=4):
     return img
 
 
-def vertical_gradient(width=900, height=1180, colour='#66ccff', reverse=False):
-    if colour[0] != '#':
-        colour = '#' + colour
-    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', colour)
+def vertical_gradient(width=900, height=1180, main_color='#66ccff', secondary_color=False, reverse=False):
+    if main_color[0] != '#':
+        main_color = '#' + main_color
+    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', main_color)
     if not match:
         return False
-    color = Color(colour)
-    if not reverse:
-        top_color = ImageColor.getrgb(color.light)
-        bottom_color = ImageColor.getrgb(color.shadow)
+    if secondary_color is not False:
+        if secondary_color[0] != '#':
+            secondary_color = '#' + secondary_color
+        match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', secondary_color)
+        if not match:
+            return False
+        top_color = ImageColor.getrgb(main_color)
+        bottom_color = ImageColor.getrgb(secondary_color)
     else:
-        top_color = ImageColor.getrgb(color.shadow)
-        bottom_color = ImageColor.getrgb(color.light)
+        color = Color(main_color)
+        if not reverse:
+            top_color = ImageColor.getrgb(color.light)
+            bottom_color = ImageColor.getrgb(color.shadow)
+        else:
+            top_color = ImageColor.getrgb(color.shadow)
+            bottom_color = ImageColor.getrgb(color.light)
 
     img = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     for y in range(height):
@@ -373,7 +382,7 @@ def generate_banner(guild, scale, style=''):
 
         bg = bg.convert("L")
 
-        bg = ImageOps.colorize(bg, "black", minecraft_colors[banner['base']])
+        bg = ImageOps.colorize(bg, "black", minecraft_banner_colors[banner['base']])
 
         for layer in banner['layers']:
             if w == 64:
@@ -385,7 +394,7 @@ def generate_banner(guild, scale, style=''):
 
             pattern2 = pattern.convert("L")
 
-            pattern2 = ImageOps.colorize(pattern2, "black", minecraft_colors[layer['colour']])
+            pattern2 = ImageOps.colorize(pattern2, "black", minecraft_banner_colors[layer['colour']])
 
             bg.paste(pattern2, (0, 0), mask)
 
