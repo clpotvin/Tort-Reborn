@@ -13,8 +13,8 @@ from Helpers.variables import guilds
 class formView(View):
     def __init__(self, channel):
         super().__init__()
-        self.add_item(Button(label='Guild Member', url=f'https://tally.so/r/3laAPp?ticket={channel}', emoji='🔵'))
-        self.add_item(Button(label='Community Member', url=f'https://tally.so/r/mBk0l7?ticket={channel}', emoji='🟢'))
+        self.add_item(Button(label='Guild Member', url=f'https://tally.so/r/nrpr5X?ticket={channel}', emoji='🔵'))
+        self.add_item(Button(label='Community Member', url=f'https://tally.so/r/3XgBrz?ticket={channel}', emoji='🟢'))
 
 
 class OnGuildChannelCreate(commands.Cog):
@@ -37,12 +37,10 @@ class OnGuildChannelCreate(commands.Cog):
                     if not overwrite.bot:
                         user_name = overwrite.name
                         break
-            # img = Image.open('images/profile/welcome.png')
-            img = Image.open('images/profile/angler.png')
+            img = Image.open('images/profile/welcome.png')
             draw = ImageDraw.Draw(img)
             gameFont = ImageFont.truetype('images/profile/game.ttf', 38)
             draw.text((198, 13), user_name, font=gameFont, fill='#ffba02')
-            draw.text((198, 13), user_name, fill='#ffba02')
 
             with BytesIO() as file:
                 img.save(file, format="PNG")
