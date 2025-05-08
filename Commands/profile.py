@@ -19,32 +19,25 @@ class Profile(commands.Cog):
         self.client = client
 
     @slash_command(description='Displays a guild profile of guild member')
-    async def profile(self, message, name: discord.Option(str, require=True),
-                      days: discord.Option(int, min=1, max=30, default=7)):
-        await message.defer()
+    async def profile(self, ctx: discord.ApplicationContext, name: discord.Option(str, required=True), days: discord.Option(int, min=1, max=30, default=7)):
+        await ctx.defer()
         player = PlayerStats(name, days)
 
         if player.error:
-            print
             embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
                                   description=f'Could not retrieve information of `{name}`.\nPlease check your spelling or try again later.',
                                   color=0xe33232)
-            await message.followup.send(embed=embed, ephemeral=True)
+            await ctx.followup.send(embed=embed, ephemeral=True)
             return
 
         color = '#ffffff'
         basic_text_color = '#ffffff'
         basic_text_drop_shadow = '#3f3f3f'
 
-        # Temporary while I work on implementing the rest of the profile card customizations
-        # Also I have bad variable names...
-        ###
         custom_bg_fg = True
         custom_bg_fg_color_1 = '#4585db'
         custom_bg_fg_color_2 = '#2f2b73'
-        ###
 
-        # outline and card bg
         bg = vertical_gradient(main_color=player.tag_color)
         bg = round_corners(bg)
         draw = ImageDraw.Draw(bg)
@@ -59,12 +52,10 @@ class Profile(commands.Cog):
         fg_bg = round_corners(fg_bg)
         bg.paste(fg_bg, (41, 100), fg_bg)
 
-        # background
         background = Image.open(f"images/profile_backgrounds/{player.background}.png")
         background = round_corners(background, radius=20)
         bg.paste(background, (50, 110), background)
 
-        # skin
         try:
             headers = {'User-Agent': os.getenv("visage_UA")}
             url = f"https://visage.surgeplay.com/bust/500/{player.UUID}"
@@ -76,12 +67,10 @@ class Profile(commands.Cog):
         skin.thumbnail((480, 480))
         bg.paste(skin, (200, 156), skin)
 
-        # wynn rank badge
         rank = generate_rank_badge(player.tag_display, player.tag_color)
         rank_w, rank_h = rank.size
         bg.paste(rank, (450 - int(rank_w / 2), 96), rank)
 
-        # guild and rank
         if player.guild:
             guild_font = ImageFont.truetype('images/profile/minecraft_font.ttf', 40)
             _, _, w, h = draw.textbbox((0, 0), player.guild, font=guild_font)
@@ -121,7 +110,6 @@ class Profile(commands.Cog):
             banner.thumbnail((157, 157))
             bg.paste(banner, (41, 562))
 
-        # name
         name_font = ImageFont.truetype('images/profile/game.ttf', 50)
         _, _, w, h = draw.textbbox((0, 0), player.username, font=name_font)
         name_img = Image.new("RGBA", (800, 100), (0, 0, 0, 0))
@@ -130,7 +118,6 @@ class Profile(commands.Cog):
         name_draw.text((0, 0), player.username, font=name_font, fill=basic_text_color)
         bg.paste(name_img, (50, 40), name_img)
 
-        # profile boxes
         box_l = Image.new('RGBA', (400, 75), (0, 0, 0, 0))
         box_r = Image.new('RGBA', (380, 75), (0, 0, 0, 0))
         box_l_draw = ImageDraw.Draw(box_l)
@@ -142,7 +129,6 @@ class Profile(commands.Cog):
             bg.paste(box_l, (50, 730 + (row * 85)), box_l)
             bg.paste(box_r, (470, 730 + (row * 85)), box_r)
 
-        # profile stats
         title_font = ImageFont.truetype('images/profile/5x5.ttf', 40)
         data_font = ImageFont.truetype('images/profile/game.ttf', 35)
         if player.online:
@@ -166,17 +152,11 @@ class Profile(commands.Cog):
             draw.text((440, 1020), format_number(player.guild_contributed), font=data_font, anchor="ra")
             if player.taq and player.in_guild_for.days >= 1:
                 draw.text((60, 1060), 'Guild Raids', font=title_font, fill='#fad51e')
-                # draw.text((440, 1105), format_number(player.guild_raids), font=data_font, anchor="ra")
                 draw.text((480, 805), f'Playtime / {player.stats_days} D', font=title_font, fill='#fad51e')
-                # draw.text((840, 850), f'{player.real_pt} hrs', font=data_font, anchor="ra")
                 draw.text((480, 890), f'Wars / {player.stats_days} D', font=title_font, fill='#fad51e')
-                # draw.text((840, 935), '{:,}'.format(player.real_wars), font=data_font, anchor="ra")
                 draw.text((480, 975), f'Guild XP / {player.stats_days} D', font=title_font, fill='#fad51e')
-                # draw.text((840, 1020), format_number(player.real_xp), font=data_font, anchor="ra")
                 draw.text((480, 1060), f'Guild Raids / {player.stats_days} D', font=title_font, fill='#fad51e')
-                # draw.text((840, 1105), format_number(player.real_guild_raids), font=data_font, anchor="ra")
 
-                # shells
                 shells_img = Image.open('images/profile/shells.png')
                 shells_img.thumbnail((50, 50))
                 data_font = ImageFont.truetype('images/profile/game.ttf', 50)
@@ -186,7 +166,6 @@ class Profile(commands.Cog):
                 bal_draw.text((7, 7), str(player.balance), font=data_font, fill=basic_text_drop_shadow)
                 bal_draw.text((0, 0), str(player.balance), font=data_font, fill=basic_text_color)
                 bg.paste(bal_img, (780 - (30 * len(str(player.balance))), 40), bal_img)
-                # addLine('&f{:,}'.format(player.balance), draw, data_font, 780 - w, 40)
                 bg.paste(shells_img, (800, 40), shells_img)
 
         with BytesIO() as file:
@@ -195,11 +174,10 @@ class Profile(commands.Cog):
             t = int(time.time())
             profile_card = discord.File(file, filename=f"profile{t}.png")
 
-        await message.followup.send(file=profile_card)
+        await ctx.followup.send(file=profile_card)
 
         if player.linked:
-            # 1 Year background unlock
-            if str(message.author.id) == player.discord and player.in_guild_for.days >= 365 and 4 not in player.backgrounds_owned:
+            if str(ctx.author.id) == player.discord and player.in_guild_for.days >= 365 and 4 not in player.backgrounds_owned:
                 embed = discord.Embed(title=':tada: New background unlocked!',
                                       description=f'<@{player.discord}> unlocked the **1 Year Anniversary** background!',
                                       color=0x34eb40)
@@ -208,10 +186,9 @@ class Profile(commands.Cog):
 
                 unlock = player.unlock_background('1 Year Anniversary')
                 if unlock:
-                    await message.channel.send(embed=embed, file=bg_file)
+                    await ctx.channel.send(embed=embed, file=bg_file)
 
-            # Narwhal background unlock
-            if str(message.author.id) == player.discord and player.rank.upper() in ['NARWHAL','HYDRA'] and 3 not in player.backgrounds_owned:
+            if str(ctx.author.id) == player.discord and player.rank.upper() in ['NARWHAL','HYDRA'] and 3 not in player.backgrounds_owned:
                 embed = discord.Embed(title=':tada: New background unlocked!',
                                       description=f'<@{player.discord}> unlocked the **TAq Sea Turtle** background!',
                                       color=0x34eb40)
@@ -220,10 +197,7 @@ class Profile(commands.Cog):
 
                 unlock = player.unlock_background('TAq Sea Turtle')
                 if unlock:
-                    await message.channel.send(embed=embed, file=bg_file)
-
-
-
+                    await ctx.channel.send(embed=embed, file=bg_file)
 
     @commands.Cog.listener()
     async def on_ready(self):

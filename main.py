@@ -84,7 +84,7 @@ if not test or test:
 
         ch = client.get_channel(1367285315236008036)
         if len(traceback_string) > 1500:
-            traceback_string = "…(truncated)…\n" + traceback_string[-1500:]
+            traceback_string = "…(truncated)…\n" + traceback_string[:1500]
         await ch.send(f'## {ctx.author} in <#{ctx.channel_id}>:\n```\n/{ctx.command.qualified_name}{options}\n```\n## Traceback:\n```\n{traceback_string}\n```')
         raise error
 
