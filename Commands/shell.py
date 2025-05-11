@@ -48,7 +48,7 @@ class Shell(commands.Cog):
         db = DB()
         db.connect()
         db.cursor.execute(
-            'SELECT shells.user, discord_links.uuid, shells.bal '
+            'SELECT shells.user, discord_links.uuid, shells.balance '
             'FROM shells JOIN discord_links ON shells.user = discord_links.discord_id;'
         )
         row_headers = [x[0] for x in db.cursor.description]
@@ -78,7 +78,7 @@ class Shell(commands.Cog):
                     shelldata.append({
                         'name': member['name'],
                         'rank': member['rank'],
-                        'shells': player['bal']
+                        'shells': player['balance']
                     })
             if not found:
                 shelldata.append({

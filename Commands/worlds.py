@@ -15,7 +15,7 @@ class Worlds(commands.Cog):
 
     @slash_command(description='Shows worlds information')
     async def worlds(self, message,
-                     order_by: discord.Option(str, choices=['World', 'Player count', 'World age'],
+                     order_by: discord.Option(str, choices=['Player count', 'World age'],
                                               require=True),
                      order: discord.Option(str, choices=['⬆️ Ascending', '⬇️ Descending'], require=True)):
         await message.defer()

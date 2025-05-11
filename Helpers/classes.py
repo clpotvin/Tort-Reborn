@@ -258,7 +258,7 @@ class LinkAccount(Modal):
         db = DB()
         db.connect()
         db.cursor.execute(
-            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', 0, \'{self.rank}\');')
+            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', False, \'{self.rank}\');')
         db.connection.commit()
         await self.user.edit(nick=f"{self.rank} {self.children[0].value}")
         await interaction.response.send_message(f'{self.added}\n\n{self.removed}', ephemeral=True)

@@ -127,9 +127,11 @@ class Manage(commands.Cog):
             )
             db.connection.commit()
             try:
-                base = user.nick.split(' ')[0]
+                current = user.nick or user.name
+                parts = current.split(' ', 1)
+                base = parts[1] if len(parts) > 1 else parts[0]
                 await user.edit(nick=f"{rank} {base}")
-            except:
+            except Exception:
                 pass
             await ctx.followup.send(f"{added}\n\n{removed}", ephemeral=True)
         else:

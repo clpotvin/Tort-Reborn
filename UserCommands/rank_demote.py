@@ -52,14 +52,20 @@ class RankDemote(commands.Cog):
 
                 await user.remove_roles(*roles_to_remove, reason=f'Demotion (ran by {message.author.name})', atomic=True)
 
-                await user.edit(nick=f'{list(discord_ranks)[current_rank_index-1]} {username}')
+                try:
+                    parts = user.nick.split(' ', 1)
+                    base = parts[1] if len(parts) > 1 else parts[0]
+                    new_rank = list(discord_ranks)[current_rank_index-1]
+                    await user.edit(nick=f'{new_rank} {base}')
+                except Exception:
+                    pass
 
                 db.cursor.execute(f'UPDATE discord_links SET rank = \'{list(discord_ranks)[current_rank_index-1]}\' WHERE discord_id = {user.id}')
                 db.connection.commit()
                 db.close()
 
                 embed = discord.Embed(title=':white_check_mark: Demotion successful',
-                                      description=f'<@{user.id}> promoted to **{list(discord_ranks)[current_rank_index-1]}**', color=0x3ed63e)
+                                      description=f'<@{user.id}> demoted to **{list(discord_ranks)[current_rank_index-1]}**', color=0x3ed63e)
                 await message.respond(embed=embed)
             else:
                 embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
