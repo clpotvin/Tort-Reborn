@@ -16,6 +16,8 @@ if test:
     eco_learning_channel = unknown_channel_redirect
     rank_up_channel = unknown_channel_redirect
     promotion_channel = unknown_channel_redirect
+    raid_collecting_channel = 1370900136267616339
+    raid_log_channel = 1370124586036887652
 else:
     guilds = [729147655875199017, 1364751619018850405]
     te = 784795827808763904
@@ -26,6 +28,8 @@ else:
     eco_learning_channel = None
     rank_up_channel = None
     promotion_channel = None
+    raid_collecting_channel = None
+    raid_log_channel = None
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 

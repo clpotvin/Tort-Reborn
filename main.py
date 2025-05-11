@@ -112,7 +112,7 @@ client.load_extension('Commands.update_claim')
 client.load_extension('Commands.welcome_admin')
 client.load_extension('Commands.suggest_promotion')
 client.load_extension('Commands.ranking_up_setup')
-
+client.load_extension('Commands.raid_collecting')
 
 # Load Dev Commands
 client.load_extension('Commands.render_text')

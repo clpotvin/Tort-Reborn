@@ -1,1 +1,1 @@
-{"type": "Disconnected", "value": "Bot disconnected from Discord", "tb": "Bot disconnected from Discord", "timestamp": 1746732974}
+{"type": "<class 'discord.errors.ExtensionFailed'>", "value": "Extension 'Tasks.update_member_data' raised an error: ClientException: Cog named 'RaidCollecting' already loaded", "tb": "<traceback object at 0x000002D7F66377C0>", "timestamp": 1746921979}
