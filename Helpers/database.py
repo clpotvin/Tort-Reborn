@@ -13,9 +13,9 @@ class DB:
                 user=os.getenv("DB_LOGIN"),
                 password=os.getenv("DB_PASS"),
                 host=os.getenv("DB_HOST"),
-                port=int(os.getenv("DB_PORT", 5432)),
+                port=int(os.getenv("DB_PORT")),
                 database=os.getenv("DB_DATABASE", "postgres"),
-                sslmode=os.getenv("DB_SSLMODE","disable")
+                sslmode=os.getenv("DB_SSLMODE")
             )
             self.cursor = self.connection.cursor()
         except OperationalError as e:
