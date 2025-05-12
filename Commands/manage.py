@@ -152,7 +152,7 @@ class Manage(commands.Cog):
         operation: discord.Option(str, choices=['add','remove']),
         user: discord.Member,
         amount: int,
-        reason: discord.Option(str, required=False, default='')
+        # reason: discord.Option(str, required=False, default='')
     ):
         db = DB(); db.connect()
         db.cursor.execute(
@@ -192,15 +192,15 @@ class Manage(commands.Cog):
                 addLine(f'&7All-Time: &f{player.shells}', draw, font, 95, 61)
             addLine(f'&f{player.username}', draw, font, 95, 15)
             addLine(f'&7Balance: &f{new_bal} &7({diff}&7)', draw, font, 95, 40)
-            if reason:
-                for line in split_sentence(reason):
-                    img, draw = expand_image(img)
-                    addLine(f'&3{line}', draw, font, 10, img.height-25)
+            # if reason:
+            #     for line in split_sentence(reason):
+            #         img, draw = expand_image(img)
+            #         addLine(f'&3{line}', draw, font, 10, img.height-25)
             db.connection.commit()
             # Log
             with open('shell.log','a') as f:
                 ts = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
-                f.write(f'[{ts}] {ctx.user.name} {operation}ed {amount} to {player.username}. Reason: {reason}\n')
+                f.write(f'[{ts}] {ctx.user.name} {operation}ed {amount} to {player.username}.\n')
             img = ImageOps.expand(img,border=(2,2),fill='#100010e2')
             draw = ImageDraw.Draw(img)
             draw.rectangle((2,2,img.width-3,img.height-3),outline='#240059',width=2)
@@ -213,7 +213,8 @@ class Manage(commands.Cog):
                 user=user,
                 operation=operation,
                 amount=amount,
-                reason=reason
+                # set to empty for now
+                reason=''
             )
             await ctx.interaction.response.send_modal(modal)
         db.close()

@@ -19,7 +19,12 @@ if test:
     raid_collecting_channel = 1370900136267616339
     raid_log_channel = 1370124586036887652
     member_app_channel = 1367283441850122330
+    military_channel = 1367287144682487828
+    territory_tracker_channel = 1367287144682487828
+    spearhead_role_id = 1367287262068342804
     application_manager_role_id = "<@&1371274399637835837>"
+    shell_emoji_id = "<:shells:1371292212729479207>"
+    aspect_emoji_id = "<:aspect_warrior:1371292093074640936>"
 else:
     guilds = [729147655875199017, 1364751619018850405]
     te = 784795827808763904
@@ -34,7 +39,12 @@ else:
     raid_collecting_channel = 1280196125340602478
     raid_log_channel = 1290713041285152788
     member_app_channel = 889162191150931978
+    military_channel = 729162690760671244
+    territory_tracker_channel = 729162480000958564
+    spearhead_role_id = 857589881689210950
     application_manager_role_id = "<@&870767928704921651>"
+    shell_emoji_id = "<:shells:1126608994526560306>"
+    aspect_emoji_id = "<:aspect_warrior:1371292000963395655>"
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 

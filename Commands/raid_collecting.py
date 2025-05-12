@@ -3,9 +3,10 @@ from discord.ext import commands
 from discord.commands import slash_command
 from discord.ui import View, button
 from pathlib import Path
+from textwrap import dedent
 
 from Helpers.database import DB
-from Helpers.variables import guilds, raid_collecting_channel
+from Helpers.variables import guilds, raid_collecting_channel, shell_emoji_id, aspect_emoji_id
 
 CHANNEL_ID = raid_collecting_channel
 GUILD_ID   = guilds[0]
@@ -123,20 +124,26 @@ class RaidCollecting(commands.Cog):
 
         embed = discord.Embed(color=discord.Color.blurple())
         embed.set_image(url="attachment://raidcollectingbanner.png")
-        embed.description = (
-            "❓ **How to Claim Your Raid Rewards**\n"
-            "After completing raids, you become eligible for rewards. You can claim **Aspects** or **Shells** depending on how many raids you've completed.\n\n"
-            "Make sure to check your eligibility by clicking on the **Claim rewards** button below. You'll see how many raids you've completed and which rewards are available.\n\n"
-            "<:aspect_warrior:> **Claim Aspects**\n"
-            "• 1 Aspect for every 2 Guild Raids you complete.\n\n"
-            "<:shells:> **Claim Shells**\n"
-            "• 1 Shell for every Guild Raid you complete.\n\n"
-            "**How to Claim**\n"
-            "1. Click the **Claim rewards** button.\n"
-            "2. Choose either **Aspects** or **Shells**.\n"
-            "3. Your claimed rewards will be updated automatically!\n\n"
-            "_Complete more raids to earn more rewards!_"
-        )
+        embed.description = dedent(f"""
+            ❓ **How to Claim Your Raid Rewards**
+
+            After completing raids, you become eligible for rewards. You can claim **Aspects** or **Shells** depending on how many raids you've completed.
+
+            Make sure to check your eligibility by clicking on the **Claim rewards** button below. You'll see how many raids you've completed and which rewards are available.
+
+            {aspect_emoji_id} **Claim Aspects**
+            • 1 Aspect for every 2 Guild Raids you complete.
+
+            {shell_emoji_id} **Claim Shells**
+            • 1 Shell for every Guild Raid you complete.
+
+            **How to Claim**
+            1. Click the **Claim rewards** button.
+            2. Choose either **Aspects** or **Shells**.
+            3. Your claimed rewards will be updated automatically!
+
+            _Complete more raids to earn more rewards!_
+            """)
         await channel.send(embed=embed, view=view)
 
         await ctx.followup.send("✅ Posted the raid-collecting message.", ephemeral=True)

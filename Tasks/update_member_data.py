@@ -47,7 +47,7 @@ class UpdateMemberData(commands.Cog):
         bar = "█" * filled + "─" * (length - filled)
         return f"[{bar}]"
 
-    @tasks.loop(minutes=0.5)
+    @tasks.loop(minutes=5)
     async def update_member_data(self):
         db = None
         try:
@@ -97,6 +97,7 @@ class UpdateMemberData(commands.Cog):
                             if new_count > old_count:
                                 if not any(p["uuid"] == uuid for p in self.raid_participants[raid]):
                                     self.raid_participants[raid].append({"uuid": uuid, "name": name})
+                                    print(f"User {name} had {old_count} and now has {new_count}")
                                     if len(self.raid_participants[raid]) == 4:
                                         participants = self.raid_participants[raid]
                                         names = [p["name"] for p in participants]
