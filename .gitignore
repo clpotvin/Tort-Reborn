@@ -6,6 +6,10 @@ gen
 
 # Environment file
 .env
+venv
+
+# Python cache files
+__pycache__/
 
 Archive/theaquarium.json
 current_activity.json

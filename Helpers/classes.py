@@ -1,6 +1,6 @@
 import datetime
 import json
-import urllib.request
+import requests
 
 from PIL import Image, ImageOps
 from dateutil import parser
@@ -22,10 +22,9 @@ class Guild:
         else:
             url = f'https://api.wynncraft.com/v3/guild/{urlify(guild)}'
 
-        f = urllib.request.urlopen(url)
-        data = f.read().decode('utf-8')
-
-        guild_data = json.loads(data)
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        guild_data = resp.json()
 
         self.name = guild_data['name']
         self.prefix = guild_data['prefix']
@@ -123,7 +122,7 @@ class PlayerStats:
                 self.backgrounds_owned = json.loads(row[2])
         # shells
         if self.taq:
-            db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{self.discord}\'')
+            db.cursor.execute(f'SELECT * FROM shells WHERE \"user\" = \'{self.discord}\'')
             rows = db.cursor.fetchall()
             self.shells = 0 if len(rows) == 0 else rows[0][1]
             self.balance = 0 if len(rows) == 0 else rows[0][2]
@@ -218,25 +217,32 @@ class PlayerShells:
     def __init__(self, discord_id):
         db = DB()
         db.connect()
-        db.cursor.execute(f'SELECT uuid FROM discord_links WHERE discord_id = \'{discord_id}\'')
-        uuid = db.cursor.fetchone()[0]
-        player_data = getPlayerUUID(uuid)
-        if not player_data:
-            self.UUID = uuid
-            self.username = uuid
-        else:
-            self.UUID = player_data[1]
-            self.username = player_data[0]
 
-        db.cursor.execute(f'SELECT * FROM shells WHERE user = \'{discord_id}\'')
-        rows = db.cursor.fetchall()
-        db.close()
-        if len(rows) != 0:
+        db.cursor.execute(
+            "SELECT ign, uuid FROM discord_links WHERE discord_id = %s",
+            (discord_id,)
+        )
+        link = db.cursor.fetchone()
+        if link:
+            self.username, self.UUID = link[0], link[1]
             self.error = False
-            self.shells = 0 if len(rows) == 0 else rows[0][1]
-            self.balance = 0 if len(rows) == 0 else rows[0][2]
         else:
+            self.username, self.UUID = None, None
             self.error = True
+
+        self.shells = 0
+        self.balance = 0
+
+        if not self.error:
+            db.cursor.execute(
+                "SELECT shells, balance FROM shells WHERE \"user\" = %s",
+                (str(discord_id),)
+            )
+            row = db.cursor.fetchone()
+            if row:
+                self.shells, self.balance = row
+
+        db.close()
 
 
 class LinkAccount(Modal):
@@ -252,7 +258,7 @@ class LinkAccount(Modal):
         db = DB()
         db.connect()
         db.cursor.execute(
-            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', 0, \'{self.rank}\');')
+            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', False, \'{self.rank}\');')
         db.connection.commit()
         await self.user.edit(nick=f"{self.rank} {self.children[0].value}")
         await interaction.response.send_message(f'{self.added}\n\n{self.removed}', ephemeral=True)
@@ -313,7 +319,7 @@ class NewMember(Modal):
             db.connection.commit()
         else:
             db.cursor.execute(
-                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , 0, \'Starfish\', {pdata.wars});')
+                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , False, \'Starfish\', {pdata.wars});')
             db.connection.commit()
         db.close()
         await self.user.edit(nick="Starfish " + self.children[0].value)

@@ -56,7 +56,8 @@ async def on_ready():
                                                                             f'```\n{crash_report["type"]}\n{crash_report["value"]}```',
                       colour=0x1cd641)
 
-        ch = client.get_channel(1053736331404120114)
+        # ch = client.get_channel(1053736331404120114) CHANGE TO UNKNOWN
+        ch = client.get_channel(1367285315236008036)
         await ch.send(embed=embed)
 
 
@@ -68,7 +69,7 @@ async def on_disconnect():
         json.dump(crash, f)
 
 
-if not test:
+if not test or test:
     @client.event
     async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
         options = ''
@@ -81,42 +82,47 @@ if not test:
             for message in tb:
                 traceback_string += f'{message}'
 
-        ch = client.get_channel(1212881770505043999)
+        ch = client.get_channel(1367285315236008036)
+        if len(traceback_string) > 1500:
+            traceback_string = "…(truncated)…\n" + traceback_string[:1500]
         await ch.send(f'## {ctx.author} in <#{ctx.channel_id}>:\n```\n/{ctx.command.qualified_name}{options}\n```\n## Traceback:\n```\n{traceback_string}\n```')
         raise error
 
 # Load Commands
 client.load_extension('Commands.online')
-client.load_extension('Commands.activity')
+# client.load_extension('Commands.activity')
+# Profile needs work but has shell count
 client.load_extension('Commands.profile')
-client.load_extension('Commands.progress')
+#client.load_extension('Commands.progress')
 client.load_extension('Commands.worlds')
+# Leaderboard needs work too, functional tho
 client.load_extension('Commands.leaderboard')
-client.load_extension('Commands.background_admin')
-client.load_extension('Commands.background')
-client.load_extension('Commands.rankcheck')
-client.load_extension('Commands.bank_admin')
+#client.load_extension('Commands.background_admin')
+#client.load_extension('Commands.background')
+#client.load_extension('Commands.rankcheck')
+#client.load_extension('Commands.bank_admin')
 client.load_extension('Commands.new_member')
-client.load_extension('Commands.reset_roles')
+# Kind of works but needs edits
+#client.load_extension('Commands.reset_roles')
 client.load_extension('Commands.manage')
-client.load_extension('Commands.blacklist')
+#client.load_extension('Commands.blacklist')
 client.load_extension('Commands.shell')
-client.load_extension('Commands.contribution')
-client.load_extension('Commands.recruit')
-client.load_extension('Commands.build')
-client.load_extension('Commands.withdraw')
-client.load_extension('Commands.update_claim')
-client.load_extension('Commands.welcome_admin')
-client.load_extension('Commands.suggest_promotion')
-client.load_extension('Commands.ranking_up_setup')
-
+#client.load_extension('Commands.contribution')
+#client.load_extension('Commands.recruit')
+#client.load_extension('Commands.build')
+#client.load_extension('Commands.withdraw')
+#client.load_extension('Commands.update_claim')
+#client.load_extension('Commands.welcome_admin')
+#client.load_extension('Commands.suggest_promotion')
+#client.load_extension('Commands.ranking_up_setup')
+client.load_extension('Commands.raid_collecting')
 
 # Load Dev Commands
 client.load_extension('Commands.render_text')
 client.load_extension('Commands.send_changelog')
 client.load_extension('Commands.preview_changelog')
-client.load_extension('Commands.check_app')
-client.load_extension('Commands.custom_profile')
+#client.load_extension('Commands.check_app')
+#client.load_extension('Commands.custom_profile')
 client.load_extension('Commands.rank_badge')
 client.load_extension('Commands.restart')
 
@@ -124,10 +130,11 @@ client.load_extension('Commands.restart')
 client.load_extension('UserCommands.new_member')
 client.load_extension('UserCommands.rank_promote')
 client.load_extension('UserCommands.rank_demote')
-client.load_extension('UserCommands.reset_roles')
+#client.load_extension('UserCommands.reset_roles')
 
 # Load message command
-client.load_extension('MessageCommands.notify')
+# Think we can remove, redundant
+# client.load_extension('MessageCommands.notify')
 
 # Load events
 client.load_extension('Events.on_message')

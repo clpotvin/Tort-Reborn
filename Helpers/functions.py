@@ -2,16 +2,15 @@ import colorsys
 import datetime
 import math
 import os
-import urllib.request
 import json
 import re
 from io import BytesIO
 from uuid import UUID
 
 import requests
-from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont, ImageOps, ImageColor
 
-from Helpers.variables import minecraft_colors, colours, shadows, test
+from Helpers.variables import minecraft_colors, minecraft_banner_colors, colours, shadows, test
 
 
 def isInCurrDay(data, uuid):
@@ -33,79 +32,78 @@ def date_diff(time=False):
 
 
 def getPlayerData(name):
-    if name.lower() == 'woodcreature': name = 'aa7402cc-bf1c-4aed-838b-fd8897d38836'
-    url = 'https://api.wynncraft.com/v2/player/' + name + '/stats'
+    if name.lower() == 'woodcreature':
+        name = 'aa7402cc-bf1c-4aed-838b-fd8897d38836'
+    url = f'https://api.wynncraft.com/v2/player/{name}/stats'
     try:
-        f = urllib.request.urlopen(url)
-    except:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
         return False
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    return jsondata
 
 
 def getPlayerDatav3(uuid):
     url = f'https://api.wynncraft.com/v3/player/{uuid}?fullResult'
     try:
-        f = urllib.request.urlopen(url)
-    except:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
         return False
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    return jsondata
 
 
 def getGuildFromShort(short):
-    url = 'https://api.wynncraft.com/public_api.php?action=statsLeaderboard&type=guild&timeframe=alltime'
+    url = ('https://api.wynncraft.com/public_api.php'
+           '?action=statsLeaderboard&type=guild&timeframe=alltime')
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return False
 
-    f = urllib.request.urlopen(url)
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    for guild in jsondata['data']:
+    for guild in data.get('data', []):
         if guild['prefix'].lower() == short.lower():
             return guild['name']
 
+    # fallback to local cache
     with open('guild_prefix.json', 'r') as f:
         guilds = json.load(f)
-        f.close()
+    return guilds.get(short.lower(), False)
 
-    if short.lower() in guilds:
-        return guilds[short.lower()]
-
-    return False
 
 
 def search(item, type):
     try_prefix = getGuildFromShort(item)
-
-    if not try_prefix:
-        searchurl = 'https://api.wynncraft.com/public_api.php?action=statsSearch&search=' + urlify(item)
-        f = urllib.request.urlopen(searchurl)
-
-        data = f.read().decode('utf-8')
-
-        jsondata = json.loads(data)
-
-        for datum in jsondata[type]:
-            if item.lower() == datum.lower():
-                return [True, datum]
-    else:
+    if try_prefix:
         return [True, try_prefix]
+
+    searchurl = (
+      'https://api.wynncraft.com/public_api.php'
+      f'?action=statsSearch&search={urlify(item)}'
+    )
+    try:
+        resp = requests.get(searchurl, timeout=10)
+        resp.raise_for_status()
+        jsondata = resp.json()
+    except requests.RequestException:
+        return [False]
+
+    for datum in jsondata.get(type, []):
+        if item.lower() == datum.lower():
+            return [True, datum]
     return [False]
 
 
 def getData(guild):
     url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
-    f = urllib.request.urlopen(url)
-    data = f.read().decode('utf-8')
-    jsondata = json.loads(data)
-    return jsondata
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException:
+        return False
 
 
 def urlify(in_string):
@@ -173,14 +171,16 @@ def calcPercentage(p, m):
 
 
 def getGuildMembers(guild):
-    url = 'https://api.wynncraft.com/public_api.php?action=guildStats&command=' + urlify(guild)
-
-    f = urllib.request.urlopen(url)
-    data = f.read().decode('utf-8')
-
-    jsondata = json.loads(data)
-
-    return jsondata['members']
+    url = (
+      'https://api.wynncraft.com/public_api.php'
+      f'?action=guildStats&command={urlify(guild)}'
+    )
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json().get('members', [])
+    except requests.RequestException:
+        return []
 
 
 def savePlayers(data):
@@ -237,15 +237,20 @@ class Color:
         self.rgb = tuple(int(color.lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))
         self.r, self.g, self.b = self.rgb[0] / 255, self.rgb[1] / 255, self.rgb[2] / 255
         self.hsv = colorsys.rgb_to_hsv(self.r, self.g, self.b)
-        self.h, self.s, self.v = self.hsv[0], self.hsv[1], self.hsv[2]
+        self.h, self.s, self.v = self.hsv
+
+        shadow_h = (self.h - 0.03) % 1
+        light_h = (self.h + 0.03) % 1
+        shadow_v = max(self.v - 0.1, 0)
+        light_v = min(self.v + 0.15, 1)
+
         self.shadow = '#%02x%02x%02x' % self.normalize_rgb(
-            colorsys.hsv_to_rgb(self.h - 0.03 if self.h >= 0.03 else 0, self.s, self.v - 0.1 if self.v >= 0.1 else 0))
+            colorsys.hsv_to_rgb(shadow_h, self.s, shadow_v))
         self.light = '#%02x%02x%02x' % self.normalize_rgb(
-            colorsys.hsv_to_rgb(self.h + 0.03 if self.h <= 0.97 else 1, self.s, self.v + 0.15 if self.v <= 0.85 else 1))
+            colorsys.hsv_to_rgb(light_h, self.s, light_v))
 
     def normalize_rgb(self, rgb):
-        (r, g, b) = (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
-        return r, g, b
+        return tuple(int(c * 255) for c in rgb)
 
 
 def generate_rank_old_badge(text, colour, scale=4):
@@ -314,11 +319,121 @@ def generate_rank_badge(text, colour, scale=4):
     return img
 
 
+def get_guild_badge_colors_with_text(colour):
+    if colour[0] != '#':
+        colour = '#' + colour
+    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', colour)
+    if not match:
+        return False
+    r, g, b = [int(colour[i:i+2], 16)/255 for i in (1, 3, 5)]
+    h, s, v = colorsys.rgb_to_hsv(r, g, b)
+
+    # light and shadow tones
+    light_s = max(s - 0.20, 0)
+    light_v = min(v + 0.09, 1)
+    shadow_s = min(s + 0.15, 1)
+    shadow_v = max(v - 0.15, 0)
+
+    light_rgb = colorsys.hsv_to_rgb(h, light_s, light_v)
+    shadow_rgb = colorsys.hsv_to_rgb(h, shadow_s, shadow_v)
+
+    light_hex = '#%02x%02x%02x' % tuple(int(c * 255) for c in light_rgb)
+    shadow_hex = '#%02x%02x%02x' % tuple(int(c * 255) for c in shadow_rgb)
+
+    # calculate brightness of base color to decide text color
+    brightness = 0.299 * r + 0.587 * g + 0.114 * b
+    text_color = '#000000' if brightness > 0.5 else '#ffffff'
+
+    return light_hex, shadow_hex, text_color
+
+
+def generate_badge(text, base_color, scale=3):
+    if not base_color.startswith("#"):
+        base_color = "#" + base_color
+
+    if not re.fullmatch(r'^#(?:[0-9a-fA-F]{3}){1,2}$', base_color):
+        return False
+
+    light, shadow, text_color = get_guild_badge_colors_with_text(base_color)
+
+    font = ImageFont.truetype('images/profile/5x5.ttf', 20)
+
+    img_height = 18
+    text_bbox = font.getbbox(text)
+    text_width = text_bbox[2] - text_bbox[0]
+    img_width = text_width + 24
+
+    img = Image.new('RGBA', (img_width, img_height), (255, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    draw.rectangle([(0, 1), (img.width, 14)], fill=light)
+    draw.rectangle([(2, 3), (img.width - 3, 12)], fill=base_color)
+    draw.rectangle([(0, 11), (3, 14)], fill=shadow)
+    draw.rectangle([(img.width - 4, 11), (img.width, 14)], fill=shadow)
+    draw.rectangle([(2, 15), (img.width - 3, 16)], fill=shadow)
+    draw.rectangle([(2, 11), (3, 12)], fill=light)
+    draw.rectangle([(img.width - 4, 11), (img.width - 3, 12)], fill=light)
+
+    left_margin = 14
+    text_y = img.height / 2 - 3
+    draw.text((left_margin + 2, text_y), text, font=font, anchor="lm", fill=shadow)
+    draw.text((left_margin, text_y), text, font=font, anchor="lm", fill=text_color)
+
+    img = img.resize((img.width * scale, img.height * scale), resample=Image.Resampling.NEAREST)
+    return img
+
+
+def vertical_gradient(width=900, height=1180, main_color='#66ccff', secondary_color=False, reverse=False):
+    if main_color[0] != '#':
+        main_color = '#' + main_color
+    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', main_color)
+    if not match:
+        return False
+    if secondary_color is not False:
+        if secondary_color[0] != '#':
+            secondary_color = '#' + secondary_color
+        match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', secondary_color)
+        if not match:
+            return False
+        top_color = ImageColor.getrgb(main_color)
+        bottom_color = ImageColor.getrgb(secondary_color)
+    else:
+        color = Color(main_color)
+        if not reverse:
+            top_color = ImageColor.getrgb(color.light)
+            bottom_color = ImageColor.getrgb(color.shadow)
+        else:
+            top_color = ImageColor.getrgb(color.shadow)
+            bottom_color = ImageColor.getrgb(color.light)
+
+    img = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    for y in range(height):
+        ratio = y / height
+        r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+        g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+        b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+        for x in range(width):
+            img.putpixel((x, y), (r, g, b))
+    return img
+
+
+def round_corners(img, radius=25):
+    img = img.convert("RGBA")
+    rounded_mask = Image.new("L", img.size, 0)
+    draw = ImageDraw.Draw(rounded_mask)
+    draw.rounded_rectangle([(0, 0), img.size], radius=radius, fill=255)
+    img.putalpha(rounded_mask)
+    return img
+
+
 def generate_banner(guild, scale, style=''):
     url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
-
-    f = urllib.request.urlopen(url)
-    data = json.loads(f.read().decode('utf-8'))
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+    except requests.RequestException:
+        return Image.open(f'images/banner{style}/base.png')
 
     if data['banner']:
         banner = data['banner']
@@ -336,7 +451,7 @@ def generate_banner(guild, scale, style=''):
 
         bg = bg.convert("L")
 
-        bg = ImageOps.colorize(bg, "black", minecraft_colors[banner['base']])
+        bg = ImageOps.colorize(bg, "black", minecraft_banner_colors[banner['base']])
 
         for layer in banner['layers']:
             if w == 64:
@@ -348,7 +463,7 @@ def generate_banner(guild, scale, style=''):
 
             pattern2 = pattern.convert("L")
 
-            pattern2 = ImageOps.colorize(pattern2, "black", minecraft_colors[layer['colour']])
+            pattern2 = ImageOps.colorize(pattern2, "black", minecraft_banner_colors[layer['colour']])
 
             bg.paste(pattern2, (0, 0), mask)
 

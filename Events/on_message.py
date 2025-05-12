@@ -37,7 +37,8 @@ class OnMessage(commands.Cog):
             if result:
                 if result[1] == 0:
                     if message.guild.id != 729147655875199017:
-                        ch = self.client.get_channel(1210928455663751228)  # test
+                        # Updated 4/30/2025
+                        ch = self.client.get_channel(1367283441850122330)  # test
                     else:
                         ch = self.client.get_channel(889162191150931978)
 
@@ -54,7 +55,7 @@ class OnMessage(commands.Cog):
                                 break
                     # else search for stats link in message content
                     else:
-                        stats_link = re.findall("wynncraft\.com\/stats\/player.*", message.content)
+                        stats_link = re.findall("wynncraft\\.com\\/stats\\/player.*", message.content)
                         if stats_link:
                             mc_name = stats_link[0].split('/')[-1]
 

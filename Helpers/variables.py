@@ -4,20 +4,41 @@ from dotenv import load_dotenv
 load_dotenv()
 test = os.getenv("TEST_MODE").lower() in ('true', '1', 't')
 
+unknown_channel_redirect = 1367285315236008036
+
 if test:
-    guilds = [1053447772302479421]
-    te = 1053447772302479421
-    main_guild = 1004096608465592462
-    changelog_channel = 1053699411823308972
+    guilds = [1364751619018850405, 1369134564450107412]
+    te = 1364751619018850405
+    changelog_channel = 1367276640207507617
+    guildbank_channel = unknown_channel_redirect
+    log_channel = unknown_channel_redirect
+    attention_channel = unknown_channel_redirect
+    eco_learning_channel = unknown_channel_redirect
+    rank_up_channel = unknown_channel_redirect
+    promotion_channel = unknown_channel_redirect
+    raid_collecting_channel = 1370900136267616339
+    raid_log_channel = 1370124586036887652
+    member_app_channel = 1367283441850122330
+    application_manager_role_id = "<@&1371274399637835837>"
 else:
-    guilds = [729147655875199017, 1053447772302479421]
+    guilds = [729147655875199017, 1364751619018850405]
     te = 784795827808763904
-    main_guild = 729147655875199017
-    changelog_channel = 939943620860084295
+    changelog_channel = 1367276640207507617
+    guildbank_channel = 1213515243041595442
+    log_channel = 936679740385931414
+    # Below seem unused or old, unsure
+    attention_channel = None
+    eco_learning_channel = None
+    rank_up_channel = None
+    promotion_channel = 1033401698695262379
+    raid_collecting_channel = 1280196125340602478
+    raid_log_channel = 1290713041285152788
+    member_app_channel = 889162191150931978
+    application_manager_role_id = "<@&870767928704921651>"
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 
-banned_words = ['uwu', 'owo']
+banned_words = []
 
 rank_map = {'recruit': '', 'recruiter': '*', 'captain': '**', 'strategist': '***', 'chief': '****', 'owner': '*****'}
 class_map = {'archer': '<:bow:966079566189842482>', 'hunter': '<:bow2:966079565791363162>',
@@ -121,6 +142,23 @@ minecraft_colors = {"BLACK": (25, 25, 25),
               "ORANGE": (216, 127, 51),
               "BROWN": (102, 76, 51),
               "RED": (153, 51, 51)}
+
+minecraft_banner_colors = {"BLACK": (20, 21, 25),
+                           "GRAY": (76, 76, 76),
+                           "SILVER": (142, 142, 134),
+                           "WHITE": (233, 233, 233),
+                           "PINK": (237, 141, 170),
+                           "MAGENTA": (189, 68, 179),
+                           "PURPLE": (120, 42, 172),
+                           "BLUE": (53, 56, 157),
+                           "CYAN": (76, 127, 153),
+                           "LIGHT_BLUE": (58, 175, 217),
+                           "GREEN": (84, 109, 27),
+                           "LIME": (112, 185, 25),
+                           "YELLOW": (248, 199, 39),
+                           "ORANGE": (239, 118, 20),
+                           "BROWN": (114, 71, 40),
+                           "RED": (161, 38, 34)}
 
 colours = {"0": '#000000',
            "1": '#0000AA',

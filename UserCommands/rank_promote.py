@@ -52,7 +52,13 @@ class RankPromote(commands.Cog):
 
                 await user.remove_roles(*roles_to_remove, reason=f'Promotion (ran by {message.author.name})', atomic=True)
 
-                await user.edit(nick=f'{list(discord_ranks)[current_rank_index+1]} {username}')
+                try:
+                    parts = user.nick.split(' ', 1)
+                    base = parts[1] if len(parts) > 1 else parts[0]
+                    new_rank = list(discord_ranks)[current_rank_index+1]
+                    await user.edit(nick=f'{new_rank} {base}')
+                except Exception:
+                    pass
 
                 db.cursor.execute(f'UPDATE discord_links SET rank = \'{list(discord_ranks)[current_rank_index+1]}\' WHERE discord_id = {user.id}')
                 db.connection.commit()

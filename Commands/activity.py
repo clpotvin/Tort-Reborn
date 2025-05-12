@@ -16,6 +16,9 @@ from Helpers.variables import rank_map
 import json
 import math
 
+from Helpers.variables import test, guilds
+
+
 
 class Activity(commands.Cog):
     def __init__(self, client):
@@ -67,9 +70,9 @@ class Activity(commands.Cog):
 
         if order_by == 'Kick Suitability':
             try:
-                guild = self.client.get_guild(729147655875199017)
+                guild = self.client.get_guild(guilds[0])
             except:
-                guild = await self.client.fetch_guild(729147655875199017)
+                guild = await self.client.fetch_guild(guilds[0])
             db.cursor.execute(f'SELECT discord_id, ign FROM discord_links')
             rows = db.cursor.fetchall()
             all_roles = guild.roles

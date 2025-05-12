@@ -1,7 +1,5 @@
-import json
 import os
 import time
-import urllib
 from io import BytesIO
 
 import discord
@@ -56,7 +54,7 @@ class Progress(commands.Cog):
                 label = pclass['data']['type']
             options.append(discord.SelectOption(label=label, value=str(i),
                                                 description=f'Total Level: {pclass["data"]["totalLevel"] + 12}',
-                                                emoji=class_map[re.sub('\d', '', pclass["data"]["type"].lower())]))
+                                                emoji=class_map[re.sub('\\d', '', pclass["data"]["type"].lower())]))
             i += 1
 
         async def callback(interaction):

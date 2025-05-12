@@ -11,6 +11,7 @@ from discord.ext import commands
 from Helpers.classes import BasicPlayerStats
 from Helpers.database import DB
 from Helpers.functions import generate_applicant_info
+from Helpers.variables import member_app_channel
 
 
 class ApplicationNotify(commands.Cog):
@@ -27,9 +28,10 @@ class ApplicationNotify(commands.Cog):
             application = db.cursor.fetchone()
             if application:
                 if ctx.interaction.guild.id != 729147655875199017:
-                    ch = self.client.get_channel(1210928455663751228)  # test
+                    # UPDATED 4/30/2025
+                    ch = self.client.get_channel(member_app_channel)  # test
                 else:
-                    ch = self.client.get_channel(889162191150931978)
+                    ch = self.client.get_channel(member_app_channel)
                 if application[1] == 1:
                     try:
                         orig_msg = await ch.fetch_message(application[6])
@@ -52,7 +54,7 @@ class ApplicationNotify(commands.Cog):
                             break
                 # else search for stats link in message content
                 else:
-                    stats_link = re.findall("wynncraft\.com\/stats\/player.*", message.content)
+                    stats_link = re.findall("wynncraft\\.com\\/stats\\/player.*", message.content)
                     if stats_link:
                         mc_name = stats_link[0].split('/')[-1]
 

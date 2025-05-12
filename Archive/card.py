@@ -9,7 +9,7 @@ from flask import Flask, request, send_file
 from Helpers.classes import PlayerStats
 from Helpers.database import DB
 from Helpers.functions import pretty_date, generate_rank_badge
-from Helpers.variables import main_guild, discord_ranks
+from Helpers.variables import discord_ranks
 
 app = Flask(__name__)
 

@@ -5,7 +5,7 @@ from discord import option, default_permissions, slash_command
 from discord.ext import commands
 from discord.ui import View
 
-from Helpers.variables import test
+from Helpers.variables import test, log_channel, guildbank_channel, guilds
 
 
 async def get_mythics(message: discord.AutocompleteContext):
@@ -27,10 +27,7 @@ class itemViewTaken(View):
     @discord.ui.button(label='Deposit', custom_id='deposit-button', style=discord.ButtonStyle.red)
     async def return_item(self, button, ctx: discord.ApplicationContext):
         await ctx.response.defer(ephemeral=True)
-        if not test:
-            log_channel = 992819067943665774
-        else:
-            log_channel = 1213217302770880573
+        self.log_channel = log_channel
         with open('guild_bank.json', 'r') as f:
             mythics = json.load(f)
             f.close()
@@ -48,14 +45,10 @@ class itemViewTaken(View):
 class Withdraw(commands.Cog):
     def __init__(self, client):
         self.client = client
-        if not test:
-            self.gbank_channel = 1213515243041595442
-            self.log_channel = 992819067943665774
-        else:
-            self.gbank_channel = 1213462757069033503
-            self.log_channel = 1213217302770880573
+        self.gbank_channel = guildbank_channel
+        self.log_channel = log_channel
 
-    @slash_command(description="Withdraw item from guild bank", guild_ids=[729147655875199017, 1053447772302479421])
+    @slash_command(description="Withdraw item from guild bank", guild_ids=[guilds[0], guilds[1]])
     @default_permissions(manage_roles=True)
     @option("item", description="Pick item to withdraw", autocomplete=get_mythics)
     async def withdraw(self, message, item: str):

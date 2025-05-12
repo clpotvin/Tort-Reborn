@@ -6,6 +6,8 @@ from discord import default_permissions, guild_only
 from discord.ext import commands
 from discord.commands import slash_command
 
+from Helpers.variables import te, guilds
+
 
 async def update(long_link, hq):
     with open('mapmaker_decompression.json', 'r') as f:
@@ -15,7 +17,7 @@ async def update(long_link, hq):
         terr_data = json.load(f)
         f.close()
 
-    link_split = re.split("[+\-=]", long_link)
+    link_split = re.split("[+\\-=]", long_link)
     guild_terrs = link_split[link_split.index('TAq') + 2]
     conns = [terr_data[terr] for terr in terr_data if terr.lower() == hq.lower()]
     new_claim = dict()
@@ -37,7 +39,7 @@ class UpdateClaim(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @slash_command(description='Updates the guild claim in the territory tracker', guild_ids=[729147655875199017,784795827808763904,1053447772302479421])
+    @slash_command(description='Updates the guild claim in the territory tracker', guild_ids=[guilds[0],te,guilds[1]])
     @default_permissions(administrator=True)
     async def update_claim(self, message, hq: discord.Option(str, name='hq', required=True, description='Location of the guild headquarters'), link: discord.Option(str, name='long_link', required=True, description='The long link from map maker')):
         await message.defer()

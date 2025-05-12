@@ -1,7 +1,6 @@
 import os
-
-import mariadb
-
+import psycopg2
+from psycopg2 import OperationalError
 
 class DB:
     def __init__(self):
@@ -10,17 +9,22 @@ class DB:
 
     def connect(self):
         try:
-            self.connection = mariadb.connect(
+            self.connection = psycopg2.connect(
                 user=os.getenv("DB_LOGIN"),
                 password=os.getenv("DB_PASS"),
                 host=os.getenv("DB_HOST"),
                 port=int(os.getenv("DB_PORT")),
-                database=os.getenv("DB_DATABASE")
+                database=os.getenv("DB_DATABASE", "postgres"),
+                sslmode=os.getenv("DB_SSLMODE")
             )
-        except mariadb.Error as e:
-            print(f"Error connecting to MariaDB Platform: {e}")
-
-        self.cursor = self.connection.cursor()
+            self.cursor = self.connection.cursor()
+        except OperationalError as e:
+            print(f"[DB] Connection failed: {e}")
+            raise
 
     def close(self):
-        self.connection.close()
+        """Close cursor and connection."""
+        if self.cursor:
+            self.cursor.close()
+        if self.connection:
+            self.connection.close()
