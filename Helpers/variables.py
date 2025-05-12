@@ -18,18 +18,23 @@ if test:
     promotion_channel = unknown_channel_redirect
     raid_collecting_channel = 1370900136267616339
     raid_log_channel = 1370124586036887652
+    member_app_channel = 1367283441850122330
+    application_manager_role_id = "<@&1371274399637835837>"
 else:
     guilds = [729147655875199017, 1364751619018850405]
     te = 784795827808763904
     changelog_channel = 1367276640207507617
-    guildbank_channel = None
-    log_channel = None
+    guildbank_channel = 1213515243041595442
+    log_channel = 936679740385931414
+    # Below seem unused or old, unsure
     attention_channel = None
     eco_learning_channel = None
     rank_up_channel = None
-    promotion_channel = None
-    raid_collecting_channel = None
-    raid_log_channel = None
+    promotion_channel = 1033401698695262379
+    raid_collecting_channel = 1280196125340602478
+    raid_log_channel = 1290713041285152788
+    member_app_channel = 889162191150931978
+    application_manager_role_id = "<@&870767928704921651>"
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 

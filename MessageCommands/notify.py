@@ -11,6 +11,7 @@ from discord.ext import commands
 from Helpers.classes import BasicPlayerStats
 from Helpers.database import DB
 from Helpers.functions import generate_applicant_info
+from Helpers.variables import member_app_channel
 
 
 class ApplicationNotify(commands.Cog):
@@ -28,9 +29,9 @@ class ApplicationNotify(commands.Cog):
             if application:
                 if ctx.interaction.guild.id != 729147655875199017:
                     # UPDATED 4/30/2025
-                    ch = self.client.get_channel(1367283441850122330)  # test
+                    ch = self.client.get_channel(member_app_channel)  # test
                 else:
-                    ch = self.client.get_channel(889162191150931978)
+                    ch = self.client.get_channel(member_app_channel)
                 if application[1] == 1:
                     try:
                         orig_msg = await ch.fetch_message(application[6])

@@ -1,1 +1,1 @@
-{"type": "Restart", "value": "thundderr (Thundderr) ran the restart command", "timestamp": 1746935280}
+{"type": "<class 'discord.errors.ExtensionFailed'>", "value": "Extension 'Events.on_guild_channel_create' raised an error: SyntaxError: invalid syntax (on_guild_channel_create.py, line 1)", "tb": "<traceback object at 0x000001CD77622080>", "timestamp": 1747006565}

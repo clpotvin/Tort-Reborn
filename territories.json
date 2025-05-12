@@ -167,7 +167,7 @@
             "name": "TheButteryWarriors",
             "prefix": "TBUH"
         },
-        "acquired": "2025-05-10T11:36:35.755000Z",
+        "acquired": "2025-05-11T07:45:48.085000Z",
         "location": {
             "start": [
                 -812,
@@ -347,7 +347,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-11T00:28:16.863000Z",
+        "acquired": "2025-05-11T09:28:39.228000Z",
         "location": {
             "start": [
                 300,
@@ -401,7 +401,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-08T22:32:00.849000Z",
+        "acquired": "2025-05-11T10:15:02.359000Z",
         "location": {
             "start": [
                 900,
@@ -419,7 +419,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-10T18:42:04.878000Z",
+        "acquired": "2025-05-11T10:35:15.932000Z",
         "location": {
             "start": [
                 805,
@@ -487,11 +487,11 @@
     },
     "Temple of Legends": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-10T10:48:12.206000Z",
+        "acquired": "2025-05-12T00:22:37.041000Z",
         "location": {
             "start": [
                 -631,
@@ -505,11 +505,11 @@
     },
     "Mummy's Tomb": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:10:36.115000Z",
+        "acquired": "2025-05-11T20:40:13.148000Z",
         "location": {
             "start": [
                 990,
@@ -617,7 +617,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:00:34.296000Z",
+        "acquired": "2025-05-11T09:34:37.875000Z",
         "location": {
             "start": [
                 -128,
@@ -635,7 +635,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:20:24.256000Z",
+        "acquired": "2025-05-11T09:50:10.282000Z",
         "location": {
             "start": [
                 -727,
@@ -671,7 +671,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:13:30.588000Z",
+        "acquired": "2025-05-11T09:45:33.964000Z",
         "location": {
             "start": [
                 -750,
@@ -689,7 +689,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-06T20:35:27.649000Z",
+        "acquired": "2025-05-11T10:02:54.265000Z",
         "location": {
             "start": [
                 1000,
@@ -725,7 +725,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T14:52:59.164000Z",
+        "acquired": "2025-05-11T09:50:44.085000Z",
         "location": {
             "start": [
                 -41,
@@ -743,7 +743,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:14:34.667000Z",
+        "acquired": "2025-05-11T09:55:38.638000Z",
         "location": {
             "start": [
                 -454,
@@ -1283,7 +1283,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:08:49.897000Z",
+        "acquired": "2025-05-11T07:48:11.544000Z",
         "location": {
             "start": [
                 -288,
@@ -1301,7 +1301,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T18:26:08.264000Z",
+        "acquired": "2025-05-11T08:16:06.447000Z",
         "location": {
             "start": [
                 -290,
@@ -1319,7 +1319,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T06:10:34.917000Z",
+        "acquired": "2025-05-11T20:15:12.527000Z",
         "location": {
             "start": [
                 -349,
@@ -1337,7 +1337,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T03:25:53.318000Z",
+        "acquired": "2025-05-11T19:42:05.693000Z",
         "location": {
             "start": [
                 -224,
@@ -1355,7 +1355,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:08:17.180000Z",
+        "acquired": "2025-05-11T08:08:03.674000Z",
         "location": {
             "start": [
                 30,
@@ -1373,7 +1373,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:18:07.109000Z",
+        "acquired": "2025-05-11T08:00:54.957000Z",
         "location": {
             "start": [
                 -122,
@@ -1387,11 +1387,11 @@
     },
     "Burning Farm": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T03:25:36.606000Z",
+        "acquired": "2025-05-12T00:13:44.263000Z",
         "location": {
             "start": [
                 107,
@@ -1427,7 +1427,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T18:38:50.795000Z",
+        "acquired": "2025-05-11T08:01:06.903000Z",
         "location": {
             "start": [
                 51,
@@ -1445,7 +1445,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T17:57:09.716000Z",
+        "acquired": "2025-05-11T18:49:26.081000Z",
         "location": {
             "start": [
                 338,
@@ -1463,7 +1463,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:31:48.393000Z",
+        "acquired": "2025-05-11T19:17:03.701000Z",
         "location": {
             "start": [
                 334,
@@ -1481,7 +1481,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:12:07.396000Z",
+        "acquired": "2025-05-11T18:53:50.539000Z",
         "location": {
             "start": [
                 341,
@@ -1499,7 +1499,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:00:08.460000Z",
+        "acquired": "2025-05-11T18:37:21.453000Z",
         "location": {
             "start": [
                 562,
@@ -1517,7 +1517,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:31:46.740000Z",
+        "acquired": "2025-05-11T19:27:02.287000Z",
         "location": {
             "start": [
                 607,
@@ -1553,7 +1553,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:44:17.384000Z",
+        "acquired": "2025-05-11T18:40:50.311000Z",
         "location": {
             "start": [
                 572,
@@ -1571,7 +1571,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:19:18.334000Z",
+        "acquired": "2025-05-11T19:15:44.516000Z",
         "location": {
             "start": [
                 810,
@@ -1589,7 +1589,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:12:49.280000Z",
+        "acquired": "2025-05-11T19:15:35.156000Z",
         "location": {
             "start": [
                 703,
@@ -1607,7 +1607,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:11:35.772000Z",
+        "acquired": "2025-05-11T19:11:36.200000Z",
         "location": {
             "start": [
                 747,
@@ -1625,7 +1625,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:21:49.737000Z",
+        "acquired": "2025-05-11T19:28:50.139000Z",
         "location": {
             "start": [
                 1029,
@@ -1715,7 +1715,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-09T20:25:17.151000Z",
+        "acquired": "2025-05-11T07:46:12.011000Z",
         "location": {
             "start": [
                 -1557,
@@ -1733,7 +1733,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T07:51:23.512000Z",
+        "acquired": "2025-05-11T14:23:13.498000Z",
         "location": {
             "start": [
                 -1555,
@@ -1747,11 +1747,11 @@
     },
     "Fallen Factory": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-09T22:16:57.690000Z",
+        "acquired": "2025-05-12T00:31:47.119000Z",
         "location": {
             "start": [
                 -1579,
@@ -1769,7 +1769,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-09T22:04:40.312000Z",
+        "acquired": "2025-05-12T00:26:22.264000Z",
         "location": {
             "start": [
                 -1394,
@@ -1801,11 +1801,11 @@
     },
     "Ruined Houses": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-10T15:55:40.435000Z",
+        "acquired": "2025-05-12T00:35:11.628000Z",
         "location": {
             "start": [
                 -1684,
@@ -1841,7 +1841,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T23:30:26.828000Z",
+        "acquired": "2025-05-12T00:32:14.581000Z",
         "location": {
             "start": [
                 -1376,
@@ -2147,7 +2147,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-10T22:08:02.404000Z",
+        "acquired": "2025-05-11T10:10:43.666000Z",
         "location": {
             "start": [
                 1178,
@@ -2165,7 +2165,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-08T22:34:23.105000Z",
+        "acquired": "2025-05-11T10:11:48.986000Z",
         "location": {
             "start": [
                 1057,
@@ -2237,7 +2237,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:45:39.067000Z",
+        "acquired": "2025-05-11T19:20:46.989000Z",
         "location": {
             "start": [
                 1200,
@@ -2273,7 +2273,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-01T02:11:40.510000Z",
+        "acquired": "2025-05-11T10:11:21.492000Z",
         "location": {
             "start": [
                 1202,
@@ -2287,11 +2287,11 @@
     },
     "Herb Cave": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
+            "name": "Empire of Sindria",
+            "prefix": "ESI"
         },
-        "acquired": "2025-05-11T03:08:15.322000Z",
+        "acquired": "2025-05-11T17:26:49.972000Z",
         "location": {
             "start": [
                 -448,
@@ -2327,7 +2327,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-06T20:19:40.479000Z",
+        "acquired": "2025-05-11T10:06:49.354000Z",
         "location": {
             "start": [
                 1001,
@@ -2417,7 +2417,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:11:19.932000Z",
+        "acquired": "2025-05-11T09:47:53.059000Z",
         "location": {
             "start": [
                 -472,
@@ -2449,11 +2449,11 @@
     },
     "Corkus Sea Cove": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-10T22:30:58.722000Z",
+        "acquired": "2025-05-12T00:32:34.372000Z",
         "location": {
             "start": [
                 -1578,
@@ -2525,7 +2525,7 @@
             "name": "Profession Heaven",
             "prefix": "PROF"
         },
-        "acquired": "2025-05-09T01:30:31.510000Z",
+        "acquired": "2025-05-11T18:13:42.995000Z",
         "location": {
             "start": [
                 813,
@@ -2723,7 +2723,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:38:25.847000Z",
+        "acquired": "2025-05-11T22:59:47.491000Z",
         "location": {
             "start": [
                 -814,
@@ -2741,7 +2741,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:39:40.797000Z",
+        "acquired": "2025-05-11T23:01:18.227000Z",
         "location": {
             "start": [
                 -894,
@@ -2759,7 +2759,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:32:45.819000Z",
+        "acquired": "2025-05-11T22:58:42.280000Z",
         "location": {
             "start": [
                 -894,
@@ -2795,7 +2795,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:37:20.247000Z",
+        "acquired": "2025-05-11T19:31:20.800000Z",
         "location": {
             "start": [
                 -775,
@@ -2813,7 +2813,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:35:40.259000Z",
+        "acquired": "2025-05-11T19:36:55.754000Z",
         "location": {
             "start": [
                 -645,
@@ -2831,7 +2831,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:20:30.508000Z",
+        "acquired": "2025-05-11T10:04:19.318000Z",
         "location": {
             "start": [
                 -951,
@@ -2849,7 +2849,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:34:23.738000Z",
+        "acquired": "2025-05-11T19:34:07.478000Z",
         "location": {
             "start": [
                 -894,
@@ -3281,7 +3281,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-11T01:50:34.767000Z",
+        "acquired": "2025-05-11T21:05:09.874000Z",
         "location": {
             "start": [
                 70,
@@ -3367,11 +3367,11 @@
     },
     "Jungle Entrance": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-11T03:11:25.960000Z",
+        "acquired": "2025-05-12T00:16:22.274000Z",
         "location": {
             "start": [
                 -395,
@@ -3385,11 +3385,11 @@
     },
     "Apprentice Huts": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "de2db8e4-1581-4d14-aa82-4c1484441c35",
+            "name": "Gemini",
+            "prefix": "GEMI"
         },
-        "acquired": "2025-05-11T02:48:02.319000Z",
+        "acquired": "2025-05-11T12:54:48.828000Z",
         "location": {
             "start": [
                 -600,
@@ -3403,11 +3403,11 @@
     },
     "Iboju Village": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-11T02:50:12.193000Z",
+        "acquired": "2025-05-12T00:35:58.471000Z",
         "location": {
             "start": [
                 -671,
@@ -3421,11 +3421,11 @@
     },
     "Troms Lake": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-11T03:06:28.861000Z",
+        "acquired": "2025-05-12T00:21:29.971000Z",
         "location": {
             "start": [
                 -601,
@@ -3457,11 +3457,11 @@
     },
     "Rymek": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:11:25.836000Z",
+        "acquired": "2025-05-11T21:42:15.160000Z",
         "location": {
             "start": [
                 1210,
@@ -3475,11 +3475,11 @@
     },
     "Sunrise Plateau": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:09:12.242000Z",
+        "acquired": "2025-05-11T21:38:30.551000Z",
         "location": {
             "start": [
                 1211,
@@ -3493,11 +3493,11 @@
     },
     "Eagle Tribe": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:25:23.829000Z",
+        "acquired": "2025-05-11T21:25:18.703000Z",
         "location": {
             "start": [
                 1479,
@@ -3511,11 +3511,11 @@
     },
     "Ruined Prospect": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:17:14.226000Z",
+        "acquired": "2025-05-11T21:22:47.691000Z",
         "location": {
             "start": [
                 1209,
@@ -3529,11 +3529,11 @@
     },
     "Sunset Plateau": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:33:01.015000Z",
+        "acquired": "2025-05-11T21:21:30.863000Z",
         "location": {
             "start": [
                 1211,
@@ -3547,11 +3547,11 @@
     },
     "Owl Tribe": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:22:04.795000Z",
+        "acquired": "2025-05-11T21:30:31.990000Z",
         "location": {
             "start": [
                 1190,
@@ -3565,11 +3565,11 @@
     },
     "Invaded Barracks": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:13:29.295000Z",
+        "acquired": "2025-05-11T21:12:23.370000Z",
         "location": {
             "start": [
                 1260,
@@ -3583,11 +3583,11 @@
     },
     "Barren Sands": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:12:27.827000Z",
+        "acquired": "2025-05-11T21:10:26.707000Z",
         "location": {
             "start": [
                 1260,
@@ -3601,11 +3601,11 @@
     },
     "Accursed Dunes": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:48:19.671000Z",
+        "acquired": "2025-05-11T20:55:06.760000Z",
         "location": {
             "start": [
                 1450,
@@ -3619,11 +3619,11 @@
     },
     "Cascading Oasis": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:08:04.327000Z",
+        "acquired": "2025-05-11T20:34:53.696000Z",
         "location": {
             "start": [
                 990,
@@ -3637,11 +3637,11 @@
     },
     "Gloopy Cave": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:50:03.405000Z",
+        "acquired": "2025-05-11T21:03:26.645000Z",
         "location": {
             "start": [
                 1195,
@@ -3655,11 +3655,11 @@
     },
     "Ruined Villa": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:02:14.453000Z",
+        "acquired": "2025-05-11T20:52:44.027000Z",
         "location": {
             "start": [
                 1060,
@@ -3673,11 +3673,11 @@
     },
     "Ancient Excavation": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:36:21.205000Z",
+        "acquired": "2025-05-11T20:37:20.242000Z",
         "location": {
             "start": [
                 1210,
@@ -3691,11 +3691,11 @@
     },
     "Almuj": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:43:42.581000Z",
+        "acquired": "2025-05-11T20:27:27.914000Z",
         "location": {
             "start": [
                 1050,
@@ -3709,11 +3709,11 @@
     },
     "Dusty Pit": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:19:20.862000Z",
+        "acquired": "2025-05-11T20:32:10.959000Z",
         "location": {
             "start": [
                 990,
@@ -3727,11 +3727,11 @@
     },
     "Almuj Slums": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T00:40:46.973000Z",
+        "acquired": "2025-05-11T21:04:33.921000Z",
         "location": {
             "start": [
                 1040,
@@ -3745,11 +3745,11 @@
     },
     "Ternaves Tunnel": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T03:13:23.162000Z",
+        "acquired": "2025-05-11T20:42:11.442000Z",
         "location": {
             "start": [
                 775,
@@ -3763,11 +3763,11 @@
     },
     "Entrance to Almuj": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "221efb28-7f93-4d5d-b219-9ddf43f7418b",
+            "name": "Eden",
+            "prefix": "EDN"
         },
-        "acquired": "2025-05-11T01:23:25.458000Z",
+        "acquired": "2025-05-11T20:43:16.534000Z",
         "location": {
             "start": [
                 750,
@@ -3821,7 +3821,7 @@
             "name": "Empire of Sindria",
             "prefix": "ESI"
         },
-        "acquired": "2025-05-10T17:34:58.156000Z",
+        "acquired": "2025-05-11T10:58:01.019000Z",
         "location": {
             "start": [
                 10,
@@ -3911,7 +3911,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:27:09.646000Z",
+        "acquired": "2025-05-11T09:37:19.518000Z",
         "location": {
             "start": [
                 -409,
@@ -3929,7 +3929,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-08T22:20:02.181000Z",
+        "acquired": "2025-05-11T10:18:08.075000Z",
         "location": {
             "start": [
                 537,
@@ -3947,7 +3947,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-08T22:19:55.912000Z",
+        "acquired": "2025-05-11T10:30:53.306000Z",
         "location": {
             "start": [
                 482,
@@ -3965,7 +3965,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-08T22:24:55.903000Z",
+        "acquired": "2025-05-11T11:20:55.453000Z",
         "location": {
             "start": [
                 390,
@@ -4001,7 +4001,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T14:22:23.408000Z",
+        "acquired": "2025-05-11T09:59:45.865000Z",
         "location": {
             "start": [
                 870,
@@ -4019,7 +4019,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T14:43:27.842000Z",
+        "acquired": "2025-05-11T09:55:48.502000Z",
         "location": {
             "start": [
                 870,
@@ -4037,7 +4037,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T14:35:30.002000Z",
+        "acquired": "2025-05-11T10:02:09.419000Z",
         "location": {
             "start": [
                 870,
@@ -4055,7 +4055,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T14:42:32.216000Z",
+        "acquired": "2025-05-11T09:51:34.411000Z",
         "location": {
             "start": [
                 870,
@@ -4343,7 +4343,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T17:55:20.400000Z",
+        "acquired": "2025-05-11T18:35:26.240000Z",
         "location": {
             "start": [
                 381,
@@ -4775,7 +4775,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-10T21:23:50.981000Z",
+        "acquired": "2025-05-11T15:57:00.211000Z",
         "location": {
             "start": [
                 -1391,
@@ -4811,7 +4811,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-10T21:36:01.222000Z",
+        "acquired": "2025-05-11T21:04:17.751000Z",
         "location": {
             "start": [
                 -1391,
@@ -4883,7 +4883,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-10T23:37:34.532000Z",
+        "acquired": "2025-05-11T21:03:11.930000Z",
         "location": {
             "start": [
                 -1553,
@@ -4937,7 +4937,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T00:41:51.924000Z",
+        "acquired": "2025-05-11T20:29:34.672000Z",
         "location": {
             "start": [
                 -1134,
@@ -4955,7 +4955,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T00:40:09.173000Z",
+        "acquired": "2025-05-11T20:18:58.203000Z",
         "location": {
             "start": [
                 -1030,
@@ -4973,7 +4973,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T00:42:48.806000Z",
+        "acquired": "2025-05-11T20:15:54.419000Z",
         "location": {
             "start": [
                 -1014,
@@ -5005,11 +5005,11 @@
     },
     "Guardian of the Forest": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T01:57:42.385000Z",
+        "acquired": "2025-05-12T00:08:42.913000Z",
         "location": {
             "start": [
                 -1134,
@@ -5063,7 +5063,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-10T18:59:31.590000Z",
+        "acquired": "2025-05-11T10:05:19.508000Z",
         "location": {
             "start": [
                 -736,
@@ -5117,7 +5117,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:39:42.587000Z",
+        "acquired": "2025-05-11T10:03:56.811000Z",
         "location": {
             "start": [
                 -1014,
@@ -5131,11 +5131,11 @@
     },
     "Dodegar's Forge": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T01:53:57.918000Z",
+        "acquired": "2025-05-12T00:00:30.637000Z",
         "location": {
             "start": [
                 -929,
@@ -5149,11 +5149,11 @@
     },
     "Unicorn Trail": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "4c6e7702-523d-4f8c-9113-d0c3044bf13a",
+            "name": "Discoverers",
+            "prefix": "DVS"
         },
-        "acquired": "2025-05-11T01:56:40.329000Z",
+        "acquired": "2025-05-11T22:38:51.688000Z",
         "location": {
             "start": [
                 -1014,
@@ -5185,11 +5185,11 @@
     },
     "Collapsed Bridge": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "4c6e7702-523d-4f8c-9113-d0c3044bf13a",
+            "name": "Discoverers",
+            "prefix": "DVS"
         },
-        "acquired": "2025-05-11T01:55:07.375000Z",
+        "acquired": "2025-05-11T23:28:02.841000Z",
         "location": {
             "start": [
                 -834,
@@ -5203,11 +5203,11 @@
     },
     "Mycelial Expanse": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T01:51:48.899000Z",
+        "acquired": "2025-05-11T23:59:04.017000Z",
         "location": {
             "start": [
                 -926,
@@ -5225,7 +5225,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:36:07.846000Z",
+        "acquired": "2025-05-11T10:01:46.263000Z",
         "location": {
             "start": [
                 -926,
@@ -5513,7 +5513,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:06:12.790000Z",
+        "acquired": "2025-05-11T07:43:25.397000Z",
         "location": {
             "start": [
                 -288,
@@ -5527,11 +5527,11 @@
     },
     "Big Mushroom Cave": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "0c38e0a7-8a01-40c1-bed4-28c5a0e545a8",
+            "name": "The Void Syndicate",
+            "prefix": "VSI"
         },
-        "acquired": "2025-05-11T03:17:53.404000Z",
+        "acquired": "2025-05-11T22:42:34.554000Z",
         "location": {
             "start": [
                 -130,
@@ -5545,11 +5545,11 @@
     },
     "Paper Trail": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T03:19:59.882000Z",
+        "acquired": "2025-05-12T00:24:20.151000Z",
         "location": {
             "start": [
                 3,
@@ -5567,7 +5567,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T03:30:21.693000Z",
+        "acquired": "2025-05-11T20:00:34.058000Z",
         "location": {
             "start": [
                 -127,
@@ -5585,7 +5585,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:14:24.697000Z",
+        "acquired": "2025-05-11T20:02:20.168000Z",
         "location": {
             "start": [
                 -127,
@@ -5603,7 +5603,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:44:41.454000Z",
+        "acquired": "2025-05-11T20:22:02.417000Z",
         "location": {
             "start": [
                 -127,
@@ -5621,7 +5621,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:23:32.765000Z",
+        "acquired": "2025-05-11T07:57:40.295000Z",
         "location": {
             "start": [
                 30,
@@ -5639,7 +5639,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:07:06.597000Z",
+        "acquired": "2025-05-11T07:53:15.075000Z",
         "location": {
             "start": [
                 -130,
@@ -5657,7 +5657,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-11T01:22:47.973000Z",
+        "acquired": "2025-05-11T07:56:24.267000Z",
         "location": {
             "start": [
                 -218,
@@ -5675,7 +5675,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:33:45.494000Z",
+        "acquired": "2025-05-11T08:00:00.199000Z",
         "location": {
             "start": [
                 -128,
@@ -5779,11 +5779,11 @@
     },
     "Waterfall Cave": {
         "guild": {
-            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
-            "name": "BuggCraft",
-            "prefix": "BUGG"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-10T23:03:21.334000Z",
+        "acquired": "2025-05-12T00:22:35.731000Z",
         "location": {
             "start": [
                 -127,
@@ -5797,11 +5797,11 @@
     },
     "Timeworn Arch": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T03:21:38.390000Z",
+        "acquired": "2025-05-12T00:19:25.796000Z",
         "location": {
             "start": [
                 33,
@@ -5815,11 +5815,11 @@
     },
     "Pine Pillar Forest": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T03:23:01.436000Z",
+        "acquired": "2025-05-12T00:18:07.817000Z",
         "location": {
             "start": [
                 35,
@@ -5833,11 +5833,11 @@
     },
     "Evergreen Outbreak": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-11T03:24:17.040000Z",
+        "acquired": "2025-05-12T00:14:54.954000Z",
         "location": {
             "start": [
                 35,
@@ -5855,7 +5855,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:01:40.197000Z",
+        "acquired": "2025-05-11T19:12:45.591000Z",
         "location": {
             "start": [
                 98,
@@ -5873,7 +5873,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-09T18:58:34.804000Z",
+        "acquired": "2025-05-11T08:07:47.887000Z",
         "location": {
             "start": [
                 98,
@@ -5891,7 +5891,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:13:35.643000Z",
+        "acquired": "2025-05-11T08:05:34.432000Z",
         "location": {
             "start": [
                 51,
@@ -5909,7 +5909,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:02:34.434000Z",
+        "acquired": "2025-05-11T08:16:32.050000Z",
         "location": {
             "start": [
                 104,
@@ -5927,7 +5927,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:16:25.895000Z",
+        "acquired": "2025-05-11T08:12:09.998000Z",
         "location": {
             "start": [
                 168,
@@ -5945,7 +5945,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:25:59.057000Z",
+        "acquired": "2025-05-11T08:08:12.508000Z",
         "location": {
             "start": [
                 260,
@@ -5963,7 +5963,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:58:26.899000Z",
+        "acquired": "2025-05-11T18:34:00.859000Z",
         "location": {
             "start": [
                 199,
@@ -5981,7 +5981,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:59:55.516000Z",
+        "acquired": "2025-05-11T19:09:36.222000Z",
         "location": {
             "start": [
                 194,
@@ -5999,7 +5999,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T16:44:08.063000Z",
+        "acquired": "2025-05-11T19:14:11.547000Z",
         "location": {
             "start": [
                 111,
@@ -6017,7 +6017,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T20:10:27.927000Z",
+        "acquired": "2025-05-11T19:18:30.998000Z",
         "location": {
             "start": [
                 194,
@@ -6035,7 +6035,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T20:00:44.626000Z",
+        "acquired": "2025-05-11T19:23:23.259000Z",
         "location": {
             "start": [
                 110,
@@ -6053,7 +6053,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:59:18.795000Z",
+        "acquired": "2025-05-11T19:33:57.466000Z",
         "location": {
             "start": [
                 110,
@@ -6089,7 +6089,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T20:14:13.997000Z",
+        "acquired": "2025-05-11T19:36:53.114000Z",
         "location": {
             "start": [
                 115,
@@ -6107,7 +6107,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:56:50.143000Z",
+        "acquired": "2025-05-11T19:19:11.586000Z",
         "location": {
             "start": [
                 200,
@@ -6125,7 +6125,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:44:20.678000Z",
+        "acquired": "2025-05-11T19:06:39.800000Z",
         "location": {
             "start": [
                 265,
@@ -6143,7 +6143,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:52:33.470000Z",
+        "acquired": "2025-05-11T19:12:38.630000Z",
         "location": {
             "start": [
                 265,
@@ -6161,7 +6161,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:45:28.923000Z",
+        "acquired": "2025-05-11T18:54:58.191000Z",
         "location": {
             "start": [
                 200,
@@ -6179,7 +6179,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:42:16.988000Z",
+        "acquired": "2025-05-11T18:53:30.652000Z",
         "location": {
             "start": [
                 264,
@@ -6197,7 +6197,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:20:47.408000Z",
+        "acquired": "2025-05-11T19:14:29.671000Z",
         "location": {
             "start": [
                 263,
@@ -6215,7 +6215,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:26:21.271000Z",
+        "acquired": "2025-05-11T08:13:05.862000Z",
         "location": {
             "start": [
                 250,
@@ -6233,7 +6233,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:52:52.156000Z",
+        "acquired": "2025-05-11T18:57:28.576000Z",
         "location": {
             "start": [
                 271,
@@ -6251,7 +6251,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:59:30.347000Z",
+        "acquired": "2025-05-11T18:47:25.672000Z",
         "location": {
             "start": [
                 271,
@@ -6269,7 +6269,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:40:13.049000Z",
+        "acquired": "2025-05-11T18:49:11.420000Z",
         "location": {
             "start": [
                 271,
@@ -6287,7 +6287,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:44:04.598000Z",
+        "acquired": "2025-05-11T19:03:59.618000Z",
         "location": {
             "start": [
                 271,
@@ -6305,7 +6305,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:34:20.059000Z",
+        "acquired": "2025-05-11T19:08:44.467000Z",
         "location": {
             "start": [
                 338,
@@ -6323,7 +6323,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:11:38.355000Z",
+        "acquired": "2025-05-11T18:59:02.685000Z",
         "location": {
             "start": [
                 347,
@@ -6341,7 +6341,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:07:23.655000Z",
+        "acquired": "2025-05-11T17:57:30.474000Z",
         "location": {
             "start": [
                 439,
@@ -6359,7 +6359,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:06:17.071000Z",
+        "acquired": "2025-05-11T18:51:58.826000Z",
         "location": {
             "start": [
                 438,
@@ -6377,7 +6377,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:34:45.615000Z",
+        "acquired": "2025-05-11T19:29:46.119000Z",
         "location": {
             "start": [
                 334,
@@ -6395,7 +6395,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:30:18.964000Z",
+        "acquired": "2025-05-11T19:28:24.625000Z",
         "location": {
             "start": [
                 437,
@@ -6413,7 +6413,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:29:55.347000Z",
+        "acquired": "2025-05-11T19:23:55.852000Z",
         "location": {
             "start": [
                 340,
@@ -6431,7 +6431,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:20:40.051000Z",
+        "acquired": "2025-05-11T19:13:38.990000Z",
         "location": {
             "start": [
                 435,
@@ -6449,7 +6449,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T17:52:34.673000Z",
+        "acquired": "2025-05-11T19:29:19.293000Z",
         "location": {
             "start": [
                 440,
@@ -6467,7 +6467,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:55:04.412000Z",
+        "acquired": "2025-05-11T18:47:59.540000Z",
         "location": {
             "start": [
                 440,
@@ -6485,7 +6485,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:07:34.627000Z",
+        "acquired": "2025-05-11T18:20:36.438000Z",
         "location": {
             "start": [
                 563,
@@ -6503,7 +6503,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:57:52.567000Z",
+        "acquired": "2025-05-11T18:54:13.039000Z",
         "location": {
             "start": [
                 445,
@@ -6521,7 +6521,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:03:08.096000Z",
+        "acquired": "2025-05-11T18:17:37.729000Z",
         "location": {
             "start": [
                 570,
@@ -6539,7 +6539,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:35:56.138000Z",
+        "acquired": "2025-05-11T18:58:47.957000Z",
         "location": {
             "start": [
                 445,
@@ -6557,7 +6557,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:24:53.378000Z",
+        "acquired": "2025-05-11T19:25:40.771000Z",
         "location": {
             "start": [
                 443,
@@ -6575,7 +6575,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:40:15.332000Z",
+        "acquired": "2025-05-11T18:33:25.247000Z",
         "location": {
             "start": [
                 699,
@@ -6593,7 +6593,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:26:35.969000Z",
+        "acquired": "2025-05-11T19:17:52.543000Z",
         "location": {
             "start": [
                 572,
@@ -6611,7 +6611,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:22:39.324000Z",
+        "acquired": "2025-05-11T19:06:26.824000Z",
         "location": {
             "start": [
                 700,
@@ -6629,7 +6629,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:20:49.603000Z",
+        "acquired": "2025-05-11T19:26:12.948000Z",
         "location": {
             "start": [
                 574,
@@ -6647,7 +6647,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:11:03.108000Z",
+        "acquired": "2025-05-11T19:24:52.764000Z",
         "location": {
             "start": [
                 699,
@@ -6665,7 +6665,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T23:19:59.458000Z",
+        "acquired": "2025-05-11T19:19:17.121000Z",
         "location": {
             "start": [
                 854,
@@ -6751,11 +6751,11 @@
     },
     "Entamis Village": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-11T02:58:03.264000Z",
+        "acquired": "2025-05-12T00:29:09.394000Z",
         "location": {
             "start": [
                 -737,
@@ -6769,11 +6769,11 @@
     },
     "Fountain of Youth": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-11T02:54:13.743000Z",
+        "acquired": "2025-05-12T00:27:20.676000Z",
         "location": {
             "start": [
                 -744,
@@ -6787,11 +6787,11 @@
     },
     "Delnar Manor": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "175c16d9-fbb5-42b7-ade5-3ad45397e81d",
+            "name": "Shadestepper btw",
+            "prefix": "BUFF"
         },
-        "acquired": "2025-05-11T03:03:06.787000Z",
+        "acquired": "2025-05-11T14:20:05.242000Z",
         "location": {
             "start": [
                 -970,
@@ -6809,7 +6809,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T07:46:25.610000Z",
+        "acquired": "2025-05-11T14:15:36.927000Z",
         "location": {
             "start": [
                 -1559,
@@ -6823,11 +6823,11 @@
     },
     "Road to Mine": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-10T15:38:17.304000Z",
+        "acquired": "2025-05-12T00:36:56.696000Z",
         "location": {
             "start": [
                 -1467,
@@ -6845,7 +6845,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T15:54:12.484000Z",
+        "acquired": "2025-05-12T00:28:36.007000Z",
         "location": {
             "start": [
                 -1683,
@@ -6863,7 +6863,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T07:37:24.757000Z",
+        "acquired": "2025-05-12T00:36:04.515000Z",
         "location": {
             "start": [
                 -1681,
@@ -6881,7 +6881,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T07:40:43.080000Z",
+        "acquired": "2025-05-12T00:40:04.105000Z",
         "location": {
             "start": [
                 -1888,
@@ -6935,7 +6935,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T07:43:23.522000Z",
+        "acquired": "2025-05-11T07:40:33.087000Z",
         "location": {
             "start": [
                 -1503,
@@ -6949,11 +6949,11 @@
     },
     "Relos": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-10T16:05:58.020000Z",
+        "acquired": "2025-05-11T23:56:18.168000Z",
         "location": {
             "start": [
                 -1680,
@@ -7057,11 +7057,11 @@
     },
     "Lighthouse Lookout": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-10T16:13:20.114000Z",
+        "acquired": "2025-05-12T00:32:19.549000Z",
         "location": {
             "start": [
                 -1633,
@@ -7097,7 +7097,7 @@
             "name": "Sins of Seedia",
             "prefix": "SDU"
         },
-        "acquired": "2025-05-10T16:16:34.228000Z",
+        "acquired": "2025-05-12T00:32:52.429000Z",
         "location": {
             "start": [
                 -1633,
@@ -7151,7 +7151,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-11T03:31:36.217000Z",
+        "acquired": "2025-05-11T22:57:24.577000Z",
         "location": {
             "start": [
                 -775,
@@ -7165,11 +7165,11 @@
     },
     "Monte's Village": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "0b6cc5b6-f511-4527-94b6-7379a1675460",
+            "name": "banana empire",
+            "prefix": "mleb"
         },
-        "acquired": "2025-05-11T02:45:07.667000Z",
+        "acquired": "2025-05-12T00:12:42.730000Z",
         "location": {
             "start": [
                 -515,
@@ -7187,7 +7187,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-08T22:25:43.535000Z",
+        "acquired": "2025-05-11T10:23:30.984000Z",
         "location": {
             "start": [
                 405,
@@ -7205,7 +7205,7 @@
             "name": "Titans Valor",
             "prefix": "ANO"
         },
-        "acquired": "2025-05-09T15:14:36.657000Z",
+        "acquired": "2025-05-11T09:57:14.370000Z",
         "location": {
             "start": [
                 -929,
@@ -7223,7 +7223,7 @@
             "name": "Aequitas",
             "prefix": "Aeq"
         },
-        "acquired": "2025-05-10T05:21:30.092000Z",
+        "acquired": "2025-05-11T08:20:49.605000Z",
         "location": {
             "start": [
                 244,
@@ -7241,7 +7241,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T19:42:05.838000Z",
+        "acquired": "2025-05-11T18:50:15.742000Z",
         "location": {
             "start": [
                 337,
@@ -7259,7 +7259,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-10T18:17:46.639000Z",
+        "acquired": "2025-05-11T18:15:40.332000Z",
         "location": {
             "start": [
                 440,

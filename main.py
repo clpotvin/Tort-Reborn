@@ -133,7 +133,8 @@ client.load_extension('UserCommands.rank_demote')
 #client.load_extension('UserCommands.reset_roles')
 
 # Load message command
-client.load_extension('MessageCommands.notify')
+# Think we can remove, redundant
+# client.load_extension('MessageCommands.notify')
 
 # Load events
 client.load_extension('Events.on_message')
