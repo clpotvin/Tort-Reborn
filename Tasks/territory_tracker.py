@@ -5,7 +5,7 @@ import time
 
 from discord.ext import tasks, commands
 
-from Helpers.variables import test
+from Helpers.variables import spearhead_role_id, territory_tracker_channel, military_channel
 
 
 def getTerritoryData():
@@ -45,14 +45,9 @@ class TerritoryTracker(commands.Cog):
     @tasks.loop(seconds=10)
     async def territory_tracker(self):
         try:
-            if not test:
-                channel = self.client.get_channel(729162480000958564)
-                military_channel = self.client.get_channel(729162690760671244)
-                spearhead = 857589881689210950
-            else:
-                channel = self.client.get_channel(1367287144682487828)  # test
-                military_channel = self.client.get_channel(1367287144682487828)  # test
-                spearhead = 1367287262068342804  # test
+            channel = self.client.get_channel(territory_tracker_channel)
+            military_channel = self.client.get_channel(military_channel)
+            spearhead = spearhead_role_id
         except:
             pass
 

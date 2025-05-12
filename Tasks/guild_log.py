@@ -49,7 +49,7 @@ class GuildLog(commands.Cog):
                                     u_timenow = time.mktime(datetime.datetime.now().timetuple())
                                     await channel.send(
                                         '🟦 <t:' + str(int(u_timenow)) + ':d> <t:' + str(int(u_timenow)) + ':t> | **' +
-                                        player['name'].replace('_', '\_') + f'** {discord_id} | ' + player[key].upper() + ' ➜ ' + item[key].upper())
+                                        player['name'].replace('_', '\\_') + f'** {discord_id} | ' + player[key].upper() + ' ➜ ' + item[key].upper())
                                 elif key == 'name':
                                     db = DB()
                                     db.connect()
@@ -85,7 +85,7 @@ class GuildLog(commands.Cog):
                 discord_id = f' (<@{rows[0][0]}>) ' if len(rows) != 0 else ''
                 await channel.send(
                     '🟥 <t:' + str(int(u_timenow)) + ':d> <t:' + str(int(u_timenow)) + ':t> | **' + player[
-                        'name'].replace('_', '\_') + f'** {discord_id} has left the guild! | ' + player[
+                        'name'].replace('_', '\\_') + f'** {discord_id} has left the guild! | ' + player[
                         'rank'].upper() + ' | member for **' + str(in_guild_for.days) + f' days**{lastseen}')
         for player in new_data:
             uuid = player['uuid']
@@ -123,7 +123,7 @@ class GuildLog(commands.Cog):
                 await channel.send(
                     '🟩 <t:' + str(int(u_timenow)) + ':d> <t:' + str(int(u_timenow)) + ':t> | **' + player[
                         'name'].replace(
-                        '_', '\_') + f'** {discord_id} joined the guild! | ' + player['rank'].upper())
+                        '_', '\\_') + f'** {discord_id} joined the guild! | ' + player['rank'].upper())
 
     @guild_log.before_loop
     async def guild_log_before_loop(self):
