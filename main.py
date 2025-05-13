@@ -116,6 +116,7 @@ client.load_extension('Commands.shell')
 #client.load_extension('Commands.suggest_promotion')
 #client.load_extension('Commands.ranking_up_setup')
 client.load_extension('Commands.raid_collecting')
+client.load_extension('Commands.lootpool')
 
 # Load Dev Commands
 client.load_extension('Commands.render_text')

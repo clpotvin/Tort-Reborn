@@ -94,7 +94,9 @@ class UpdateMemberData(commands.Cog):
                         for raid in self.RAID_NAMES:
                             new_count = new_raid_data[uuid][raid]
                             old_count = old.get(raid, 0)
-                            if new_count > old_count:
+                            raid_difference = new_count - old_count
+                            # For bugs where past raid might be set to 0 then jumps up to higher number
+                            if new_count > old_count and raid_difference < 3:
                                 if not any(p["uuid"] == uuid for p in self.raid_participants[raid]):
                                     self.raid_participants[raid].append({"uuid": uuid, "name": name})
                                     print(f"User {name} had {old_count} and now has {new_count}")
