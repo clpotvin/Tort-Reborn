@@ -45,6 +45,7 @@ class Shell(commands.Cog):
 
     @shell_group.command()
     async def baltop(self, message: ApplicationContext):
+        await message.response.defer()
         db = DB()
         db.connect()
         db.cursor.execute(
@@ -65,8 +66,6 @@ class Shell(commands.Cog):
         gameFont = ImageFont.truetype('images/profile/game.ttf', 19)
         widest = 0
         book = []
-
-        await message.response.defer()
 
         for result in rows:
             playerdata.append(dict(zip(row_headers, result)))
