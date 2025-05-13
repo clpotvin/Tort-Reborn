@@ -2791,11 +2791,11 @@
     },
     "Path to Light": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "f6e6ce24-c818-4ccc-8b8e-94f45fe1eb69",
+            "name": "Black Fangs",
+            "prefix": "BFS"
         },
-        "acquired": "2025-05-13T02:46:40.491000Z",
+        "acquired": "2025-05-13T03:01:36.025000Z",
         "location": {
             "start": [
                 -775,
@@ -3097,11 +3097,11 @@
     },
     "Roots of Corruption": {
         "guild": {
-            "uuid": "36ff5dff-c193-48d6-b747-3461a6fe309e",
-            "name": "Squishmallow",
-            "prefix": "Sqm"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-13T02:27:33.994000Z",
+        "acquired": "2025-05-13T03:01:15.400000Z",
         "location": {
             "start": [
                 106,
@@ -4123,11 +4123,11 @@
     },
     "Mining Base Camp": {
         "guild": {
-            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
-            "name": "Avicia",
-            "prefix": "AVO"
+            "uuid": "36ff5dff-c193-48d6-b747-3461a6fe309e",
+            "name": "Squishmallow",
+            "prefix": "Sqm"
         },
-        "acquired": "2025-05-10T10:30:08.710000Z",
+        "acquired": "2025-05-13T03:01:51.239000Z",
         "location": {
             "start": [
                 880,
@@ -5797,11 +5797,11 @@
     },
     "Timeworn Arch": {
         "guild": {
-            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
-            "name": "The Whimsical Warlords",
-            "prefix": "TWHW"
+            "uuid": "7274da55-ded3-40a5-9cdf-4aa4a08f5345",
+            "name": "New Moon",
+            "prefix": "NewM"
         },
-        "acquired": "2025-05-13T02:44:58.537000Z",
+        "acquired": "2025-05-13T03:01:56.869000Z",
         "location": {
             "start": [
                 33,
