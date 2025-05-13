@@ -55,20 +55,20 @@ class OnGuildChannelCreate(commands.Cog):
             welcome_file = discord.File(buf, filename=f"welcome_{channel.id}.png")
 
         view = View()
-        view.add_item(
-            Button(
-                label="Guild Member",
-                url=f"https://tally.so/r/nrpr5X?ticket={channel.id}",
-                emoji="🔵",
-            )
-        )
-        view.add_item(
-            Button(
-                label="Community Member",
-                url=f"https://tally.so/r/3XgBrz?ticket={channel.id}",
-                emoji="🟢",
-            )
-        )
+        # view.add_item(
+        #     Button(
+        #         label="Guild Member",
+        #         url=f"https://tally.so/r/nrpr5X?ticket={channel.id}",
+        #         emoji="🔵",
+        #     )
+        # )
+        # view.add_item(
+        #     Button(
+        #         label="Community Member",
+        #         url=f"https://tally.so/r/3XgBrz?ticket={channel.id}",
+        #         emoji="🟢",
+        #     )
+        # )
         await channel.send(file=welcome_file, view=view)
 
         exec_chan = self.client.get_channel(member_app_channel)
