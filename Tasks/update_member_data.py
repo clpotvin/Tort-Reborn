@@ -8,9 +8,19 @@ from discord.ext import tasks, commands
 
 from Helpers.classes import Guild, DB
 from Helpers.functions import getPlayerDatav3
-from Helpers.variables import raid_log_channel
+from Helpers.variables import raid_log_channel, notg_emoji_id, tcc_emoji_id, tna_emoji_id, nol_emoji_id
 
 RAID_ANNOUNCE_CHANNEL_ID = raid_log_channel
+GUILD_TTL = timedelta(minutes=10)
+XP_THRESHOLD = 10_000_000
+
+# Emoji map for each raid, pulled from variables
+RAID_EMOJIS = {
+    "Nest of the Grootslangs": notg_emoji_id,
+    "The Canyon Colossus": tcc_emoji_id,
+    "The Nameless Anomaly": tna_emoji_id,
+    "Orphion's Nexus of Light": nol_emoji_id
+}
 
 class UpdateMemberData(commands.Cog):
     RAID_NAMES = [
@@ -22,11 +32,10 @@ class UpdateMemberData(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        self.previous_raid_data = self._load_json("previous_raid_data.json", {})
-        # map each raid to { uuid: {"name": str, "first_seen": datetime} }
+        self.previous_data = self._load_json("previous_data.json", {})
         self.raid_participants = {raid: {} for raid in self.RAID_NAMES}
+        self.pending_verification = {raid: {} for raid in self.RAID_NAMES}
         self.cold_start = True
-
         self.update_member_data.start()
 
     def _load_json(self, path, default):
@@ -50,126 +59,122 @@ class UpdateMemberData(commands.Cog):
         bar = "█" * filled + "─" * (length - filled)
         return f"[{bar}]"
 
+    async def _announce_raid(self, raid, group, guild, db):
+        names = [self.raid_participants[raid][uid] for uid in group]
+        bolded = [f"**{n}**" for n in names]
+        if len(bolded) > 1:
+            *first, last = bolded
+            names_str = ", ".join(first) + ", and " + last
+        else:
+            names_str = bolded[0]
+
+        emoji = RAID_EMOJIS.get(raid, "")
+        message = f"{names_str} completed\n{emoji} **{raid}** guild raid!"
+
+        now = datetime.datetime.now(timezone.utc)
+        print(f"{now} - ANNOUNCE: {message}")
+
+        channel = self.client.get_channel(RAID_ANNOUNCE_CHANNEL_ID)
+        if channel:
+            await channel.send(message)
+
+        for uid in group:
+            db.cursor.execute(
+                """
+                INSERT INTO uncollected_raids (uuid, uncollected_raids, collected_raids)
+                VALUES (%s, 1, 0)
+                ON CONFLICT (uuid) DO UPDATE
+                  SET uncollected_raids = uncollected_raids + 1
+                """,
+                (uid,)
+            )
+        db.connection.commit()
+
     @tasks.loop(minutes=5)
     async def update_member_data(self):
+        now = datetime.datetime.now(timezone.utc)
         if self.cold_start:
-            print("Starting member tracking!")
+            print(f"{now} - Starting member tracking (cold start)")
 
-        prune_cutoff = datetime.datetime.now(timezone.utc) - timedelta(minutes=10)
-        for raid, participants in self.raid_participants.items():
-            expired = [
-                uid for uid, info in participants.items()
-                if info["first_seen"] < prune_cutoff
-            ]
-            for uid in expired:
-                del participants[uid]
+        cutoff = now - GUILD_TTL
+        for raid, parts in self.raid_participants.items():
+            for uid, first_seen in list(parts.items()):
+                if first_seen < cutoff:
+                    print(f"{now} - PRUNE: {uid} from {raid} (first seen {first_seen})")
+                    parts.pop(uid, None)
 
         db = None
         try:
-            db = DB()
-            db.connect()
-
+            db = DB(); db.connect()
             guild = Guild("The Aquarium")
             await self.client.change_presence(
                 activity=discord.CustomActivity(name=f"{guild.online} members online")
             )
 
-            new_raid_data = {}
-            snapshot = []
-
+            new_data = {}
             for member in guild.all_members:
-                try:
-                    m = getPlayerDatav3(member["uuid"])
-                    if not isinstance(m, dict):
-                        print(f"[UpdateMemberData] getPlayerDatav3 returned non-dict for {member['uuid']}: {m}")
-                        continue
+                m = getPlayerDatav3(member["uuid"])
+                if not isinstance(m, dict):
+                    continue
 
-                    uuid = m.get("uuid")
-                    name = m.get("username")
-                    if not uuid or not name:
-                        print(f"[UpdateMemberData] Missing uuid/name for member data: {m}")
-                        continue
+                uuid = m.get("uuid")
+                name = m.get("username")
+                if not uuid or not name:
+                    continue
 
-                    raids = m.get("globalData", {}).get("raids", {}).get("list", {})
-                    new_raid_data[uuid] = {raid: raids.get(raid, 0) for raid in self.RAID_NAMES}
+                contributed = member.get("contributed", 0)
+                raids = m.get("globalData", {}).get("raids", {}).get("list", {})
+                new_data[uuid] = {
+                    "contributed": contributed,
+                    "raids": {r: raids.get(r, 0) for r in self.RAID_NAMES}
+                }
 
-                    snapshot.append({
-                        "name": name,
-                        "uuid": uuid,
-                        "rank": member.get("rank"),
-                        "playtime": m.get("playtime"),
-                        "last_join": m.get("lastJoin"),
-                        "contributed": member.get("contributed"),
-                        "wars": m.get("globalData", {}).get("wars", 0),
-                        "raids": new_raid_data[uuid],
-                    })
+                if not self.cold_start:
+                    old = self.previous_data.get(uuid, {"contributed": 0, "raids": {}})
+                    for raid in self.RAID_NAMES:
+                        new_count = new_data[uuid]["raids"][raid]
+                        old_count = old["raids"].get(raid, 0)
+                        diff = new_count - old_count
+                        if 0 < diff < 3:
+                            parts = self.raid_participants[raid]
+                            if uuid not in parts and len(parts) < 4:
+                                parts[uuid] = name
+                                print(f"{now} - DETECT: {name} in {raid}, count {old_count}->{new_count}")
+                            if len(parts) == 4:
+                                group = frozenset(parts.keys())
+                                if group not in self.pending_verification[raid]:
+                                    self.pending_verification[raid][group] = now
+                                    print(f"{now} - SCHEDULE VERIFICATION for group {group} on {raid}")
 
-                    if not self.cold_start:
-                        old = self.previous_raid_data.get(uuid, {})
-                        for raid in self.RAID_NAMES:
-                            new_count = new_raid_data[uuid][raid]
-                            old_count = old.get(raid, 0)
-                            diff = new_count - old_count
-                            # ignore large jumps
-                            if new_count > old_count and diff < 3:
-                                detect_time = datetime.datetime.now(timezone.utc)
-                                parts = self.raid_participants[raid]
-                                if uuid not in parts:
-                                    parts[uuid] = {"name": name, "first_seen": detect_time}
-                                    print(f"{detect_time} - User {name} had {old_count} and now has {new_count}")
+                await asyncio.sleep(0.5)
 
-                                if len(parts) >= 4:
-                                    names = [info["name"] for info in parts.values()]
-                                    print(f"{detect_time} - [GUILD RAID] {raid} completed by: {', '.join(names)}")
+            for raid, pend in self.pending_verification.items():
+                for group, detect_time in list(pend.items()):
+                    if now - detect_time >= GUILD_TTL:
+                        print(f"{now} - VERIFY: group {group} for {raid}")
+                        passed = all(
+                            new_data[uid]["contributed"] -
+                            self.previous_data.get(uid, {"contributed": 0})["contributed"]
+                            >= XP_THRESHOLD
+                            for uid in group
+                        )
+                        if passed:
+                            print(f"{now} - VERIFICATION PASSED for group {group} on {raid}")
+                            await self._announce_raid(raid, group, guild, db)
+                        else:
+                            print(f"{now} - VERIFICATION FAILED for group {group} on {raid}")
+                        for uid in group:
+                            self.raid_participants[raid].pop(uid, None)
+                        del pend[group]
 
-                                    channel = self.client.get_channel(RAID_ANNOUNCE_CHANNEL_ID)
-                                    if channel:
-                                        current_xp = guild.xpPercent
-                                        bar = self._make_progress_bar(current_xp)
-                                        embed = discord.Embed(
-                                            title="🏹 Guild Raid Completed!",
-                                            description=f"**{raid}** completed by: {', '.join(names)}",
-                                            color=discord.Color.blue()
-                                        )
-                                        embed.set_footer(
-                                            text=(
-                                                f"Lv.{guild.level} – THE AQUARIUM – "
-                                                f"{current_xp}% XP  {bar}"
-                                            )
-                                        )
-                                        await channel.send(embed=embed)
-
-                                    for uid in parts:
-                                        db.cursor.execute(
-                                            """
-                                            INSERT INTO uncollected_raids AS ur (uuid, uncollected_raids, collected_raids)
-                                            VALUES (%s, 1, 0)
-                                            ON CONFLICT (uuid)
-                                            DO UPDATE SET
-                                              uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids,
-                                              collected_raids   = ur.collected_raids   + EXCLUDED.collected_raids
-                                            """,
-                                            (uid,)
-                                        )
-                                    db.connection.commit()
-
-                                    # clear participants for this raid
-                                    self.raid_participants[raid].clear()
-                except Exception as e:
-                    print(f"[UpdateMemberData] Error processing {member.get('uuid')}: {e}")
-                finally:
-                    await asyncio.sleep(0.5)
-
-            self.previous_raid_data = new_raid_data
-            self._save_json("previous_raid_data.json", new_raid_data)
-            with open("current_activity.json", "w") as f:
-                json.dump(snapshot, f, indent=2)
-
+            self.previous_data = new_data
+            self._save_json("previous_data.json", new_data)
             if self.cold_start:
-                print("Starting graid counting!")
-            self.cold_start = False
+                print(f"{now} - Ending cold start")
+                self.cold_start = False
+
         except Exception as e:
-            print(f"[UpdateMemberData] Fatal error in update_member_data loop: {e}")
+            print(f"{now} - [UpdateMemberData] Fatal error: {e}")
         finally:
             if db:
                 try:
@@ -183,7 +188,7 @@ class UpdateMemberData(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("UpdateMemberData task loaded")
+        print(f"{datetime.datetime.now(timezone.utc)} - UpdateMemberData task loaded")
 
 
 def setup(client):

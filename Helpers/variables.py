@@ -25,6 +25,10 @@ if test:
     application_manager_role_id = "<@&1371274399637835837>"
     shell_emoji_id = "<:shells:1371292212729479207>"
     aspect_emoji_id = "<:aspect_warrior:1371292093074640936>"
+    notg_emoji_id = "<:notg:1371906671747666052>"
+    tcc_emoji_id = "<:tcc:1371906703099953242>"
+    tna_emoji_id = "<:tna:1371906714949124247>"
+    nol_emoji_id = "<:nol:1371906726940639272>"
 else:
     guilds = [729147655875199017, 1364751619018850405]
     te = 784795827808763904
@@ -45,6 +49,10 @@ else:
     application_manager_role_id = "<@&870767928704921651>"
     shell_emoji_id = "<:shells:1126608994526560306>"
     aspect_emoji_id = "<:aspect_warrior:1371292000963395655>"
+    notg_emoji_id = "<:notg:1316539942524031017>"
+    tcc_emoji_id = "<:tcc:1316539938917060658>"
+    tna_emoji_id = "<:tna:1316539936438222850>"
+    nol_emoji_id = "<:nol:1316539940418621530>"
 
 golden_tort = [644071980160647178, 419845975000219648, 282914836084686848]
 
