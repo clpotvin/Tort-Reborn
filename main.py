@@ -15,7 +15,16 @@ from Helpers.variables import test
 
 # get bot token
 load_dotenv()
-token = os.getenv("TOKEN")
+if os.getenv("TEST_MODE"):
+    try:
+        token = os.getenv("TEST_TOKEN")
+    except Exception as e:
+        print(e)
+else:
+    try:
+        token = os.getenv("TOKEN")
+    except Exception as e:
+        print(e)
 
 # Discord intents
 intents = discord.Intents.default()
