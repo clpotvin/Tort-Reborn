@@ -2,6 +2,8 @@ import asyncio
 import json
 import os
 import discord
+import datetime
+from datetime import timezone, timedelta
 from discord.ext import tasks, commands
 
 from Helpers.classes import Guild, DB
@@ -21,7 +23,8 @@ class UpdateMemberData(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.previous_raid_data = self._load_json("previous_raid_data.json", {})
-        self.raid_participants = {raid: [] for raid in self.RAID_NAMES}
+        # map each raid to { uuid: {"name": str, "first_seen": datetime} }
+        self.raid_participants = {raid: {} for raid in self.RAID_NAMES}
         self.cold_start = True
 
         self.update_member_data.start()
@@ -49,6 +52,18 @@ class UpdateMemberData(commands.Cog):
 
     @tasks.loop(minutes=5)
     async def update_member_data(self):
+        if self.cold_start:
+            print("Starting member tracking!")
+
+        prune_cutoff = datetime.datetime.now(timezone.utc) - timedelta(minutes=10)
+        for raid, participants in self.raid_participants.items():
+            expired = [
+                uid for uid, info in participants.items()
+                if info["first_seen"] < prune_cutoff
+            ]
+            for uid in expired:
+                del participants[uid]
+
         db = None
         try:
             db = DB()
@@ -94,50 +109,52 @@ class UpdateMemberData(commands.Cog):
                         for raid in self.RAID_NAMES:
                             new_count = new_raid_data[uuid][raid]
                             old_count = old.get(raid, 0)
-                            raid_difference = new_count - old_count
-                            # For bugs where past raid might be set to 0 then jumps up to higher number
-                            if new_count > old_count and raid_difference < 3:
-                                if not any(p["uuid"] == uuid for p in self.raid_participants[raid]):
-                                    self.raid_participants[raid].append({"uuid": uuid, "name": name})
-                                    print(f"User {name} had {old_count} and now has {new_count}")
-                                    if len(self.raid_participants[raid]) == 4:
-                                        participants = self.raid_participants[raid]
-                                        names = [p["name"] for p in participants]
-                                        print(f"[GUILD RAID] {raid} completed by: {', '.join(names)}")
+                            diff = new_count - old_count
+                            # ignore large jumps
+                            if new_count > old_count and diff < 3:
+                                detect_time = datetime.datetime.now(timezone.utc)
+                                parts = self.raid_participants[raid]
+                                if uuid not in parts:
+                                    parts[uuid] = {"name": name, "first_seen": detect_time}
+                                    print(f"{detect_time} - User {name} had {old_count} and now has {new_count}")
 
-                                        channel = self.client.get_channel(RAID_ANNOUNCE_CHANNEL_ID)
-                                        if channel:
-                                            current_xp = guild.xpPercent
-                                            bar = self._make_progress_bar(current_xp)
-                                            embed = discord.Embed(
-                                                title="🏹 Guild Raid Completed!",
-                                                description=(
-                                                    f"**{raid}** completed by: {', '.join(names)}"
-                                                ),
-                                                color=discord.Color.blue()
-                                            )
-                                            embed.set_footer(
-                                                text=(
-                                                    f"Lv.{guild.level} – THE AQUARIUM – "
-                                                    f"{current_xp}% XP  {bar}"
-                                                )
-                                            )
-                                            await channel.send(embed=embed)
+                                if len(parts) >= 4:
+                                    names = [info["name"] for info in parts.values()]
+                                    print(f"{detect_time} - [GUILD RAID] {raid} completed by: {', '.join(names)}")
 
-                                        for p in participants:
-                                            db.cursor.execute(
-                                                """
-                                                INSERT INTO uncollected_raids AS ur (uuid, uncollected_raids, collected_raids)
-                                                VALUES (%s, 1, 0)
-                                                ON CONFLICT (uuid)
-                                                DO UPDATE SET
-                                                  uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids,
-                                                  collected_raids   = ur.collected_raids   + EXCLUDED.collected_raids
-                                                """,
-                                                (p["uuid"],)
+                                    channel = self.client.get_channel(RAID_ANNOUNCE_CHANNEL_ID)
+                                    if channel:
+                                        current_xp = guild.xpPercent
+                                        bar = self._make_progress_bar(current_xp)
+                                        embed = discord.Embed(
+                                            title="🏹 Guild Raid Completed!",
+                                            description=f"**{raid}** completed by: {', '.join(names)}",
+                                            color=discord.Color.blue()
+                                        )
+                                        embed.set_footer(
+                                            text=(
+                                                f"Lv.{guild.level} – THE AQUARIUM – "
+                                                f"{current_xp}% XP  {bar}"
                                             )
-                                        db.connection.commit()
-                                        self.raid_participants[raid] = []
+                                        )
+                                        await channel.send(embed=embed)
+
+                                    for uid in parts:
+                                        db.cursor.execute(
+                                            """
+                                            INSERT INTO uncollected_raids AS ur (uuid, uncollected_raids, collected_raids)
+                                            VALUES (%s, 1, 0)
+                                            ON CONFLICT (uuid)
+                                            DO UPDATE SET
+                                              uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids,
+                                              collected_raids   = ur.collected_raids   + EXCLUDED.collected_raids
+                                            """,
+                                            (uid,)
+                                        )
+                                    db.connection.commit()
+
+                                    # clear participants for this raid
+                                    self.raid_participants[raid].clear()
                 except Exception as e:
                     print(f"[UpdateMemberData] Error processing {member.get('uuid')}: {e}")
                 finally:
@@ -148,6 +165,8 @@ class UpdateMemberData(commands.Cog):
             with open("current_activity.json", "w") as f:
                 json.dump(snapshot, f, indent=2)
 
+            if self.cold_start:
+                print("Starting graid counting!")
             self.cold_start = False
         except Exception as e:
             print(f"[UpdateMemberData] Fatal error in update_member_data loop: {e}")
