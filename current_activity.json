@@ -18,8 +18,8 @@
     "name": "WoodCreature",
     "uuid": "aa7402cc-bf1c-4aed-838b-fd8897d38836",
     "rank": "chief",
-    "playtime": 27815.17,
-    "last_join": "2025-05-12T05:37:25.903000Z",
+    "playtime": 27829.42,
+    "last_join": "2025-05-13T01:54:53.141000Z",
     "contributed": 10823544027383,
     "wars": 3830,
     "raids": {
@@ -93,8 +93,8 @@
     "name": "Battleslay1000",
     "uuid": "19dcfdee-7911-480e-be06-84ef99c63f58",
     "rank": "chief",
-    "playtime": 4000.58,
-    "last_join": "2025-05-10T18:22:40.806000Z",
+    "playtime": 4000.83,
+    "last_join": "2025-05-12T16:45:53.673000Z",
     "contributed": 422909639870,
     "wars": 4354,
     "raids": {
@@ -123,8 +123,8 @@
     "name": "Thundderr",
     "uuid": "ea7ca108-8e11-4a4e-9cd6-03d1c5cd2484",
     "rank": "chief",
-    "playtime": 1892.08,
-    "last_join": "2025-05-07T00:59:29.798000Z",
+    "playtime": 1901.08,
+    "last_join": "2025-05-13T01:30:19.100000Z",
     "contributed": 327774525896,
     "wars": 342,
     "raids": {
@@ -138,8 +138,8 @@
     "name": "Bulkas",
     "uuid": "5c5f8d1b-40ea-4ade-a6fa-baef905c9181",
     "rank": "chief",
-    "playtime": 1757.08,
-    "last_join": "2025-05-10T22:32:35.764000Z",
+    "playtime": 1757.25,
+    "last_join": "2025-05-12T20:43:55.687000Z",
     "contributed": 221736293072,
     "wars": 2072,
     "raids": {
@@ -363,9 +363,9 @@
     "name": "alproy",
     "uuid": "b03ca931-08df-4024-bdb6-aa57354a7afa",
     "rank": "strategist",
-    "playtime": 7278.42,
-    "last_join": "2025-05-11T19:00:31.318000Z",
-    "contributed": 1373304296732,
+    "playtime": 7280.83,
+    "last_join": "2025-05-12T18:29:17.021000Z",
+    "contributed": 1373304348846,
     "wars": 4644,
     "raids": {
       "Nest of the Grootslangs": 451,
@@ -393,14 +393,14 @@
     "name": "AFTX",
     "uuid": "d431d3cb-f59c-4f89-a0fe-912ca14ee253",
     "rank": "strategist",
-    "playtime": 1627.33,
-    "last_join": "2025-05-12T05:30:42.966000Z",
+    "playtime": 1630.83,
+    "last_join": "2025-05-13T01:53:04.876000Z",
     "contributed": 1170338387180,
     "wars": 351,
     "raids": {
       "Nest of the Grootslangs": 616,
       "The Canyon Colossus": 560,
-      "The Nameless Anomaly": 194,
+      "The Nameless Anomaly": 201,
       "Orphion's Nexus of Light": 11
     }
   },
@@ -408,8 +408,8 @@
     "name": "FallenImpact",
     "uuid": "9eda181d-60c8-40eb-9fae-93ff9d877ba5",
     "rank": "strategist",
-    "playtime": 2077.83,
-    "last_join": "2025-04-30T06:12:43.837000Z",
+    "playtime": 2078.42,
+    "last_join": "2025-05-12T16:57:28.653000Z",
     "contributed": 999074425953,
     "wars": 129,
     "raids": {
@@ -423,8 +423,8 @@
     "name": "CarrotBunn",
     "uuid": "e26c5867-8e36-4b49-a2ec-1f2f08f6646d",
     "rank": "strategist",
-    "playtime": 2495.75,
-    "last_join": "2025-05-11T14:54:08.138000Z",
+    "playtime": 2497.08,
+    "last_join": "2025-05-12T16:50:25.188000Z",
     "contributed": 949204928405,
     "wars": 570,
     "raids": {
@@ -438,12 +438,12 @@
     "name": "ToNoize",
     "uuid": "de78ab41-77ed-4254-8187-b9a510bbe489",
     "rank": "strategist",
-    "playtime": 4414.25,
-    "last_join": "2025-05-11T22:58:45.431000Z",
-    "contributed": 811245813219,
+    "playtime": 4422.83,
+    "last_join": "2025-05-12T23:44:01.184000Z",
+    "contributed": 811248173960,
     "wars": 5309,
     "raids": {
-      "Nest of the Grootslangs": 309,
+      "Nest of the Grootslangs": 310,
       "The Canyon Colossus": 922,
       "The Nameless Anomaly": 496,
       "Orphion's Nexus of Light": 140
@@ -483,15 +483,15 @@
     "name": "muxiber_",
     "uuid": "bee5d3b1-2344-4f3c-94ad-c1aba3b2e966",
     "rank": "strategist",
-    "playtime": 1686.58,
-    "last_join": "2025-05-11T23:04:31.242000Z",
+    "playtime": 1695.83,
+    "last_join": "2025-05-12T23:29:12.764000Z",
     "contributed": 634140093041,
     "wars": 1,
     "raids": {
       "Nest of the Grootslangs": 393,
       "The Canyon Colossus": 1070,
       "The Nameless Anomaly": 45,
-      "Orphion's Nexus of Light": 775
+      "Orphion's Nexus of Light": 782
     }
   },
   {
@@ -573,14 +573,14 @@
     "name": "fraysoul",
     "uuid": "e12a5502-e89d-479d-b04c-46befe9f2bc8",
     "rank": "strategist",
-    "playtime": 2013.17,
-    "last_join": "2025-05-12T05:08:37.371000Z",
+    "playtime": 2019.0,
+    "last_join": "2025-05-12T21:09:46.444000Z",
     "contributed": 363821397742,
     "wars": 12,
     "raids": {
-      "Nest of the Grootslangs": 363,
+      "Nest of the Grootslangs": 378,
       "The Canyon Colossus": 128,
-      "The Nameless Anomaly": 286,
+      "The Nameless Anomaly": 289,
       "Orphion's Nexus of Light": 141
     }
   },
@@ -618,15 +618,15 @@
     "name": "Kizna",
     "uuid": "c810b76a-456e-4b10-ae8b-f25f42d93f6e",
     "rank": "strategist",
-    "playtime": 668.92,
-    "last_join": "2025-05-11T13:56:47.023000Z",
+    "playtime": 675.92,
+    "last_join": "2025-05-12T14:01:30.433000Z",
     "contributed": 246219015735,
     "wars": 11,
     "raids": {
       "Nest of the Grootslangs": 110,
       "The Canyon Colossus": 142,
       "The Nameless Anomaly": 118,
-      "Orphion's Nexus of Light": 92
+      "Orphion's Nexus of Light": 95
     }
   },
   {
@@ -648,9 +648,9 @@
     "name": "Nukewarmachine",
     "uuid": "4f8b7a8c-98cd-4c1d-bfdd-98c11dc733e8",
     "rank": "strategist",
-    "playtime": 6639.67,
-    "last_join": "2025-05-12T05:21:01.659000Z",
-    "contributed": 179719102417,
+    "playtime": 6643.5,
+    "last_join": "2025-05-13T01:48:57.914000Z",
+    "contributed": 179721256972,
     "wars": 2550,
     "raids": {
       "Nest of the Grootslangs": 159,
@@ -843,8 +843,8 @@
     "name": "Zombie_Mods",
     "uuid": "ba397b0e-56cd-4147-a76e-e260cc2ab952",
     "rank": "captain",
-    "playtime": 430.17,
-    "last_join": "2025-05-11T09:22:36.226000Z",
+    "playtime": 430.75,
+    "last_join": "2025-05-12T10:11:03.411000Z",
     "contributed": 513299308274,
     "wars": 4,
     "raids": {
@@ -858,12 +858,12 @@
     "name": "Eightbittey",
     "uuid": "462d45ce-67ec-4daa-85d9-55cae06a1f51",
     "rank": "captain",
-    "playtime": 1210.75,
-    "last_join": "2025-05-10T12:59:04.835000Z",
+    "playtime": 1211.25,
+    "last_join": "2025-05-12T20:12:12.704000Z",
     "contributed": 482859864469,
     "wars": 71,
     "raids": {
-      "Nest of the Grootslangs": 175,
+      "Nest of the Grootslangs": 176,
       "The Canyon Colossus": 89,
       "The Nameless Anomaly": 15,
       "Orphion's Nexus of Light": 11
@@ -873,8 +873,8 @@
     "name": "PapaPenguin_Jr",
     "uuid": "3ddddf82-27dc-4ae4-848b-862f15b6c6b3",
     "rank": "captain",
-    "playtime": 1264.75,
-    "last_join": "2025-05-08T16:42:21.149000Z",
+    "playtime": 1265.33,
+    "last_join": "2025-05-12T16:57:22.017000Z",
     "contributed": 365038029752,
     "wars": 0,
     "raids": {
@@ -963,8 +963,8 @@
     "name": "Abedos",
     "uuid": "a6095ba4-95df-4364-a25d-aca019adf148",
     "rank": "captain",
-    "playtime": 310.5,
-    "last_join": "2025-05-11T15:01:25.120000Z",
+    "playtime": 312.5,
+    "last_join": "2025-05-12T18:16:39.973000Z",
     "contributed": 243630550267,
     "wars": 21,
     "raids": {
@@ -993,12 +993,12 @@
     "name": "igasingularity",
     "uuid": "1bc769c5-3d65-491d-99fa-aa1d0675b958",
     "rank": "captain",
-    "playtime": 471.67,
-    "last_join": "2025-05-12T05:38:24.416000Z",
+    "playtime": 477.17,
+    "last_join": "2025-05-12T18:20:55.699000Z",
     "contributed": 209943822136,
     "wars": 4,
     "raids": {
-      "Nest of the Grootslangs": 109,
+      "Nest of the Grootslangs": 113,
       "The Canyon Colossus": 16,
       "The Nameless Anomaly": 6,
       "Orphion's Nexus of Light": 6
@@ -1023,8 +1023,8 @@
     "name": "TariosZaeka",
     "uuid": "eb6936e6-a91b-45fa-ac90-d347552027ee",
     "rank": "captain",
-    "playtime": 383.33,
-    "last_join": "2025-05-10T14:51:01.044000Z",
+    "playtime": 385.92,
+    "last_join": "2025-05-12T18:04:51.364000Z",
     "contributed": 186608096136,
     "wars": 14,
     "raids": {
@@ -1054,7 +1054,7 @@
     "uuid": "263e30f3-7b26-45c2-a5c8-944e340c57b7",
     "rank": "captain",
     "playtime": 596.75,
-    "last_join": "2025-05-12T02:52:44.137000Z",
+    "last_join": "2025-05-13T01:27:16.048000Z",
     "contributed": 137364292989,
     "wars": 1,
     "raids": {
@@ -1113,8 +1113,8 @@
     "name": "PxLuki",
     "uuid": "9d5d0584-84fc-48e1-9118-c3691c1e5b45",
     "rank": "captain",
-    "playtime": 314.5,
-    "last_join": "2025-05-09T15:37:31.567000Z",
+    "playtime": 314.75,
+    "last_join": "2025-05-12T15:10:43.908000Z",
     "contributed": 98506328707,
     "wars": 1,
     "raids": {
@@ -1128,12 +1128,12 @@
     "name": "punchahbear",
     "uuid": "d30a7d6b-5f82-4ce1-ab05-a64ded8c7e9b",
     "rank": "captain",
-    "playtime": 649.42,
-    "last_join": "2025-05-12T05:38:14.677000Z",
-    "contributed": 90789949260,
+    "playtime": 654.83,
+    "last_join": "2025-05-12T22:24:26.248000Z",
+    "contributed": 90789949728,
     "wars": 0,
     "raids": {
-      "Nest of the Grootslangs": 274,
+      "Nest of the Grootslangs": 276,
       "The Canyon Colossus": 7,
       "The Nameless Anomaly": 0,
       "Orphion's Nexus of Light": 7
@@ -1173,15 +1173,15 @@
     "name": "Aron10",
     "uuid": "1671df3b-6cb0-4ed0-839a-56d818c6fee9",
     "rank": "captain",
-    "playtime": 1290.75,
-    "last_join": "2025-05-11T23:49:18.490000Z",
+    "playtime": 1293.42,
+    "last_join": "2025-05-12T20:02:41.909000Z",
     "contributed": 61716339719,
     "wars": 23,
     "raids": {
-      "Nest of the Grootslangs": 145,
-      "The Canyon Colossus": 94,
-      "The Nameless Anomaly": 135,
-      "Orphion's Nexus of Light": 75
+      "Nest of the Grootslangs": 146,
+      "The Canyon Colossus": 96,
+      "The Nameless Anomaly": 136,
+      "Orphion's Nexus of Light": 76
     }
   },
   {
@@ -1233,15 +1233,15 @@
     "name": "Bocchi5101",
     "uuid": "bccbff7f-d55d-4aa0-9f95-944ad918569b",
     "rank": "captain",
-    "playtime": 4208.42,
-    "last_join": "2025-05-12T05:39:15.141000Z",
-    "contributed": 42131359482,
+    "playtime": 4214.92,
+    "last_join": "2025-05-13T01:22:08.022000Z",
+    "contributed": 42131855354,
     "wars": 8,
     "raids": {
       "Nest of the Grootslangs": 871,
-      "The Canyon Colossus": 1679,
+      "The Canyon Colossus": 1687,
       "The Nameless Anomaly": 776,
-      "Orphion's Nexus of Light": 289
+      "Orphion's Nexus of Light": 291
     }
   },
   {
@@ -1263,12 +1263,12 @@
     "name": "_kuJ0",
     "uuid": "bb7fdc2c-0026-4dc7-b04e-7921f7c9a514",
     "rank": "captain",
-    "playtime": 833.42,
-    "last_join": "2025-05-12T04:03:38.355000Z",
+    "playtime": 833.92,
+    "last_join": "2025-05-12T08:57:20.441000Z",
     "contributed": 36387594129,
     "wars": 0,
     "raids": {
-      "Nest of the Grootslangs": 113,
+      "Nest of the Grootslangs": 114,
       "The Canyon Colossus": 0,
       "The Nameless Anomaly": 0,
       "Orphion's Nexus of Light": 2
@@ -1323,8 +1323,8 @@
     "name": "Poplots",
     "uuid": "01fc9dba-83c0-4f97-9a8e-0d6f4e25f90f",
     "rank": "captain",
-    "playtime": 2114.0,
-    "last_join": "2025-05-11T19:06:48.060000Z",
+    "playtime": 2114.83,
+    "last_join": "2025-05-12T23:02:08.269000Z",
     "contributed": 23326012017,
     "wars": 1725,
     "raids": {
@@ -1353,9 +1353,9 @@
     "name": "Alpacaturtleboy",
     "uuid": "9e7bbdd9-2ff8-4d86-b795-3a13720589d0",
     "rank": "captain",
-    "playtime": 571.75,
-    "last_join": "2025-05-11T10:09:14.059000Z",
-    "contributed": 10369420771,
+    "playtime": 576.42,
+    "last_join": "2025-05-12T17:31:33.569000Z",
+    "contributed": 10370094001,
     "wars": 0,
     "raids": {
       "Nest of the Grootslangs": 9,
@@ -1383,9 +1383,9 @@
     "name": "sry4troll",
     "uuid": "a7c0af62-9900-408e-8421-6c5aedd64db3",
     "rank": "captain",
-    "playtime": 1508.5,
-    "last_join": "2025-05-06T19:49:48.074000Z",
-    "contributed": 3861064125,
+    "playtime": 1511.58,
+    "last_join": "2025-05-12T16:50:43.027000Z",
+    "contributed": 3861586000,
     "wars": 57,
     "raids": {
       "Nest of the Grootslangs": 140,
@@ -1398,8 +1398,8 @@
     "name": "Ness1254",
     "uuid": "eeec7d41-e210-4e05-b352-0053af3a323c",
     "rank": "captain",
-    "playtime": 1260.0,
-    "last_join": "2025-05-12T03:08:16.408000Z",
+    "playtime": 1260.5,
+    "last_join": "2025-05-13T01:56:31.057000Z",
     "contributed": 0,
     "wars": 3,
     "raids": {
@@ -1428,13 +1428,13 @@
     "name": "N1ght91",
     "uuid": "b1dd1a5f-eed8-4acc-96d0-8e2451cc9939",
     "rank": "recruiter",
-    "playtime": 859.67,
-    "last_join": "2025-05-11T20:03:53.221000Z",
+    "playtime": 861.5,
+    "last_join": "2025-05-12T20:52:41.126000Z",
     "contributed": 173124965230,
     "wars": 264,
     "raids": {
       "Nest of the Grootslangs": 137,
-      "The Canyon Colossus": 82,
+      "The Canyon Colossus": 83,
       "The Nameless Anomaly": 202,
       "Orphion's Nexus of Light": 1
     }
@@ -1443,12 +1443,12 @@
     "name": "kaliphobia",
     "uuid": "f76ff3f4-1fc6-4454-8794-591003f04d8c",
     "rank": "recruiter",
-    "playtime": 908.58,
-    "last_join": "2025-05-11T20:15:16.551000Z",
+    "playtime": 913.75,
+    "last_join": "2025-05-12T21:09:49.969000Z",
     "contributed": 126997176537,
     "wars": 0,
     "raids": {
-      "Nest of the Grootslangs": 225,
+      "Nest of the Grootslangs": 241,
       "The Canyon Colossus": 28,
       "The Nameless Anomaly": 20,
       "Orphion's Nexus of Light": 71
@@ -1533,8 +1533,8 @@
     "name": "Admiralwienerdog",
     "uuid": "ae5e24a1-0d94-4903-aeb2-2df901df8b2b",
     "rank": "recruiter",
-    "playtime": 539.67,
-    "last_join": "2025-05-11T10:04:59.772000Z",
+    "playtime": 539.75,
+    "last_join": "2025-05-12T05:51:24.820000Z",
     "contributed": 72589601512,
     "wars": 0,
     "raids": {
@@ -1594,7 +1594,7 @@
     "uuid": "d4eda1cb-8777-478e-8508-7f61be930651",
     "rank": "recruiter",
     "playtime": 981.33,
-    "last_join": "2025-05-06T05:19:22.872000Z",
+    "last_join": "2025-05-12T07:30:57.995000Z",
     "contributed": 54427361373,
     "wars": 25,
     "raids": {
@@ -1743,8 +1743,8 @@
     "name": "swfet",
     "uuid": "da5bcd65-29d3-4299-8c69-46452e592886",
     "rank": "recruiter",
-    "playtime": 253.17,
-    "last_join": "2025-05-11T01:53:04.381000Z",
+    "playtime": 253.5,
+    "last_join": "2025-05-12T13:32:32.349000Z",
     "contributed": 25919885114,
     "wars": 0,
     "raids": {
@@ -1773,8 +1773,8 @@
     "name": "P_POLIC",
     "uuid": "f881b3c9-fd4c-4a51-90df-9194b5ff7b88",
     "rank": "recruiter",
-    "playtime": 303.33,
-    "last_join": "2025-05-12T00:42:06.678000Z",
+    "playtime": 303.67,
+    "last_join": "2025-05-12T16:50:29.703000Z",
     "contributed": 10367116452,
     "wars": 15,
     "raids": {
@@ -1833,8 +1833,8 @@
     "name": "SpikefulCacti",
     "uuid": "0db7dab1-a5d3-4f47-b8fc-4695ae45a44f",
     "rank": "recruiter",
-    "playtime": 908.67,
-    "last_join": "2025-05-12T00:13:04.552000Z",
+    "playtime": 909.0,
+    "last_join": "2025-05-12T20:04:21.736000Z",
     "contributed": 26163883,
     "wars": 47,
     "raids": {
@@ -1863,12 +1863,12 @@
     "name": "Thundurstrike",
     "uuid": "9e3cc777-485f-48f8-949e-25bc26d756e6",
     "rank": "recruiter",
-    "playtime": 238.83,
-    "last_join": "2025-05-12T02:55:28.932000Z",
-    "contributed": 10906241,
+    "playtime": 240.75,
+    "last_join": "2025-05-12T22:07:55.385000Z",
+    "contributed": 11730489,
     "wars": 3,
     "raids": {
-      "Nest of the Grootslangs": 32,
+      "Nest of the Grootslangs": 33,
       "The Canyon Colossus": 5,
       "The Nameless Anomaly": 0,
       "Orphion's Nexus of Light": 7
@@ -1893,8 +1893,8 @@
     "name": "Myrmace",
     "uuid": "41043541-921f-4950-9bcd-50fe1930d767",
     "rank": "recruiter",
-    "playtime": 1586.83,
-    "last_join": "2025-05-10T22:38:35.796000Z",
+    "playtime": 1588.33,
+    "last_join": "2025-05-12T18:33:23.524000Z",
     "contributed": 0,
     "wars": 725,
     "raids": {
@@ -1953,8 +1953,8 @@
     "name": "RandomNameIdea",
     "uuid": "c075ae57-56b9-4346-b3b9-18e3d5a22ebb",
     "rank": "recruit",
-    "playtime": 762.83,
-    "last_join": "2025-05-11T20:21:16.977000Z",
+    "playtime": 763.08,
+    "last_join": "2025-05-12T16:55:05.970000Z",
     "contributed": 23375441372,
     "wars": 19,
     "raids": {
@@ -2043,9 +2043,9 @@
     "name": "RC_Cap",
     "uuid": "e84c052a-2ae0-434f-8aef-7310f747ce33",
     "rank": "recruit",
-    "playtime": 1549.0,
-    "last_join": "2025-05-11T18:15:42.177000Z",
-    "contributed": 5184666407,
+    "playtime": 1549.42,
+    "last_join": "2025-05-12T22:57:15.382000Z",
+    "contributed": 5184722368,
     "wars": 0,
     "raids": {
       "Nest of the Grootslangs": 11,
@@ -2163,8 +2163,8 @@
     "name": "sooqqu",
     "uuid": "42a7a7ed-7a1e-4031-bfae-93d5ad0bdda8",
     "rank": "recruit",
-    "playtime": 418.17,
-    "last_join": "2025-05-11T08:28:12.193000Z",
+    "playtime": 422.75,
+    "last_join": "2025-05-12T11:03:34.569000Z",
     "contributed": 0,
     "wars": 1,
     "raids": {
