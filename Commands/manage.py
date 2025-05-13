@@ -226,6 +226,7 @@ class Manage(commands.Cog):
         user: discord.Member,
         ign: str
     ):
+        await ctx.defer(ephemeral=True)
         db = DB(); db.connect()
         uuid = getPlayerUUID(ign)[1]
         db.cursor.execute(
@@ -246,7 +247,10 @@ class Manage(commands.Cog):
                 await user.edit(nick=f"{base} {ign}")
             except:
                 pass
-            await ctx.respond(f'Updated link for **{user.name}** to **{ign}**', ephemeral=True)
+            await ctx.followup.send(
+                f'Updated link for **{user.name}** to **{ign}**',
+                ephemeral=True
+            )
         else:
             base = (user.nick.split(' ')[0] if user.nick else '')
             db.cursor.execute(
@@ -254,7 +258,10 @@ class Manage(commands.Cog):
                 (user.id, ign, uuid, base)
             )
             db.connection.commit()
-            await ctx.respond(f'Linked **{user.name}** to **{ign}**', ephemeral=True)
+            await ctx.followup.send(
+                f'Linked **{user.name}** to **{ign}**',
+                ephemeral=True
+            )
         db.close()
 
     @commands.Cog.listener()
