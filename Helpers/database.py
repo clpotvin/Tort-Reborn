@@ -9,17 +9,17 @@ class DB:
 
     def connect(self):
         try:
-            if os.getenv("TEST_MODE"):
+            if os.getenv("TEST_MODE").lower() == "true":
                 self.connection = psycopg2.connect(
                     user=os.getenv("TEST_DB_LOGIN"),
                     password=os.getenv("TEST_DB_PASS"),
                     host=os.getenv("TEST_DB_HOST"),
                     port=int(os.getenv("TEST_DB_PORT")),
-                    database=os.getenv("TEST_)DB_DATABASE", "postgres"),
+                    database=os.getenv("TEST_DB_DATABASE", "postgres"),
                     sslmode=os.getenv("TEST_DB_SSLMODE")
                 )
                 self.cursor = self.connection.cursor()
-            else:
+            elif os.getenv("TEST_MODE").lower() == "false":
                 self.connection = psycopg2.connect(
                     user=os.getenv("DB_LOGIN"),
                     password=os.getenv("DB_PASS"),
@@ -29,6 +29,9 @@ class DB:
                     sslmode=os.getenv("DB_SSLMODE")
                 )
                 self.cursor = self.connection.cursor()
+            else:
+                print("Problem logging into db")
+                exit(-1)
         except OperationalError as e:
             print(f"[DB] Connection failed: {e}")
             raise

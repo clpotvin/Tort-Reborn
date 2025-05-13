@@ -14,7 +14,6 @@ RAID_ANNOUNCE_CHANNEL_ID = raid_log_channel
 GUILD_TTL = timedelta(minutes=10)
 XP_THRESHOLD = 10_000_000
 
-# Emoji map for each raid, pulled from variables
 RAID_EMOJIS = {
     "Nest of the Grootslangs": notg_emoji_id,
     "The Canyon Colossus": tcc_emoji_id,
@@ -33,6 +32,7 @@ class UpdateMemberData(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.previous_data = self._load_json("previous_data.json", {})
+        # track users: raid_name -> { uuid: {"name": str, "first_seen": datetime} }
         self.raid_participants = {raid: {} for raid in self.RAID_NAMES}
         self.pending_verification = {raid: {} for raid in self.RAID_NAMES}
         self.cold_start = True
@@ -60,7 +60,7 @@ class UpdateMemberData(commands.Cog):
         return f"[{bar}]"
 
     async def _announce_raid(self, raid, group, guild, db):
-        names = [self.raid_participants[raid][uid] for uid in group]
+        names = [self.raid_participants[raid][uid]["name"] for uid in group]
         bolded = [f"**{n}**" for n in names]
         if len(bolded) > 1:
             *first, last = bolded
@@ -98,9 +98,18 @@ class UpdateMemberData(commands.Cog):
 
         cutoff = now - GUILD_TTL
         for raid, parts in self.raid_participants.items():
-            for uid, first_seen in list(parts.items()):
+            for uid, info in list(parts.items()):
+                raw = info["first_seen"] if isinstance(info, dict) else info
+                if isinstance(raw, str):
+                    try:
+                        first_seen = datetime.datetime.fromisoformat(raw)
+                    except ValueError:
+                        first_seen = datetime.datetime.strptime(raw, "%Y-%m-%dT%H:%M:%S.%f%z")
+                else:
+                    first_seen = raw
                 if first_seen < cutoff:
-                    print(f"{now} - PRUNE: {uid} from {raid} (first seen {first_seen})")
+                    name = info["name"] if isinstance(info, dict) else str(uid)
+                    print(f"{now} - PRUNE: {name} ({uid}) from {raid} (seen {first_seen})")
                     parts.pop(uid, None)
 
         db = None
@@ -138,7 +147,7 @@ class UpdateMemberData(commands.Cog):
                         if 0 < diff < 3:
                             parts = self.raid_participants[raid]
                             if uuid not in parts and len(parts) < 4:
-                                parts[uuid] = name
+                                parts[uuid] = {"name": name, "first_seen": now}
                                 print(f"{now} - DETECT: {name} in {raid}, count {old_count}->{new_count}")
                             if len(parts) == 4:
                                 group = frozenset(parts.keys())

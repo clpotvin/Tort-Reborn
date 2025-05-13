@@ -15,16 +15,16 @@ from Helpers.variables import test
 
 # get bot token
 load_dotenv()
-if os.getenv("TEST_MODE"):
-    try:
-        token = os.getenv("TEST_TOKEN")
-    except Exception as e:
-        print(e)
+
+if os.getenv("TEST_MODE", "").lower() == "true":
+    print("Starting in test mode")
+    token = os.getenv("TEST_TOKEN")
+elif os.getenv("TEST_MODE", "").lower() == "false":
+    print("Starting in prod mode")
+    token = os.getenv("TOKEN")
 else:
-    try:
-        token = os.getenv("TOKEN")
-    except Exception as e:
-        print(e)
+    print("Error with gettin gthe token")
+    exit(-1)
 
 # Discord intents
 intents = discord.Intents.default()
