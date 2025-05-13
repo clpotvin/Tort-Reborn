@@ -675,3 +675,29 @@ def create_progress_bar(width, percentage, scale=1):
     img = img.resize((img.width * scale, img.height * scale), resample=Image.Resampling.NEAREST)
 
     return img
+
+
+def wrap_text(text, font, max_width, draw):
+    words = text.split()
+    lines = []
+    current_line = ""
+    for word in words:
+        test_line = current_line + (" " if current_line else "") + word
+        if draw.textlength(test_line, font=font) <= max_width:
+            current_line = test_line
+        else:
+            if current_line:
+                lines.append(current_line)
+            current_line = word
+    if current_line:
+        lines.append(current_line)
+    return "\n".join(lines)
+
+
+def get_multiline_text_size(text, font, spacing=0):
+    lines = text.split('\n')
+    widths = [font.getlength(line) for line in lines]
+    max_width = max(widths) if widths else 0
+    line_height = font.getbbox("Hg")[3] + 2
+    total_height = len(lines) * line_height + spacing * (len(lines) - 1)
+    return (int(max_width), total_height)
