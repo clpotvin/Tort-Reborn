@@ -509,7 +509,7 @@ def update_items():
         f.close()
 
 
-def addLine(text, draw, font, x, y):
+def addLine(text, draw, font, x, y, drop_x=2, drop_y=2, anchor=None):
     if text[0] != '&':
         text = f'&f{text}'
 
@@ -518,12 +518,12 @@ def addLine(text, draw, font, x, y):
     for word in strlist:
         if word[1] == '#':
             _, _, w, h = draw.textbbox((0, 0), word[8::], font=font)
-            draw.text((x + 2, y + 2), word[8::], font=font, fill=darken_color(word[1:8], 0.72))
-            draw.text((x, y), word[8::], font=font, fill=word[1:8])
+            draw.text((x + drop_x, y + drop_y), word[8::], font=font, fill=darken_color(word[1:8], 0.72), anchor=anchor)
+            draw.text((x, y), word[8::], font=font, fill=word[1:8], anchor=anchor)
         else:
             _, _, w, h = draw.textbbox((0, 0), word[2::], font=font)
-            draw.text((x + 2, y + 2), word[2::], font=font, fill=shadows[word[1]])
-            draw.text((x, y), word[2::], font=font, fill=colours[word[1]])
+            draw.text((x + drop_x, y + drop_y), word[2::], font=font, fill=shadows[word[1]], anchor=anchor)
+            draw.text((x, y), word[2::], font=font, fill=colours[word[1]], anchor=anchor)
         x += w
     return x
 

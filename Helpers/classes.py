@@ -73,7 +73,7 @@ class PlayerStats:
         self.wars = pdata['globalData']['wars']
         self.playtime = pdata['playtime']
         self.rank = pdata['rank']
-        self.background = 0
+        self.background = 1
         self.backgrounds_owned = []
         if self.rank == 'Player':
             self.tag = pdata['supportRank'].upper() if pdata['supportRank'] is not None else 'Player'
@@ -107,7 +107,7 @@ class PlayerStats:
             self.in_guild_for = None
 
         # linked
-        db.cursor.execute(f'SELECT * FROM discord_links WHERE uuid = \'{self.UUID}\'')
+        db.cursor.execute('SELECT * FROM discord_links WHERE uuid = %s', (self.UUID,))
         rows = db.cursor.fetchall()
         self.linked = True if len(rows) != 0 else False
         if self.linked:
@@ -115,14 +115,14 @@ class PlayerStats:
             self.discord = rows[0][0]
 
             # profile_customization
-            db.cursor.execute(f'SELECT * FROM profile_customization WHERE user = \'{self.discord}\'')
+            db.cursor.execute('SELECT * FROM profile_customization WHERE "user" = %s', (self.discord,))
             row = db.cursor.fetchone()
             if row:
                 self.background = row[1]
-                self.backgrounds_owned = json.loads(row[2])
+                self.backgrounds_owned = row[2]
         # shells
         if self.taq:
-            db.cursor.execute(f'SELECT * FROM shells WHERE \"user\" = \'{self.discord}\'')
+            db.cursor.execute('SELECT * FROM shells WHERE "user" = %s', (self.discord,))
             rows = db.cursor.fetchall()
             self.shells = 0 if len(rows) == 0 else rows[0][1]
             self.balance = 0 if len(rows) == 0 else rows[0][2]
@@ -160,28 +160,33 @@ class PlayerStats:
         db = DB()
         db.connect()
 
-        db.cursor.execute(f'SELECT * FROM profile_customization WHERE user = \'{self.discord}\'')
+        db.cursor.execute('SELECT * FROM profile_customization WHERE "user" = %s', (self.discord,))
         row = db.cursor.fetchone()
 
-        db.cursor.execute(f'SELECT id FROM profile_backgrounds WHERE name = \'{background}\'')
+        db.cursor.execute('SELECT id FROM profile_backgrounds WHERE name = %s', (background,))
         bg_id = db.cursor.fetchone()[0]
 
         # Check if user owns any backgrounds, if not insert new entry to table
         if not row:
             db.cursor.execute(
-                f'INSERT INTO profile_customization(user,background,owned) VALUES (\'{self.discord}\', 0, \'{json.dumps([bg_id])}\')')
+                'INSERT INTO profile_customization ("user", background, owned) VALUES (%s, %s, %s)',
+                (self.discord, False, json.dumps([bg_id]))
+            )
             db.connection.commit()
             db.close()
             return True
 
-        bgs = json.loads(row[2])
+        bgs = row[2]
         # Check if user already owns selected background, if so return message
         if bg_id in bgs:
             db.close()
             return True
 
         bgs.append(bg_id)
-        db.cursor.execute(f'UPDATE profile_customization SET owned=\'{json.dumps(bgs)}\' WHERE user=\'{self.discord}\'')
+        db.cursor.execute(
+            'UPDATE profile_customization SET owned = %s WHERE "user" = %s',
+            (json.dumps(bgs), self.discord)
+        )
         db.connection.commit()
         db.close()
         return True
@@ -258,7 +263,9 @@ class LinkAccount(Modal):
         db = DB()
         db.connect()
         db.cursor.execute(
-            f'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES ({self.user.id}, \'{self.children[0].value}\', False, \'{self.rank}\');')
+            'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES (%s, %s, %s, %s)',
+            (self.user.id, self.children[0].value, False, self.rank)
+        )
         db.connection.commit()
         await self.user.edit(nick=f"{self.rank} {self.children[0].value}")
         await interaction.response.send_message(f'{self.added}\n\n{self.removed}', ephemeral=True)
@@ -282,7 +289,7 @@ class NewMember(Modal):
 
         db = DB()
         db.connect()
-        db.cursor.execute(f'SELECT * FROM discord_links WHERE discord_id = \'{self.user.id}\'')
+        db.cursor.execute('SELECT * FROM discord_links WHERE discord_id = %s', (self.user.id,))
         rows = db.cursor.fetchall()
         pdata = BasicPlayerStats(self.children[0].value)
         if pdata.error:
@@ -315,11 +322,15 @@ class NewMember(Modal):
 
         if len(rows) != 0:
             db.cursor.execute(
-                f'UPDATE discord_links SET rank = \'Starfish\', ign = \'{self.children[0].value}\', wars_on_join = {pdata.wars}, uuid= \'{pdata.UUID}\' WHERE discord_id = \'{self.user.id}\'')
+                'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s WHERE discord_id = %s',
+                ('Starfish', self.children[0].value, pdata.wars, pdata.UUID, self.user.id)
+            )
             db.connection.commit()
         else:
             db.cursor.execute(
-                f'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES ({self.user.id}, \'{pdata.username}\',\'{pdata.UUID}\' , False, \'Starfish\', {pdata.wars});')
+                'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES (%s, %s, %s, %s, %s, %s)',
+                (self.user.id, pdata.username, pdata.UUID, False, 'Starfish', pdata.wars)
+            )
             db.connection.commit()
         db.close()
         await self.user.edit(nick="Starfish " + self.children[0].value)

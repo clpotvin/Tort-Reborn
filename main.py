@@ -17,13 +17,13 @@ from Helpers.variables import test
 load_dotenv()
 
 if os.getenv("TEST_MODE", "").lower() == "true":
-    print("Starting in test mode")
+    print("Starting in TEST mode...")
     token = os.getenv("TEST_TOKEN")
 elif os.getenv("TEST_MODE", "").lower() == "false":
-    print("Starting in prod mode")
+    print("Starting in PRODUCTION mode...")
     token = os.getenv("TOKEN")
 else:
-    print("Error with gettin gthe token")
+    print("Error: Could not get TOKEN. Please check your .env file.")
     exit(-1)
 
 # Discord intents
@@ -100,19 +100,16 @@ if not test or test:
 # Load Commands
 client.load_extension('Commands.online')
 # client.load_extension('Commands.activity')
-# Profile needs work but has shell count
-client.load_extension('Commands.profile')
+client.load_extension('Commands.profile')  # Profile needs work but has shell count
 #client.load_extension('Commands.progress')
 client.load_extension('Commands.worlds')
-# Leaderboard needs work too, functional tho
-client.load_extension('Commands.leaderboard')
-#client.load_extension('Commands.background_admin')
-#client.load_extension('Commands.background')
+client.load_extension('Commands.leaderboard')  # Leaderboard needs work too, functional tho
+client.load_extension('Commands.background_admin')
+client.load_extension('Commands.background')
 #client.load_extension('Commands.rankcheck')
 #client.load_extension('Commands.bank_admin')
 client.load_extension('Commands.new_member')
-# Kind of works but needs edits
-#client.load_extension('Commands.reset_roles')
+#client.load_extension('Commands.reset_roles')  # Kind of works but needs edits
 client.load_extension('Commands.manage')
 #client.load_extension('Commands.blacklist')
 client.load_extension('Commands.shell')
