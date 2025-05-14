@@ -132,6 +132,7 @@ class BackgroundAdmin(commands.Cog):
                                   color=0x34eb40)
             bg_file = discord.File(f'./images/profile_backgrounds/{bg_id}.png', filename=f"{bg_id}.png")
             embed.set_thumbnail(url=f"attachment://{bg_id}.png")
+            await message.respond(embed=embed, file=bg_file)
             return
 
         bgs = row[2]

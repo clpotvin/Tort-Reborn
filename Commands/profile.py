@@ -40,7 +40,7 @@ class Profile(commands.Cog):
         if player.background == 2:
             card_color = vertical_gradient(width=850, height=1130, main_color='#4585db', secondary_color='#2f2b73')
         else:
-            card_color = vertical_gradient(width=850, height=1130, main_color="#222f72")
+            card_color = vertical_gradient(width=850, height=1130, main_color="#293786", secondary_color="#1d275e")
         card.paste(card_color, (25, 25), card_color)
 
         # Background Outline

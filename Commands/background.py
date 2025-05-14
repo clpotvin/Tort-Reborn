@@ -135,7 +135,7 @@ class Background(commands.Cog):
             return
 
         bg_id = bg[0]
-        bg_name = bg[3]
+        bg_name = bg[1]
 
         db.cursor.execute('SELECT owned FROM profile_customization WHERE \"user\" = %s', (str(message.author.id),))
         row = db.cursor.fetchone()
