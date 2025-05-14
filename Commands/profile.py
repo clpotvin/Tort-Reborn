@@ -30,14 +30,6 @@ class Profile(commands.Cog):
             await ctx.followup.send(embed=embed, ephemeral=True)
             return
 
-        color = '#ffffff'
-        basic_text_color = '#ffffff'
-        basic_text_drop_shadow = '#3f3f3f'
-
-        custom_bg_fg = True
-        custom_bg_fg_color_1 = '#4585db'
-        custom_bg_fg_color_2 = '#2f2b73'
-
         # Base Image + Edge Gradient
         card = vertical_gradient(main_color=player.tag_color)
         card = round_corners(card)
@@ -45,8 +37,8 @@ class Profile(commands.Cog):
 
         # TODO: Custom card color
         # Card Color/Pattern
-        if custom_bg_fg:
-            card_color = vertical_gradient(width=850, height=1130, main_color=custom_bg_fg_color_1, secondary_color=custom_bg_fg_color_2)
+        if player.background == 2:
+            card_color = vertical_gradient(width=850, height=1130, main_color='#4585db', secondary_color='#2f2b73')
         else:
             card_color = vertical_gradient(width=850, height=1130, main_color="#222f72")
         card.paste(card_color, (25, 25), card_color)
