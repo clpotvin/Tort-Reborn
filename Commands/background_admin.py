@@ -76,12 +76,13 @@ class BackgroundAdmin(commands.Cog):
         db.connect()
 
         db.cursor.execute(
-            'SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = \'profile_backgrounds\';')
+            "INSERT INTO profile_backgrounds(public, price, name, description) VALUES (%s, %s, %s, %s) RETURNING id",
+            (public, price, name, description)
+        )
         bg_id = db.cursor.fetchone()[0]
 
         bg.save(f'./images/profile_backgrounds/{bg_id}.png')
 
-        db.cursor.execute(f'INSERT INTO profile_backgrounds(public, price, name, description) VALUES ({public},{price},\'{name}\',\'{description}\')')
         db.connection.commit()
 
         db.close()
@@ -107,22 +108,23 @@ class BackgroundAdmin(commands.Cog):
     # Forcefully unlock background for discord user, ignoring price and public lock
     @background_admin_group.command(description="Forcefully unlock background for discord user, ignoring price and public lock")
     @option("background", description="Pick a background to unlock", autocomplete=get_backgrounds)
-    async def unlock(self, message, user: discord.Option(discord.Member, require=True),
-                           background: str):
+    async def unlock(self, message, user: discord.Option(discord.Member, require=True), background: str):
         await message.defer(ephemeral=True)
         db = DB()
         db.connect()
 
-        db.cursor.execute(f'SELECT * FROM profile_customization WHERE user = \'{user.id}\'')
+        db.cursor.execute("SELECT * FROM profile_customization WHERE \"user\" = %s", (str(user.id),))
         row = db.cursor.fetchone()
 
-        db.cursor.execute(f'SELECT id, name FROM profile_backgrounds WHERE UPPER(name) = UPPER(\'{background}\')')
+        db.cursor.execute("SELECT id, name FROM profile_backgrounds WHERE UPPER(name) = UPPER(%s)", (background,))
         bg_id, bg_name = db.cursor.fetchone()
 
         # Check if user owns any backgrounds, if not insert new entry to table
         if not row:
             db.cursor.execute(
-                f'INSERT INTO profile_customization(user,background,owned) VALUES (\'{user.id}\', 0, \'{json.dumps([bg_id])}\')')
+                "INSERT INTO profile_customization(\"user\", background, owned) VALUES (%s, 1, %s)",
+                (str(user.id), json.dumps([bg_id]))
+            )
             db.connection.commit()
             db.close()
             embed = discord.Embed(title=':unlock: Background unlocked!',
@@ -132,7 +134,7 @@ class BackgroundAdmin(commands.Cog):
             embed.set_thumbnail(url=f"attachment://{bg_id}.png")
             return
 
-        bgs = json.loads(row[2])
+        bgs = row[2]
         # Check if user already owns selected background, if so return message
         if bg_id in bgs:
             embed = discord.Embed(title=':warning: Oops!',
@@ -143,7 +145,10 @@ class BackgroundAdmin(commands.Cog):
             return
 
         bgs.append(bg_id)
-        db.cursor.execute(f'UPDATE profile_customization SET owned=\'{json.dumps(bgs)}\' WHERE user=\'{user.id}\'')
+        db.cursor.execute(
+            "UPDATE profile_customization SET owned = %s WHERE \"user\" = %s",
+            (json.dumps(bgs), str(user.id))
+        )
         db.connection.commit()
 
         with open('background.log', 'a') as f:
@@ -171,16 +176,18 @@ class BackgroundAdmin(commands.Cog):
         db = DB()
         db.connect()
 
-        db.cursor.execute(f'SELECT * FROM profile_customization WHERE user = \'{user.id}\'')
+        db.cursor.execute("SELECT * FROM profile_customization WHERE \"user\" = %s", (str(user.id),))
         row = db.cursor.fetchone()
 
-        db.cursor.execute(f'SELECT id, name FROM profile_backgrounds WHERE UPPER(name) = UPPER(\'{background}\')')
+        db.cursor.execute("SELECT id, name FROM profile_backgrounds WHERE UPPER(name) = UPPER(%s)", (background,))
         bg_id, bg_name = db.cursor.fetchone()
 
         # Check if user exists in the database, if not insert new entry to table
         if not row:
             db.cursor.execute(
-                f'INSERT INTO profile_customization(user,background,owned) VALUES (\'{user.id}\', {bg_id}, \'[]\')')
+                "INSERT INTO profile_customization(\"user\", background, owned) VALUES (%s, %s, '[]')",
+                (str(user.id), bg_id)
+            )
             db.connection.commit()
             db.close()
             embed = discord.Embed(title=':white_check_mark: Background set!',
@@ -190,7 +197,10 @@ class BackgroundAdmin(commands.Cog):
             embed.set_thumbnail(url=f"attachment://{bg_id}.png")
             return
 
-        db.cursor.execute(f'UPDATE profile_customization SET background=\'{bg_id}\' WHERE user=\'{user.id}\'')
+        db.cursor.execute(
+            "UPDATE profile_customization SET background = %s WHERE \"user\" = %s",
+            (bg_id, str(user.id))
+        )
         db.connection.commit()
 
         with open('background.log', 'a') as f:
