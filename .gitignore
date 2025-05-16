@@ -15,3 +15,7 @@ Archive/theaquarium.json
 current_activity.json
 credentials.json
 token.json
+
+# tracking jsons
+previous_data.json
+territories.json
