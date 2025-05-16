@@ -156,11 +156,9 @@ class UpdateMemberData(commands.Cog):
                         old_count = old["raids"].get(raid, 0)
                         diff = new_count - old_count
 
-                        # detected a completion bump
                         if 0 < diff < 3:
                             parts = self.raid_participants[raid]
 
-                            # only add if same server as existing group (or first member)
                             if uuid not in parts:
                                 if not parts or server == next(iter(parts.values()))["server"]:
                                     parts[uuid] = {
@@ -172,7 +170,6 @@ class UpdateMemberData(commands.Cog):
                                 else:
                                     print(f"{now} - SKIP {name}: server mismatch for {raid}")
 
-                            # once we have 4 on the same server, announce immediately
                             if len(parts) == 4:
                                 group = frozenset(parts.keys())
                                 print(f"{now} - ANNOUNCING group {group} for {raid}")
@@ -181,7 +178,6 @@ class UpdateMemberData(commands.Cog):
                                     parts.pop(uid)
                 await asyncio.sleep(0.5)
 
-            # persist for next diff
             self.previous_data = new_data
             self._save_json("previous_data.json", new_data)
 
