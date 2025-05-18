@@ -98,7 +98,10 @@ class Profile(commands.Cog):
 
             # Guild Rank Badge Generation
             if player.taq and player.linked:
-                guild_rank_badge = generate_badge(text=player.rank.upper(), base_color=discord_ranks[player.rank]['color'], scale=3)
+                try:
+                    guild_rank_badge = generate_badge(text=player.rank.upper(), base_color=discord_ranks[player.rank]['color'], scale=3)
+                except:
+                    guild_rank_badge = generate_badge(text=player.guild_rank.upper(), base_color='#a0aeb0', scale=3)
             else:
                 guild_rank_badge = generate_badge(text=player.guild_rank.upper(), base_color='#a0aeb0', scale=3)
             guild_rank_badge.crop(guild_rank_badge.getbbox())
@@ -177,7 +180,7 @@ class Profile(commands.Cog):
                 embed = discord.Embed(title=':tada: New background unlocked!',
                                       description=f'<@{player.discord}> unlocked the **1 Year Anniversary** background!',
                                       color=0x34eb40)
-                bg_file = discord.File(f'./images/profile_backgrounds/2.png', filename=f"3.png")
+                bg_file = discord.File(f'./images/profile_backgrounds/3.png', filename=f"3.png")
                 embed.set_thumbnail(url=f"attachment://3.png")
 
                 unlock = player.unlock_background('1 Year Anniversary')
@@ -188,7 +191,7 @@ class Profile(commands.Cog):
                 embed = discord.Embed(title=':tada: New background unlocked!',
                                       description=f'<@{player.discord}> unlocked the **TAq Sea Turtle** background!',
                                       color=0x34eb40)
-                bg_file = discord.File(f'./images/profile_backgrounds/3.png', filename=f"2.png")
+                bg_file = discord.File(f'./images/profile_backgrounds/2.png', filename=f"2.png")
                 embed.set_thumbnail(url=f"attachment://2.png")
 
                 unlock = player.unlock_background('TAq Sea Turtle')
