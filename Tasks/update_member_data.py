@@ -79,32 +79,47 @@ class UpdateMemberData(commands.Cog):
 
         channel = self.client.get_channel(RAID_ANNOUNCE_CHANNEL_ID)
         if channel:
+            guild_level = getattr(guild, "level", None)
+            guild_xp = getattr(guild, "xpPercent", None)
+
+            title = f"{emoji} {raid} Completed!"
+            footer = "Guild Raid Tracker"
+
             embed = discord.Embed(
-                title=f"{emoji} {raid} Completed!",
+                title=title,
                 description=names_str,
                 timestamp=now,
                 color=0x00FF00
             )
-            # show 100% completion bar
-            embed.add_field(
-                name="Progress",
-                value=self._make_progress_bar(100),
-                inline=False
-            )
-            embed.set_footer(text="Guild Raid Tracker")
+
+            if guild_level is not None and guild_xp is not None:
+                embed.add_field(
+                    name=f"{guild.name} — Level {guild_level}",
+                    value=self._make_progress_bar(guild_xp) + f" ({guild_xp}%)",
+                    inline=False
+                )
+            else:
+                embed.add_field(
+                    name="Progress",
+                    value=self._make_progress_bar(100),
+                    inline=False
+                )
+
+            embed.set_footer(text=footer)
             await channel.send(embed=embed)
 
         for uid in group:
             db.cursor.execute(
                 """
-                INSERT INTO uncollected_raids (uuid, uncollected_raids, collected_raids)
+                INSERT INTO uncollected_raids AS ur (uuid, uncollected_raids, collected_raids)
                 VALUES (%s, 1, 0)
                 ON CONFLICT (uuid) DO UPDATE
-                  SET uncollected_raids = uncollected_raids + 1
+                SET uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids
                 """,
                 (uid,)
             )
         db.connection.commit()
+
 
     @tasks.loop(minutes=5)
     async def update_member_data(self):
@@ -112,6 +127,7 @@ class UpdateMemberData(commands.Cog):
         if self.cold_start:
             print(f"{now} - Starting member tracking (cold start)")
 
+        # Prune stale participants
         cutoff = now - GUILD_TTL
         for raid, parts in self.raid_participants.items():
             for uid, info in list(parts.items()):
@@ -132,6 +148,7 @@ class UpdateMemberData(commands.Cog):
             )
 
             new_data = {}
+            # Build up new_data with server included
             for member in guild.all_members:
                 m = getPlayerDatav3(member["uuid"])
                 if not isinstance(m, dict):
