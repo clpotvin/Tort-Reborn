@@ -34,7 +34,7 @@ class Activity(commands.Cog):
         await message.defer()
         book = []
         # new_data = await getGuildActivity(message.channel)
-        with open('activity2.json', 'r') as f:
+        with open('player_activity.json', 'r') as f:
             old_data = json.loads(f.read())
         with open('current_activity.json', 'r') as f:
             new_data = json.loads(f.read())

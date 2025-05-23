@@ -73,6 +73,9 @@ class PlayerStats:
         self.wars = pdata['globalData']['wars']
         self.playtime = pdata['playtime']
         self.rank = pdata['rank']
+        self.mobs = pdata['globalData']['killedMobs']
+        self.chests = pdata['globalData']['chestsFound']
+        self.quests = pdata['globalData']['completedQuests']
         self.background = 1
         self.backgrounds_owned = []
         if self.rank == 'Player':
@@ -126,10 +129,16 @@ class PlayerStats:
             rows = db.cursor.fetchall()
             self.shells = 0 if len(rows) == 0 else rows[0][1]
             self.balance = 0 if len(rows) == 0 else rows[0][2]
-
+        # raids
+        if self.taq:
+            db.cursor.execute('SELECT * from uncollected_raids WHERE uuid = %s', (self.UUID,))
+            rows = db.cursor.fetchall()
+            self.uncollected_raids = 0 if len(rows) == 0 else rows[0][1]
+            self.collected_raids = 0 if len(rows) == 0 else rows[0][2]
+            self.guild_raids = self.uncollected_raids + self.collected_raids
         # timed stats
         if self.taq:
-            with open('activity2.json', 'r') as f:
+            with open('player_activity.json', 'r') as f:
                 old_data = json.loads(f.read())
             if days > len(old_data):
                 days = len(old_data)
@@ -138,15 +147,24 @@ class PlayerStats:
             if days < 1:
                 days = 1
             self.stats_days = days
+            found = False
             for member in old_data[days - 1]['members']:
                 if self.UUID == member['uuid']:
+                    found = True
                     self.real_pt = int(self.playtime - int(member['playtime']))
                     self.real_xp = self.guild_contributed - member['contributed']
                     self.real_wars = self.wars - member['wars']
+                    self.real_raids = self.guild_raids - member['raids']
+            if not found:
+                self.real_pt = 'N/A'
+                self.real_xp = 'N/A'
+                self.real_wars = 'N/A'
+                self.real_raids = 'N/A'
         else:
             self.real_pt = 0
             self.real_xp = 0
             self.real_wars = 0
+            self.real_raids = 0
 
             db.close()
 

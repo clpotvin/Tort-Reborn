@@ -26,7 +26,7 @@ class Contribution(commands.Cog):
                        dayss: discord.Option(int, name="days", min_value=1, max_value=30, default=7)):
         await message.defer()
         book = []
-        with open('activity2.json', 'r') as f:
+        with open('player_activity.json', 'r') as f:
             old_data = json.loads(f.read())
         with open('current_activity.json', 'r') as f:
             new_data = json.loads(f.read())

@@ -22,7 +22,7 @@ class Xp(commands.Cog):
     async def xp(self, message, days: discord.Option(int, min_value=1, max_value=30, default=7)):
         await message.defer()
         book = []
-        with open('activity2.json', 'r') as f:
+        with open('player_activity.json', 'r') as f:
             old_data = json.loads(f.read())
         with open('current_activity.json', 'r') as f:
             new_data = json.loads(f.read())

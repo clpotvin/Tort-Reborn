@@ -120,46 +120,52 @@ class Profile(commands.Cog):
             banner.thumbnail((157, 157))
             card.paste(banner, (41, 562))
 
-        # TODO: Make boxes and text only generate for fields with a value
-        box_l = Image.new('RGBA', (400, 75), (0, 0, 0, 0))
-        box_r = Image.new('RGBA', (380, 75), (0, 0, 0, 0))
-        box_l_draw = ImageDraw.Draw(box_l)
-        box_r_draw = ImageDraw.Draw(box_r)
-        box_l_draw.rounded_rectangle([(0, 0), (400, 75)], fill=(0, 0, 0, 30), radius=10)
-        box_r_draw.rounded_rectangle([(0, 0), (380, 75)], fill=(0, 0, 0, 30), radius=10)
+        # Build out data to place in boxes
+        card_entries = {}
+        try:
+            if player.online:
+                card_entries['World'] = player.server
+            else:
+                card_entries['Last Seen'] = pretty_date(player.last_joined)
+            card_entries['Total Level'] = f'{player.total_level}'
+            card_entries['Playtime'] = f'{int(player.playtime)} hrs'
+            if player.taq and player.in_guild_for.days >= 1:
+                card_entries[f'Playtime / {player.stats_days} D'] = f'{int(player.real_pt)} hrs'        # TAq only
+            card_entries['Wars'] = str(player.wars)
+            if player.taq and player.in_guild_for.days >= 1:
+                card_entries[f'Wars / {player.stats_days} D'] = str(player.real_wars)                   # TAq only
+            if player.guild:
+                card_entries['Guild XP'] = format_number(player.guild_contributed)
+            if player.taq and player.in_guild_for.days >= 1:
+                card_entries[f'Guild XP / {player.stats_days} D'] = format_number(player.real_xp)       # TAq only
+            if player.taq:
+                card_entries['Guild Raids'] = str(player.guild_raids)
+                if player.in_guild_for.days >= 1:
+                    card_entries[f'Guild Raids / {player.stats_days} D'] = str(player.real_raids)       # TAq only
+            if len(card_entries) < 10:
+                card_entries['Killed Mobs'] = str(player.mobs)
+            if len(card_entries) < 10:
+                card_entries['Chests Looted'] = str(player.chests)
+            if len(card_entries) < 10:
+                card_entries['Quests'] = str(player.quests)
+        except Exception as e:
+            print(e)
 
-        for row in range(5):
-            card.paste(box_l, (50, 730 + (row * 85)), box_l)
-            card.paste(box_r, (470, 730 + (row * 85)), box_r)
+        entry_keys = list(card_entries.keys())
 
         title_font = ImageFont.truetype('images/profile/5x5.ttf', 40)
         data_font = ImageFont.truetype('images/profile/game.ttf', 35)
-        if player.online:
-            draw.text((60, 720), 'World', font=title_font, fill='#fad51e')
-            draw.text((440, 765), player.server, font=data_font, anchor="ra")
-        else:
-            draw.text((60, 720), 'Last seen', font=title_font, fill='#fad51e')
-            draw.text((440, 765), pretty_date(player.last_joined), font=data_font, anchor="ra")
-        draw.text((60, 805), 'Playtime', font=title_font, fill='#fad51e')
-        draw.text((440, 850), f'{int(player.playtime)} hrs', font=data_font, anchor="ra")
-        draw.text((60, 890), 'Wars', font=title_font, fill='#fad51e')
-        draw.text((440, 935), str(player.wars), font=data_font, anchor="ra")
+        box = Image.new('RGBA', (390, 75), (0, 0, 0, 0))
+        box_draw = ImageDraw.Draw(box)
+        box_draw.rounded_rectangle(((0, 0), (390, 75)), fill=(0, 0, 0, 30), radius=10)
 
-        draw.text((480, 720), 'Total Level', font=title_font, fill='#fad51e')
-        draw.text((840, 765), f'{player.total_level}', font=data_font, anchor="ra")
+        for entry in range(len(card_entries)):
+            card.paste(box, (50 + ((entry % 2) * 410), 730 + (int(entry / 2) * 85)), box)
+            draw.text((60 + ((entry % 2) * 410), 720 + (int(entry / 2) * 85)), text=entry_keys[entry], font=title_font, fill='#fad51e')
+            draw.text((430 + ((entry % 2) * 410), 765 + (int(entry / 2) * 85)), text=card_entries[entry_keys[entry]], font=data_font, anchor="ra")
 
         if player.guild:
-            title_font = ImageFont.truetype('images/profile/5x5.ttf', 40)
-            data_font = ImageFont.truetype('images/profile/game.ttf', 35)
-            draw.text((60, 975), 'Guild XP', font=title_font, fill='#fad51e')
-            draw.text((440, 1020), format_number(player.guild_contributed), font=data_font, anchor="ra")
             if player.taq and player.in_guild_for.days >= 1:
-                draw.text((60, 1060), 'Guild Raids', font=title_font, fill='#fad51e')
-                draw.text((480, 805), f'Playtime / {player.stats_days} D', font=title_font, fill='#fad51e')
-                draw.text((480, 890), f'Wars / {player.stats_days} D', font=title_font, fill='#fad51e')
-                draw.text((480, 975), f'Guild XP / {player.stats_days} D', font=title_font, fill='#fad51e')
-                draw.text((480, 1060), f'Guild Raids / {player.stats_days} D', font=title_font, fill='#fad51e')
-
                 # Shells
                 data_font = ImageFont.truetype('images/profile/game.ttf', 50)
                 shells_img = Image.open('images/profile/shells.png')

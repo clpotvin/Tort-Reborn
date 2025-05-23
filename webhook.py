@@ -195,7 +195,7 @@ def guild_banner(guild, style=''):
 @app.route('/xp_data/<path:uuid>', methods=['GET'])
 @cross_origin()
 def xp_data(uuid):
-    with open('activity2.json', 'r') as f:
+    with open('player_activity.json', 'r') as f:
         data = json.load(f)
         f.close()
 
