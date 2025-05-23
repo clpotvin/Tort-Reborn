@@ -150,7 +150,6 @@ class UpdateMemberData(commands.Cog):
             )
 
             t = int(time.mktime(datetime.datetime.now().timetuple()))
-            print(t%86400)
             memberlist = {'time': t, 'members': []}
 
             new_data = {}

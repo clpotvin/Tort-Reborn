@@ -130,6 +130,7 @@ client.load_extension('Commands.send_changelog')
 client.load_extension('Commands.preview_changelog')
 #client.load_extension('Commands.check_app')
 #client.load_extension('Commands.custom_profile')
+client.load_extension('Commands.progress_bar')
 client.load_extension('Commands.rank_badge')
 client.load_extension('Commands.restart')
 
