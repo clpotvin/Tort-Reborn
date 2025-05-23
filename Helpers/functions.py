@@ -656,7 +656,7 @@ def create_progress_bar(width, percentage, color='#2167dd', scale=1):
     pbar = progbar.crop((0, 10, math.floor(4 * percentage), 20))
     img.paste(pbar, (0,0), pbar)
 
-    img = img.resize((int(img.width * (width/img.width)), int(img.height * (width/img.width))), resample=Image.Resampling.NEAREST)
+    img = img.resize((int(img.width * (width/img.width)), img.height), resample=Image.Resampling.NEAREST)
     img = img.resize((img.width * scale, img.height * scale), resample=Image.Resampling.NEAREST)
 
     return img
