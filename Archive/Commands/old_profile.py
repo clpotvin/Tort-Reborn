@@ -129,7 +129,7 @@ class Profile(commands.Cog):
             joined = dateutil.parser.isoparse(guildstats['joined'])
             in_guild_for = datetime.datetime.now() - joined.replace(tzinfo=None)
 
-            with open('activity2.json', 'r') as f:
+            with open('player_activity.json', 'r') as f:
                 old_data = json.loads(f.read())
             if days > len(old_data):
                 days = len(old_data)

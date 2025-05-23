@@ -54,10 +54,10 @@ def job():
                 time.sleep(30)
         time.sleep(3)
 
-    with open("activity2.json", 'r') as f:
+    with open("player_activity.json", 'r') as f:
         old_data = json.loads(f.read())
         old_data.insert(0, memberlist)
-        with open("activity2.json", 'w') as f:
+        with open("player_activity.json", 'w') as f:
             json.dump(old_data[:60], f)
     db.close()
 

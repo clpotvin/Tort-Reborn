@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import discord
+import time
 import datetime
 from datetime import timezone, timedelta
 from discord.ext import tasks, commands
@@ -141,11 +142,16 @@ class UpdateMemberData(commands.Cog):
 
         db = None
         try:
-            db = DB(); db.connect()
+            db = DB()
+            db.connect()
             guild = Guild("The Aquarium")
             await self.client.change_presence(
                 activity=discord.CustomActivity(name=f"{guild.online} members online")
             )
+
+            t = int(time.mktime(datetime.datetime.now().timetuple()))
+            print(t%86400)
+            memberlist = {'time': t, 'members': []}
 
             new_data = {}
             # Build up new_data with server included
@@ -191,7 +197,49 @@ class UpdateMemberData(commands.Cog):
                                 await self._announce_raid(raid, group, guild, db)
                                 for uid in group:
                                     parts.pop(uid)
+
+                # Full Activity Tracking
+                if (t % 86400) < 300:
+                    db.cursor.execute(
+                        '''SELECT discord_links.ign, COALESCE(shells.shells, 0) AS shells 
+                           FROM discord_links
+                           LEFT JOIN shells ON discord_links.discord_id = shells.user
+                           WHERE discord_links.uuid = %s''',
+                        (m["uuid"],)
+                    )
+                    res = db.cursor.fetchone()
+                    if res:
+                        shells = res[1]
+                    else:
+                        shells = 0
+                    db.cursor.execute(
+                        '''SELECT 
+                               COALESCE(uncollected_raids.uncollected_raids, 0),
+                               COALESCE(uncollected_raids.collected_raids, 0)
+                           FROM discord_links
+                           LEFT JOIN uncollected_raids ON discord_links.uuid = uncollected_raids.uuid
+                           WHERE discord_links.uuid = %s''',
+                        (m["uuid"],)
+                    )
+                    res = db.cursor.fetchone()
+                    if res:
+                        raids = int(res[0]) + int(res[1])
+                    else:
+                        raids = 0
+
+                    memberlist['members'].append(
+                        {"name": m['username'], "uuid": m['uuid'], "rank": member['rank'],
+                         "playtime": m['playtime'], "contributed": member['contributed'],
+                         'wars': m['globalData']['wars'], 'raids': raids, 'shells': shells})
+
                 await asyncio.sleep(0.5)
+
+            if (t % 86400) < 300:
+                with open("player_activity.json", 'r') as f:
+                    old_data = json.loads(f.read())
+                    old_data.insert(0, memberlist)
+                    with open("player_activity.json", 'w') as f:
+                        json.dump(old_data[:60], f)
 
             self.previous_data = new_data
             self._save_json("previous_data.json", new_data)
