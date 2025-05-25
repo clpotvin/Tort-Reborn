@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone, timedelta
 import json
 import requests
 
@@ -101,7 +101,9 @@ class PlayerStats:
             self.guild_rank = guild_stats['rank'] if self.taq else pdata['guild']['rank']
             self.guild_contributed = guild_stats['contributed']
             self.guild_joined = parser.isoparse(guild_stats['joined'])
-            self.in_guild_for = datetime.datetime.now() - self.guild_joined.replace(tzinfo=None)
+            now_utc   = datetime.now(timezone.utc)
+            delta     = now_utc - self.guild_joined
+            self.in_guild_for = delta + timedelta(days=1) 
         else:
             self.guild = None
             self.guild_rank = None
