@@ -9,6 +9,7 @@ from Helpers.variables import application_manager_role_id
 class CheckApps(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.check_apps.start()
 
     @tasks.loop(minutes=1)
     async def check_apps(self):
@@ -71,7 +72,6 @@ class CheckApps(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("CheckApps task loaded")
-        self.check_apps.start()
 
 
 def setup(client):

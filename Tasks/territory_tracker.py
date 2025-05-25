@@ -41,6 +41,7 @@ def timeHeld(date_time_old, date_time_new):
 class TerritoryTracker(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.territory_tracker.start()
 
     @tasks.loop(seconds=10)
     async def territory_tracker(self):
@@ -127,8 +128,6 @@ class TerritoryTracker(commands.Cog):
     async def on_ready(self):
         print('TerritoryTracker task loaded')
         saveTerritoryData(getTerritoryData())
-        self.territory_tracker.start()
-
 
 def setup(client):
     client.add_cog(TerritoryTracker(client))
