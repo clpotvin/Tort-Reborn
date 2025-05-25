@@ -8,9 +8,10 @@ from datetime import timezone, timedelta
 from discord.ext import tasks, commands
 
 from Helpers.classes import Guild, DB
-from Helpers.functions import getPlayerDatav3
+from Helpers.functions import getPlayerDatav3, getNameFromUUID
 from Helpers.variables import (
     raid_log_channel,
+    log_channel,
     notg_emoji_id,
     tcc_emoji_id,
     tna_emoji_id,
@@ -18,6 +19,7 @@ from Helpers.variables import (
 )
 
 RAID_ANNOUNCE_CHANNEL_ID = raid_log_channel
+LOG_CHANNEL = log_channel
 GUILD_TTL = timedelta(minutes=10)
 
 RAID_EMOJIS = {
@@ -39,7 +41,10 @@ class UpdateMemberData(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.previous_data = self._load_json("previous_data.json", {})
-        # track users: raid_name -> { uuid: {"name": str, "first_seen": datetime, "server": str} }
+        self.member_file = "member_list.json"
+        self.previous_members = self._load_json("member_list.json", {})
+        self.member_file_exists = os.path.exists(self.member_file)
+        # track users: raid_name -> { uuid: {"name": str, "first_seen": datetime, "server":str} }
         self.raid_participants = {raid: {} for raid in self.RAID_NAMES}
         self.cold_start = True
 
@@ -145,14 +150,10 @@ class UpdateMemberData(commands.Cog):
             db.connect()
             guild = Guild("The Aquarium")
 
-            curr_map = {m['uuid']: m['name'] for m in guild.all_members}
-
-            prev_map = self.previous_members or {}
-            prev_set = set(prev_map)
-            curr_set = set(curr_map)
-
-            joined = curr_set - prev_set
-            left   = prev_set - curr_set
+            prev_map = getattr(self, "previous_members", {})
+            curr_map = {m["uuid"]: m["name"] for m in guild.all_members}
+            joined   = set(curr_map) - set(prev_map)
+            left     = set(prev_map) - set(curr_map)
 
             if (joined or left) and not (self.cold_start and not self.member_file_exists):
                 ch = self.client.get_channel(LOG_CHANNEL)
