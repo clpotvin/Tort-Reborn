@@ -16,7 +16,6 @@ from Helpers.variables import test
 class GuildLog(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.guild_log.start()
 
     @tasks.loop(minutes=1)
     async def guild_log(self):
@@ -133,6 +132,8 @@ class GuildLog(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('GuildLog task loaded')
+        if not self.guild_log.is_running():   
+            self.guild_log.start()
 
 def setup(client):
     client.add_cog(GuildLog(client))
