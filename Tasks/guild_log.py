@@ -132,7 +132,8 @@ class GuildLog(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('GuildLog task loaded')
-        self.guild_log.start()
+        if not self.guild_log.is_running():   
+            self.guild_log.start()
 
 
 def setup(client):

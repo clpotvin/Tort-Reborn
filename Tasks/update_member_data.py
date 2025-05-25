@@ -42,7 +42,6 @@ class UpdateMemberData(commands.Cog):
         # track users: raid_name -> { uuid: {"name": str, "first_seen": datetime, "server": str} }
         self.raid_participants = {raid: {} for raid in self.RAID_NAMES}
         self.cold_start = True
-        self.update_member_data.start()
 
     def _load_json(self, path, default):
         if os.path.exists(path):
@@ -145,6 +144,55 @@ class UpdateMemberData(commands.Cog):
             db = DB()
             db.connect()
             guild = Guild("The Aquarium")
+
+            curr_map = {m['uuid']: m['name'] for m in guild.all_members}
+
+            prev_map = self.previous_members or {}
+            prev_set = set(prev_map)
+            curr_set = set(curr_map)
+
+            joined = curr_set - prev_set
+            left   = prev_set - curr_set
+
+            if (joined or left) and not (self.cold_start and not self.member_file_exists):
+                ch = self.client.get_channel(LOG_CHANNEL)
+                embed = discord.Embed(
+                    title="Guild Membership Changes",
+                    timestamp=now,
+                    color=0xFFA500
+                )
+
+                def add_chunked(field_name, name_list):
+                    chunk = ""
+                    for ign in name_list:
+                        piece = f"**{ign}**" if not chunk else f", **{ign}**"
+                        if len(chunk) + len(piece) > 1024:
+                            embed.add_field(name=field_name, value=chunk, inline=False)
+                            chunk = f"**{ign}**"
+                            field_name += " cont."
+                        else:
+                            chunk += piece
+                    if chunk:
+                        embed.add_field(name=field_name, value=chunk, inline=False)
+
+                joined_igns = []
+                for uid in joined:
+                    raw = getNameFromUUID(uid)
+                    ign = raw[0] if isinstance(raw, list) and raw else str(raw)
+                    joined_igns.append(ign)
+
+                left_igns = [prev_map[uid] for uid in left]
+
+                if joined_igns:
+                    add_chunked("Joined", joined_igns)
+                if left_igns:
+                    add_chunked("Left", left_igns)
+
+                await ch.send(embed=embed)
+
+            self.previous_members = curr_map
+            self._save_json(self.member_file, curr_map)
+
             await self.client.change_presence(
                 activity=discord.CustomActivity(name=f"{guild.online} members online")
             )
@@ -262,7 +310,9 @@ class UpdateMemberData(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f"{datetime.datetime.now(timezone.utc)} - UpdateMemberData task loaded")
+        print("UpdateMemberData task loaded")
+        if not self.update_member_data.is_running():
+            self.update_member_data.start()
 
 
 def setup(client):
