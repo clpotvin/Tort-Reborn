@@ -129,6 +129,7 @@ class TerritoryTracker(commands.Cog):
         saveTerritoryData(getTerritoryData())
         if not self.territory_tracker.is_running():
             self.territory_tracker.start()
+      
 
 def setup(client):
     client.add_cog(TerritoryTracker(client))

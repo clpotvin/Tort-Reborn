@@ -135,5 +135,6 @@ class GuildLog(commands.Cog):
         if not self.guild_log.is_running():   
             self.guild_log.start()
 
+
 def setup(client):
     client.add_cog(GuildLog(client))

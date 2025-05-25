@@ -106,7 +106,7 @@ client.load_extension('Commands.worlds')
 client.load_extension('Commands.leaderboard')  # Leaderboard needs work too, functional tho
 client.load_extension('Commands.background_admin')
 client.load_extension('Commands.background')
-client.load_extension('Commands.rankcheck')
+#client.load_extension('Commands.rankcheck')
 #client.load_extension('Commands.bank_admin')
 client.load_extension('Commands.new_member')
 #client.load_extension('Commands.reset_roles')  # Kind of works but needs edits
