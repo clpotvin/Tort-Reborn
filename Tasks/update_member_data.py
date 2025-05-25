@@ -8,10 +8,9 @@ from datetime import timezone, timedelta
 from discord.ext import tasks, commands
 
 from Helpers.classes import Guild, DB
-from Helpers.functions import getPlayerDatav3, getNameFromUUID
+from Helpers.functions import getPlayerDatav3
 from Helpers.variables import (
     raid_log_channel,
-    log_channel,
     notg_emoji_id,
     tcc_emoji_id,
     tna_emoji_id,
@@ -19,7 +18,6 @@ from Helpers.variables import (
 )
 
 RAID_ANNOUNCE_CHANNEL_ID = raid_log_channel
-LOG_CHANNEL = log_channel
 GUILD_TTL = timedelta(minutes=10)
 
 RAID_EMOJIS = {
@@ -41,10 +39,7 @@ class UpdateMemberData(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.previous_data = self._load_json("previous_data.json", {})
-        self.member_file = "member_list.json"
-        self.member_file_exists = os.path.exists(self.member_file)
-        self.previous_members = self._load_json("member_list.json", {})
-        # track users: raid_name -> { uuid: {"name": str, "first_seen": datetime, "server":str} }
+        # track users: raid_name -> { uuid: {"name": str, "first_seen": datetime, "server": str} }
         self.raid_participants = {raid: {} for raid in self.RAID_NAMES}
         self.cold_start = True
         self.update_member_data.start()
@@ -84,22 +79,34 @@ class UpdateMemberData(commands.Cog):
         print(f"{now} - ANNOUNCE: {names_str} completed {raid}")
 
         channel = self.client.get_channel(RAID_ANNOUNCE_CHANNEL_ID)
-        embed = discord.Embed(
-            title=f"{emoji} {raid} Completed!",
-            description=names_str,
-            timestamp=now,
-            color=0x00FF00
-        )
-        lvl = getattr(guild, "level", None)
-        xp = getattr(guild, "xpPercent", None)
-        if lvl is not None and xp is not None:
-            embed.add_field(name=f"{guild.name} — Level {lvl}",
-                            value=self._make_progress_bar(xp) + f" ({xp}%)",
-                            inline=False)
-        else:
-            embed.add_field(name="Progress", value=self._make_progress_bar(100), inline=False)
-        embed.set_footer(text="Guild Raid Tracker")
         if channel:
+            guild_level = getattr(guild, "level", None)
+            guild_xp = getattr(guild, "xpPercent", None)
+
+            title = f"{emoji} {raid} Completed!"
+            footer = "Guild Raid Tracker"
+
+            embed = discord.Embed(
+                title=title,
+                description=names_str,
+                timestamp=now,
+                color=0x00FF00
+            )
+
+            if guild_level is not None and guild_xp is not None:
+                embed.add_field(
+                    name=f"{guild.name} — Level {guild_level}",
+                    value=self._make_progress_bar(guild_xp) + f" ({guild_xp}%)",
+                    inline=False
+                )
+            else:
+                embed.add_field(
+                    name="Progress",
+                    value=self._make_progress_bar(100),
+                    inline=False
+                )
+
+            embed.set_footer(text=footer)
             await channel.send(embed=embed)
 
         for uid in group:
@@ -125,9 +132,10 @@ class UpdateMemberData(commands.Cog):
         cutoff = now - GUILD_TTL
         for raid, parts in self.raid_participants.items():
             for uid, info in list(parts.items()):
-                first_seen = (datetime.datetime.fromisoformat(info["first_seen"])
-                              if isinstance(info["first_seen"], str)
-                              else info["first_seen"])
+                first_seen = (
+                    datetime.datetime.fromisoformat(info["first_seen"]) if isinstance(info["first_seen"], str)
+                    else info["first_seen"]
+                )
                 if first_seen < cutoff:
                     print(f"{now} - PRUNE: {info['name']} ({uid}) from {raid} (seen {first_seen})")
                     parts.pop(uid)
@@ -137,53 +145,6 @@ class UpdateMemberData(commands.Cog):
             db = DB()
             db.connect()
             guild = Guild("The Aquarium")
-
-            # membership changes
-            curr_map = {}
-            for m in guild.all_members:
-                uid = m["uuid"]
-                raw = getNameFromUUID(uid)
-                ign = raw[0] if isinstance(raw, list) and raw else str(raw)
-                curr_map[uid] = ign
-
-            prev_map = self.previous_members
-            prev_set = set(prev_map)
-            curr_set = set(curr_map)
-            joined = curr_set - prev_set
-            left = prev_set - curr_set
-
-            if not (self.cold_start and not self.member_file_exists):
-                if joined or left:
-                    mem_tracking_channel = self.client.get_channel(LOG_CHANNEL)
-                    embed = discord.Embed(
-                        title="Guild Membership Changes",
-                        timestamp=now,
-                        color=0xFFA500
-                    )
-                    def add_chunked(field_name, names, name_map):
-                        bolded = [f"**{name_map[u]}**" for u in names]
-                        chunk = ""
-                        for nm in bolded:
-                            piece = nm if not chunk else ", " + nm
-                            if len(chunk) + len(piece) > 1024:
-                                embed.add_field(name=field_name, value=chunk, inline=False)
-                                chunk = nm
-                                field_name += " cont."
-                            else:
-                                chunk += piece
-                        if chunk:
-                            embed.add_field(name=field_name, value=chunk, inline=False)
-
-                    if joined:
-                        add_chunked("Joined", joined, curr_map)
-                    if left:
-                        add_chunked("Left", left, prev_map)
-                    if mem_tracking_channel:
-                        await mem_tracking_channel.send(embed=embed)
-
-            self.previous_members = curr_map
-            self._save_json(self.member_file, curr_map)
-
             await self.client.change_presence(
                 activity=discord.CustomActivity(name=f"{guild.online} members online")
             )
@@ -301,7 +262,7 @@ class UpdateMemberData(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("UpdateMemberData task loaded")
+        print(f"{datetime.datetime.now(timezone.utc)} - UpdateMemberData task loaded")
 
 
 def setup(client):
