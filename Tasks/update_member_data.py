@@ -120,12 +120,12 @@ class UpdateMemberData(commands.Cog):
 
             db.cursor.execute(
                 """
-                INSERT INTO uncollected_raids (uuid, ign, uncollected_raids, collected_raids)
-                VALUES (%s, %s, 1, 0)
-                ON CONFLICT (uuid) DO UPDATE
-                SET 
-                uncollected_raids = uncollected_raids + EXCLUDED.uncollected_raids,
-                ign               = EXCLUDED.ign
+                    INSERT INTO uncollected_raids AS ur (uuid, ign, uncollected_raids, collected_raids)
+                    VALUES (%s, %s, 1, 0)
+                    ON CONFLICT (uuid) DO UPDATE
+                    SET
+                    uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids,
+                    ign               = EXCLUDED.ign;
                 """,
                 (uid, ign)
             )
