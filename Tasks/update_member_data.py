@@ -114,14 +114,20 @@ class UpdateMemberData(commands.Cog):
             await channel.send(embed=embed)
 
         for uid in group:
+            db.cursor.execute("SELECT ign FROM discord_links WHERE uuid = %s", (uid,))
+            row = db.cursor.fetchone()
+            ign = row[0] if row else None
+
             db.cursor.execute(
                 """
-                INSERT INTO uncollected_raids AS ur (uuid, uncollected_raids, collected_raids)
-                VALUES (%s, 1, 0)
-                ON CONFLICT (uuid) DO UPDATE
-                SET uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids
+                    INSERT INTO uncollected_raids AS ur (uuid, ign, uncollected_raids, collected_raids)
+                    VALUES (%s, %s, 1, 0)
+                    ON CONFLICT (uuid) DO UPDATE
+                    SET
+                    uncollected_raids = ur.uncollected_raids + EXCLUDED.uncollected_raids,
+                    ign               = EXCLUDED.ign;
                 """,
-                (uid,)
+                (uid, ign)
             )
         db.connection.commit()
 
@@ -129,6 +135,7 @@ class UpdateMemberData(commands.Cog):
     @tasks.loop(minutes=5)
     async def update_member_data(self):
         now = datetime.datetime.now(timezone.utc)
+        print(f"STARTING LOOP - {now}")
         if self.cold_start:
             print(f"{now} - Starting member tracking (cold start)")
 
@@ -150,31 +157,27 @@ class UpdateMemberData(commands.Cog):
             db.connect()
             guild = Guild("The Aquarium")
 
-            prev_map = getattr(self, "previous_members", {})
-            curr_map = {m["uuid"]: m["name"] for m in guild.all_members}
-            joined   = set(curr_map) - set(prev_map)
-            left     = set(prev_map) - set(curr_map)
+            prev_map = self.previous_members
+            curr_map = {m["uuid"]: {"name": m["name"], "rank": m.get("rank")} for m in guild.all_members}
+
+            joined = set(curr_map) - set(prev_map)
+            left = set(prev_map) - set(curr_map)
 
             if (joined or left) and not (self.cold_start and not self.member_file_exists):
                 ch = self.client.get_channel(LOG_CHANNEL)
-                embed = discord.Embed(
-                    title="Guild Membership Changes",
-                    timestamp=now,
-                    color=0xFFA500
-                )
 
-                def add_chunked(field_name, name_list):
+                def add_chunked(embed_obj, field_name, name_list):
                     chunk = ""
                     for ign in name_list:
                         piece = f"**{ign}**" if not chunk else f", **{ign}**"
                         if len(chunk) + len(piece) > 1024:
-                            embed.add_field(name=field_name, value=chunk, inline=False)
+                            embed_obj.add_field(name=field_name, value=chunk, inline=False)
                             chunk = f"**{ign}**"
                             field_name += " cont."
                         else:
                             chunk += piece
                     if chunk:
-                        embed.add_field(name=field_name, value=chunk, inline=False)
+                        embed_obj.add_field(name=field_name, value=chunk, inline=False)
 
                 joined_igns = []
                 for uid in joined:
@@ -182,14 +185,47 @@ class UpdateMemberData(commands.Cog):
                     ign = raw[0] if isinstance(raw, list) and raw else str(raw)
                     joined_igns.append(ign)
 
-                left_igns = [prev_map[uid] for uid in left]
+                left_igns = [
+                    prev_map[uid]["name"] if isinstance(prev_map[uid], dict) else prev_map[uid]
+                    for uid in left
+                ]
 
                 if joined_igns:
-                    add_chunked("Joined", joined_igns)
-                if left_igns:
-                    add_chunked("Left", left_igns)
+                    embed_join = discord.Embed(
+                        title="Guild Members Joined",
+                        timestamp=now,
+                        color=0x00FF00
+                    )
+                    add_chunked(embed_join, "Joined", joined_igns)
+                    await ch.send(embed=embed_join)
 
-                await ch.send(embed=embed)
+                if left_igns:
+                    embed_leave = discord.Embed(
+                        title="Guild Members Left",
+                        timestamp=now,
+                        color=0xFF0000
+                    )
+                    add_chunked(embed_leave, "Left", left_igns)
+                    await ch.send(embed=embed_leave)
+
+            role_changes = []
+            for uuid, info in curr_map.items():
+                if uuid in prev_map and isinstance(prev_map[uuid], dict):
+                    old_rank = prev_map[uuid].get("rank")
+                    new_rank = info.get("rank")
+                    if old_rank and new_rank and old_rank != new_rank:
+                        role_changes.append((uuid, info["name"], old_rank, new_rank))
+
+            if role_changes and not (self.cold_start and not self.member_file_exists):
+                ch = self.client.get_channel(LOG_CHANNEL)
+                embed2 = discord.Embed(
+                    title="Guild Rank Changes",
+                    timestamp=now,
+                    color=0x0000FF
+                )
+                for _, name, old_rank, new_rank in role_changes:
+                    embed2.add_field(name=name, value=f"{old_rank} → {new_rank}", inline=False)
+                await ch.send(embed=embed2)
 
             self.previous_members = curr_map
             self._save_json(self.member_file, curr_map)
@@ -285,9 +321,9 @@ class UpdateMemberData(commands.Cog):
             if (t % 86400) < 300:
                 with open("player_activity.json", 'r') as f:
                     old_data = json.loads(f.read())
-                    old_data.insert(0, memberlist)
-                    with open("player_activity.json", 'w') as f:
-                        json.dump(old_data[:60], f)
+                old_data.insert(0, memberlist)
+                with open("player_activity.json", 'w') as f:
+                    json.dump(old_data[:60], f)
 
             self.previous_data = new_data
             self._save_json("previous_data.json", new_data)
@@ -295,6 +331,9 @@ class UpdateMemberData(commands.Cog):
             if self.cold_start:
                 print(f"{now} - Ending cold start")
                 self.cold_start = False
+
+            now = datetime.datetime.now(timezone.utc)
+            print(f"ENDING LOOP - {now}")
 
         except Exception as e:
             print(f"{now} - [UpdateMemberData] Fatal error: {e}")
@@ -304,6 +343,7 @@ class UpdateMemberData(commands.Cog):
                     db.close()
                 except:
                     pass
+
 
     @update_member_data.before_loop
     async def before_update(self):
