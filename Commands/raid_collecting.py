@@ -90,11 +90,47 @@ class ConvertView(View):
 
     @button(label="Aspects", style=discord.ButtonStyle.secondary, custom_id="convert_aspects")
     async def aspects(self, _: discord.ui.Button, interaction: discord.Interaction):
-        print(f"[RAID ASPECT] {interaction.user} → {self.count} aspects")
-        await interaction.response.edit_message(
-            content="⚙️ Aspect conversion not implemented yet.",
+        await interaction.response.defer(ephemeral=True)
+
+        db = DB(); db.connect()
+        db.cursor.execute(
+            "SELECT uncollected_raids, uncollected_aspects FROM uncollected_raids WHERE uuid = %s",
+            (self.uuid,)
+        )
+        row = db.cursor.fetchone()
+        total_raids = row[0] if row else 0
+        current_aspects = row[1] if row else 0
+
+        # how many full aspects we can get
+        aspect_count = total_raids // 2
+        if aspect_count == 0:
+            db.close()
+            return await interaction.followup.send(
+                "❌ You need at least 2 uncollected raids to claim 1 Aspect.",
+                ephemeral=True
+            )
+
+        remainder_raids = total_raids % 2
+
+        db.cursor.execute("""
+            UPDATE uncollected_raids
+               SET uncollected_raids     = %s,
+                   uncollected_aspects   = uncollected_aspects + %s
+             WHERE uuid = %s
+        """, (remainder_raids, aspect_count, self.uuid))
+        db.connection.commit()
+        db.close()
+
+        await interaction.edit_original_response(
+            content=(
+                f"✅ Converted **{aspect_count*2}** uncollected raid(s) into "
+                f"**{aspect_count}** new uncollected aspect(s)!  \n"
+                f"• You now have **{current_aspects + aspect_count}** total uncollected aspect(s).  \n"
+                f"• **{remainder_raids}** raid(s) remain uncollected."
+            ),
             view=None
         )
+
 
 class RaidCollecting(commands.Cog):
     def __init__(self, client):
