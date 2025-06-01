@@ -71,7 +71,8 @@ class CheckApps(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("CheckApps task loaded")
-        self.check_apps.start()
+        if not self.check_apps.is_running():
+            self.check_apps.start()
 
 
 def setup(client):
