@@ -111,11 +111,13 @@ def urlify(in_string):
 
 
 def pretty_date(time=False):
-    now = datetime.datetime.now()
-    if type(time) is int:
-        diff = now - datetime.datetime.fromtimestamp(time)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    if isinstance(time, int):
+        diff = now - datetime.datetime.fromtimestamp(time, tz=datetime.timezone.utc)
     elif isinstance(time, datetime.datetime):
-        diff = now - time.replace(tzinfo=None)
+        if time.tzinfo is None:
+            time = time.replace(tzinfo=datetime.timezone.utc)
+        diff = now - time
     elif not time:
         diff = 0
     second_diff = diff.seconds
