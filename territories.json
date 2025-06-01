@@ -1,11 +1,11 @@
 {
     "Ragni": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:29:24.921000Z",
+        "acquired": "2025-06-01T14:10:27.545000Z",
         "location": {
             "start": [
                 -955,
@@ -19,11 +19,11 @@
     },
     "Ragni Main Entrance": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:25:04.812000Z",
+        "acquired": "2025-06-01T05:33:35.046000Z",
         "location": {
             "start": [
                 -747,
@@ -37,11 +37,11 @@
     },
     "Emerald Trail": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:21:45.836000Z",
+        "acquired": "2025-06-01T04:41:54.491000Z",
         "location": {
             "start": [
                 -615,
@@ -55,11 +55,11 @@
     },
     "Ragni North Entrance": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:43:28.059000Z",
+        "acquired": "2025-06-01T05:32:09.215000Z",
         "location": {
             "start": [
                 -944,
@@ -73,11 +73,11 @@
     },
     "Katoa Ranch": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:40:47.573000Z",
+        "acquired": "2025-06-01T09:58:24.398000Z",
         "location": {
             "start": [
                 -914,
@@ -91,11 +91,11 @@
     },
     "Coastal Trail": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:25:28.666000Z",
+        "acquired": "2025-06-01T05:27:11.256000Z",
         "location": {
             "start": [
                 -747,
@@ -109,11 +109,11 @@
     },
     "Maltic Coast": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:22:29.916000Z",
+        "acquired": "2025-06-01T05:24:12.034000Z",
         "location": {
             "start": [
                 -564,
@@ -127,11 +127,11 @@
     },
     "Maltic": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:28:35.444000Z",
+        "acquired": "2025-06-01T19:45:10.193000Z",
         "location": {
             "start": [
                 -604,
@@ -145,11 +145,11 @@
     },
     "Pigmen Ravines": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:39:34.207000Z",
+        "acquired": "2025-06-01T20:40:16.298000Z",
         "location": {
             "start": [
                 -784,
@@ -163,11 +163,11 @@
     },
     "Little Wood": {
         "guild": {
-            "uuid": "8ed63481-3c00-4570-a84f-91965f5a11f6",
-            "name": "TheButteryWarriors",
-            "prefix": "TBUH"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T00:16:42.336000Z",
+        "acquired": "2025-06-01T05:40:19.852000Z",
         "location": {
             "start": [
                 -812,
@@ -181,11 +181,11 @@
     },
     "Time Valley": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:33:22.303000Z",
+        "acquired": "2025-06-01T20:26:59.889000Z",
         "location": {
             "start": [
                 -563,
@@ -199,11 +199,11 @@
     },
     "Abandoned Farm": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:43:54.991000Z",
+        "acquired": "2025-06-01T20:45:35.622000Z",
         "location": {
             "start": [
                 -577,
@@ -217,11 +217,11 @@
     },
     "Sanctuary Bridge": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:35:42.879000Z",
+        "acquired": "2025-06-01T04:45:30.026000Z",
         "location": {
             "start": [
                 -324,
@@ -235,11 +235,11 @@
     },
     "Road to Time Valley": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:16:00.851000Z",
+        "acquired": "2025-06-01T04:45:26.354000Z",
         "location": {
             "start": [
                 -461,
@@ -253,11 +253,11 @@
     },
     "Nivla Woods": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:12:02.725000Z",
+        "acquired": "2025-06-01T04:48:12.520000Z",
         "location": {
             "start": [
                 -325,
@@ -271,11 +271,11 @@
     },
     "Nivla Woods Exit": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:54:16.372000Z",
+        "acquired": "2025-06-01T04:55:00.517000Z",
         "location": {
             "start": [
                 -74,
@@ -293,7 +293,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:19:39.348000Z",
+        "acquired": "2025-06-01T04:20:01.136000Z",
         "location": {
             "start": [
                 -98,
@@ -307,11 +307,11 @@
     },
     "Road to Elkurn": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:24:17.826000Z",
+        "acquired": "2025-06-01T04:59:49.692000Z",
         "location": {
             "start": [
                 -89,
@@ -329,7 +329,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T14:54:08.828000Z",
+        "acquired": "2025-06-01T04:20:14.363000Z",
         "location": {
             "start": [
                 22,
@@ -347,7 +347,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:40:46.864000Z",
+        "acquired": "2025-06-01T05:14:57.645000Z",
         "location": {
             "start": [
                 300,
@@ -365,7 +365,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T10:53:42.897000Z",
+        "acquired": "2025-06-01T14:03:25.587000Z",
         "location": {
             "start": [
                 402,
@@ -383,7 +383,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T12:06:13.367000Z",
+        "acquired": "2025-06-01T04:23:11.598000Z",
         "location": {
             "start": [
                 -400,
@@ -397,11 +397,11 @@
     },
     "Half Moon Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:54:45.975000Z",
+        "acquired": "2025-06-01T19:04:04.251000Z",
         "location": {
             "start": [
                 900,
@@ -415,11 +415,11 @@
     },
     "Mage Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-11T10:35:15.932000Z",
+        "acquired": "2025-06-01T19:05:18.439000Z",
         "location": {
             "start": [
                 805,
@@ -437,7 +437,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:53:40.460000Z",
+        "acquired": "2025-06-01T04:26:32.656000Z",
         "location": {
             "start": [
                 0,
@@ -455,7 +455,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T12:17:34.348000Z",
+        "acquired": "2025-06-01T04:28:28.295000Z",
         "location": {
             "start": [
                 95,
@@ -473,7 +473,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:46:07.190000Z",
+        "acquired": "2025-06-01T04:37:39.679000Z",
         "location": {
             "start": [
                 246,
@@ -487,11 +487,11 @@
     },
     "Temple of Legends": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:25:10.210000Z",
+        "acquired": "2025-06-01T05:41:05.870000Z",
         "location": {
             "start": [
                 -631,
@@ -505,11 +505,11 @@
     },
     "Mummy's Tomb": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T18:04:43.861000Z",
+        "acquired": "2025-06-01T18:05:41.617000Z",
         "location": {
             "start": [
                 990,
@@ -527,7 +527,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T14:18:13.335000Z",
+        "acquired": "2025-06-01T18:23:57.029000Z",
         "location": {
             "start": [
                 760,
@@ -545,7 +545,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T14:26:51.978000Z",
+        "acquired": "2025-06-01T17:32:30.459000Z",
         "location": {
             "start": [
                 890,
@@ -559,11 +559,11 @@
     },
     "Ancient Nemract": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:39:44.733000Z",
+        "acquired": "2025-06-01T12:18:58.353000Z",
         "location": {
             "start": [
                 152,
@@ -577,11 +577,11 @@
     },
     "Nemract Cathedral": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-15T22:42:12.130000Z",
+        "acquired": "2025-06-01T20:49:42.626000Z",
         "location": {
             "start": [
                 385,
@@ -599,7 +599,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T16:05:24.827000Z",
+        "acquired": "2025-06-01T06:46:05.176000Z",
         "location": {
             "start": [
                 385,
@@ -613,11 +613,11 @@
     },
     "Rooster Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:10:23.691000Z",
+        "acquired": "2025-06-01T17:06:44.282000Z",
         "location": {
             "start": [
                 -128,
@@ -631,11 +631,11 @@
     },
     "Zhight Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:27:07.460000Z",
+        "acquired": "2025-06-01T16:42:19.011000Z",
         "location": {
             "start": [
                 -727,
@@ -649,11 +649,11 @@
     },
     "Selchar": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-08T22:43:58.764000Z",
+        "acquired": "2025-06-01T17:07:26.353000Z",
         "location": {
             "start": [
                 -100,
@@ -667,11 +667,11 @@
     },
     "Pirate Town": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:32:10.075000Z",
+        "acquired": "2025-06-01T17:16:59.119000Z",
         "location": {
             "start": [
                 -750,
@@ -685,11 +685,11 @@
     },
     "Dujgon Nation": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:10:30.668000Z",
+        "acquired": "2025-06-01T16:57:24.725000Z",
         "location": {
             "start": [
                 1000,
@@ -703,11 +703,11 @@
     },
     "Nodguj Nation": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-10T18:37:53.843000Z",
+        "acquired": "2025-06-01T16:54:17.373000Z",
         "location": {
             "start": [
                 695,
@@ -721,11 +721,11 @@
     },
     "Maro Peaks": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:02:53.097000Z",
+        "acquired": "2025-06-01T16:49:24.657000Z",
         "location": {
             "start": [
                 -41,
@@ -739,11 +739,11 @@
     },
     "Tree Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:21:18.105000Z",
+        "acquired": "2025-06-01T16:45:50.067000Z",
         "location": {
             "start": [
                 -454,
@@ -761,7 +761,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T16:55:39.049000Z",
+        "acquired": "2025-06-01T05:25:28.020000Z",
         "location": {
             "start": [
                 770,
@@ -779,7 +779,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:11:20.351000Z",
+        "acquired": "2025-06-01T04:15:18.458000Z",
         "location": {
             "start": [
                 330,
@@ -797,7 +797,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:03:08.463000Z",
+        "acquired": "2025-06-01T04:10:38.083000Z",
         "location": {
             "start": [
                 330,
@@ -815,7 +815,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:19:34.362000Z",
+        "acquired": "2025-06-01T04:04:40.218000Z",
         "location": {
             "start": [
                 395,
@@ -833,7 +833,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-14T20:55:36.680000Z",
+        "acquired": "2025-06-01T04:03:43.054000Z",
         "location": {
             "start": [
                 550,
@@ -847,11 +847,11 @@
     },
     "Cinfras": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:39:42.601000Z",
+        "acquired": "2025-06-01T16:56:48.365000Z",
         "location": {
             "start": [
                 -534,
@@ -865,11 +865,11 @@
     },
     "Entrance to Olux": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-08T21:58:11.165000Z",
+        "acquired": "2025-06-01T19:20:11.001000Z",
         "location": {
             "start": [
                 -1649,
@@ -883,11 +883,11 @@
     },
     "Olux": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T03:33:30.166000Z",
+        "acquired": "2025-06-01T19:30:25.674000Z",
         "location": {
             "start": [
                 -1810,
@@ -901,11 +901,11 @@
     },
     "Orc Lake": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T07:54:21.574000Z",
+        "acquired": "2025-06-01T20:00:30.926000Z",
         "location": {
             "start": [
                 -1933,
@@ -923,7 +923,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T19:48:06.534000Z",
+        "acquired": "2025-06-01T08:34:41.327000Z",
         "location": {
             "start": [
                 -1927,
@@ -937,11 +937,11 @@
     },
     "Meteor Crater": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T05:15:03.240000Z",
+        "acquired": "2025-06-01T19:52:11.078000Z",
         "location": {
             "start": [
                 -1800,
@@ -955,11 +955,11 @@
     },
     "Iron Road": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T05:18:58.688000Z",
+        "acquired": "2025-06-01T18:39:06.338000Z",
         "location": {
             "start": [
                 -1688,
@@ -973,11 +973,11 @@
     },
     "Goblin Plains West": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T08:02:35.074000Z",
+        "acquired": "2025-06-01T19:51:03.527000Z",
         "location": {
             "start": [
                 -1688,
@@ -991,11 +991,11 @@
     },
     "Llevigar Farm": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T07:46:34.267000Z",
+        "acquired": "2025-06-01T19:06:12.457000Z",
         "location": {
             "start": [
                 -1663,
@@ -1009,11 +1009,11 @@
     },
     "Forgotten Path": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T21:27:54.684000Z",
+        "acquired": "2025-06-01T18:29:40.691000Z",
         "location": {
             "start": [
                 -1603,
@@ -1027,11 +1027,11 @@
     },
     "Goblin Plains East": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T07:26:41.085000Z",
+        "acquired": "2025-06-01T18:37:21.817000Z",
         "location": {
             "start": [
                 -1603,
@@ -1045,11 +1045,11 @@
     },
     "Mantis Nest": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T22:50:40.315000Z",
+        "acquired": "2025-06-01T17:56:42.531000Z",
         "location": {
             "start": [
                 -736,
@@ -1063,11 +1063,11 @@
     },
     "Path to Cinfras": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T13:28:56.067000Z",
+        "acquired": "2025-06-01T18:00:24.668000Z",
         "location": {
             "start": [
                 -734,
@@ -1081,11 +1081,11 @@
     },
     "Gelibord": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:02:43.081000Z",
+        "acquired": "2025-06-01T18:04:09.716000Z",
         "location": {
             "start": [
                 -1050,
@@ -1099,11 +1099,11 @@
     },
     "Twisted Housing": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-11T00:43:58.579000Z",
+        "acquired": "2025-06-01T19:54:54.185000Z",
         "location": {
             "start": [
                 -1133,
@@ -1117,11 +1117,11 @@
     },
     "Entrance to Kander": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:13:10.938000Z",
+        "acquired": "2025-06-01T17:47:17.253000Z",
         "location": {
             "start": [
                 -896,
@@ -1135,11 +1135,11 @@
     },
     "Mesquis Tower": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-12T17:48:03.933000Z",
+        "acquired": "2025-06-01T19:10:32.665000Z",
         "location": {
             "start": [
                 -834,
@@ -1153,11 +1153,11 @@
     },
     "Kander Mines": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:21:44.429000Z",
+        "acquired": "2025-06-01T19:27:18.260000Z",
         "location": {
             "start": [
                 -785,
@@ -1171,11 +1171,11 @@
     },
     "Path to Talor": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:26:55.081000Z",
+        "acquired": "2025-06-01T17:00:17.478000Z",
         "location": {
             "start": [
                 -653,
@@ -1189,11 +1189,11 @@
     },
     "Dark Forest Village": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:43:50.072000Z",
+        "acquired": "2025-06-01T17:01:42.770000Z",
         "location": {
             "start": [
                 -723,
@@ -1207,11 +1207,11 @@
     },
     "Lexdale": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T11:23:10.537000Z",
+        "acquired": "2025-06-01T17:14:19.490000Z",
         "location": {
             "start": [
                 -650,
@@ -1225,11 +1225,11 @@
     },
     "Fungal Grove": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:42:38.304000Z",
+        "acquired": "2025-06-01T17:03:16.979000Z",
         "location": {
             "start": [
                 -489,
@@ -1243,11 +1243,11 @@
     },
     "Decayed Basin": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T11:26:58.904000Z",
+        "acquired": "2025-06-01T17:48:34.760000Z",
         "location": {
             "start": [
                 -471,
@@ -1261,11 +1261,11 @@
     },
     "Heart of Decay": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T11:31:52.663000Z",
+        "acquired": "2025-06-01T17:51:41.113000Z",
         "location": {
             "start": [
                 -598,
@@ -1279,11 +1279,11 @@
     },
     "Mushroom Hill": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:53:31.816000Z",
+        "acquired": "2025-06-01T18:23:25.966000Z",
         "location": {
             "start": [
                 -288,
@@ -1297,11 +1297,11 @@
     },
     "Fallen Village": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:35:27.077000Z",
+        "acquired": "2025-06-01T16:53:54.841000Z",
         "location": {
             "start": [
                 -290,
@@ -1315,11 +1315,11 @@
     },
     "Guild Hall": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T06:12:26.752000Z",
+        "acquired": "2025-06-01T17:15:23.001000Z",
         "location": {
             "start": [
                 -349,
@@ -1333,11 +1333,11 @@
     },
     "Cinfras's Small Farm": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:30:48.139000Z",
+        "acquired": "2025-06-01T19:46:51.611000Z",
         "location": {
             "start": [
                 -224,
@@ -1351,11 +1351,11 @@
     },
     "Gert Camp": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:48:52.774000Z",
+        "acquired": "2025-06-01T18:34:04.026000Z",
         "location": {
             "start": [
                 30,
@@ -1369,11 +1369,11 @@
     },
     "Jitak's Farm": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:47:44.710000Z",
+        "acquired": "2025-06-01T18:28:07.127000Z",
         "location": {
             "start": [
                 -122,
@@ -1387,11 +1387,11 @@
     },
     "Burning Farm": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:36:29.939000Z",
+        "acquired": "2025-06-01T20:35:58.486000Z",
         "location": {
             "start": [
                 107,
@@ -1405,11 +1405,11 @@
     },
     "Burning Airship": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-13T19:55:45.027000Z",
+        "acquired": "2025-06-01T20:11:01.859000Z",
         "location": {
             "start": [
                 35,
@@ -1423,11 +1423,11 @@
     },
     "Thanos": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:47:02.222000Z",
+        "acquired": "2025-06-01T18:32:25.027000Z",
         "location": {
             "start": [
                 51,
@@ -1441,11 +1441,11 @@
     },
     "Thanos Exit": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:40:45.547000Z",
+        "acquired": "2025-06-01T10:28:52.428000Z",
         "location": {
             "start": [
                 338,
@@ -1463,7 +1463,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T19:57:26.180000Z",
+        "acquired": "2025-06-01T19:07:18.469000Z",
         "location": {
             "start": [
                 334,
@@ -1477,11 +1477,11 @@
     },
     "Krolton's Cave": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:50:37.791000Z",
+        "acquired": "2025-06-01T07:03:32.123000Z",
         "location": {
             "start": [
                 341,
@@ -1495,11 +1495,11 @@
     },
     "Canyon High Path": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:46:23.968000Z",
+        "acquired": "2025-06-01T04:05:40.960000Z",
         "location": {
             "start": [
                 562,
@@ -1513,11 +1513,11 @@
     },
     "Kandon-Beda": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T18:49:22.920000Z",
+        "acquired": "2025-06-01T20:21:03.253000Z",
         "location": {
             "start": [
                 607,
@@ -1531,11 +1531,11 @@
     },
     "Kandon Farm": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T09:51:57.877000Z",
+        "acquired": "2025-06-01T04:36:12.348000Z",
         "location": {
             "start": [
                 710,
@@ -1549,11 +1549,11 @@
     },
     "Cliffside Passage North": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-13T19:42:00.076000Z",
+        "acquired": "2025-06-01T21:12:51.607000Z",
         "location": {
             "start": [
                 572,
@@ -1567,11 +1567,11 @@
     },
     "Ranol's Farm": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:55:56.847000Z",
+        "acquired": "2025-06-01T04:13:34.526000Z",
         "location": {
             "start": [
                 810,
@@ -1585,11 +1585,11 @@
     },
     "Thesead Suburbs": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:42:37.763000Z",
+        "acquired": "2025-06-01T04:22:56.249000Z",
         "location": {
             "start": [
                 703,
@@ -1603,11 +1603,11 @@
     },
     "Thesead": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:41:49.985000Z",
+        "acquired": "2025-06-01T04:21:37.909000Z",
         "location": {
             "start": [
                 747,
@@ -1621,11 +1621,11 @@
     },
     "Eltom": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:58:35.621000Z",
+        "acquired": "2025-06-01T11:38:17.710000Z",
         "location": {
             "start": [
                 1029,
@@ -1639,11 +1639,11 @@
     },
     "Crater Descent": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-10T23:48:38.541000Z",
+        "acquired": "2025-06-01T04:44:30.849000Z",
         "location": {
             "start": [
                 1383,
@@ -1657,11 +1657,11 @@
     },
     "Ahmsord": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T19:24:36.756000Z",
+        "acquired": "2025-06-01T04:05:38.769000Z",
         "location": {
             "start": [
                 1163,
@@ -1675,11 +1675,11 @@
     },
     "Temple Island": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T19:15:00.539000Z",
+        "acquired": "2025-06-01T04:10:34.011000Z",
         "location": {
             "start": [
                 991,
@@ -1693,11 +1693,11 @@
     },
     "Snail Island": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-10T14:26:39.783000Z",
+        "acquired": "2025-06-01T04:29:27.255000Z",
         "location": {
             "start": [
                 949,
@@ -1711,11 +1711,11 @@
     },
     "Corkus City": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:52:53.618000Z",
+        "acquired": "2025-06-01T20:43:55.681000Z",
         "location": {
             "start": [
                 -1557,
@@ -1729,11 +1729,11 @@
     },
     "Corkus Castle": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:03:46.705000Z",
+        "acquired": "2025-06-01T09:35:06.455000Z",
         "location": {
             "start": [
                 -1555,
@@ -1747,11 +1747,11 @@
     },
     "Fallen Factory": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:55:09.156000Z",
+        "acquired": "2025-06-01T14:21:43.755000Z",
         "location": {
             "start": [
                 -1579,
@@ -1765,11 +1765,11 @@
     },
     "Corkus City Mine": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:45:38.732000Z",
+        "acquired": "2025-06-01T09:40:03.760000Z",
         "location": {
             "start": [
                 -1394,
@@ -1783,11 +1783,11 @@
     },
     "Legendary Island": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:20:20.264000Z",
+        "acquired": "2025-06-01T18:43:25.877000Z",
         "location": {
             "start": [
                 -1212,
@@ -1801,11 +1801,11 @@
     },
     "Ruined Houses": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:00:12.017000Z",
+        "acquired": "2025-06-01T09:29:53.183000Z",
         "location": {
             "start": [
                 -1684,
@@ -1819,11 +1819,11 @@
     },
     "Avos Temple": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:04:54.297000Z",
+        "acquired": "2025-06-01T13:52:07.195000Z",
         "location": {
             "start": [
                 -1526,
@@ -1837,11 +1837,11 @@
     },
     "Bloody Beach": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:51:16.935000Z",
+        "acquired": "2025-06-01T18:38:20.050000Z",
         "location": {
             "start": [
                 -1376,
@@ -1855,11 +1855,11 @@
     },
     "Corkus Outskirts": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:40:13.610000Z",
+        "acquired": "2025-06-01T13:47:29.315000Z",
         "location": {
             "start": [
                 -1502,
@@ -1873,11 +1873,11 @@
     },
     "Frozen Fort": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T13:24:29.040000Z",
+        "acquired": "2025-06-01T04:17:30.388000Z",
         "location": {
             "start": [
                 1501,
@@ -1891,11 +1891,11 @@
     },
     "Sky Castle": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T14:24:28.575000Z",
+        "acquired": "2025-06-01T04:22:38.900000Z",
         "location": {
             "start": [
                 954,
@@ -1909,11 +1909,11 @@
     },
     "Kandon Ridge": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
+            "name": "Profession Heaven",
+            "prefix": "PROF"
         },
-        "acquired": "2025-05-15T09:53:28.486000Z",
+        "acquired": "2025-06-01T15:41:51.918000Z",
         "location": {
             "start": [
                 885,
@@ -1927,11 +1927,11 @@
     },
     "Old Coal Mine": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T09:53:01.282000Z",
+        "acquired": "2025-06-01T04:24:11.808000Z",
         "location": {
             "start": [
                 719,
@@ -1945,11 +1945,11 @@
     },
     "Dragonling Nests": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T13:18:46.982000Z",
+        "acquired": "2025-06-01T04:30:09.942000Z",
         "location": {
             "start": [
                 925,
@@ -1963,11 +1963,11 @@
     },
     "Astraulus' Tower": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T13:13:26.555000Z",
+        "acquired": "2025-06-01T04:31:11.888000Z",
         "location": {
             "start": [
                 1102,
@@ -1981,11 +1981,11 @@
     },
     "Molten Reach": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T13:11:19.273000Z",
+        "acquired": "2025-06-01T04:19:26.828000Z",
         "location": {
             "start": [
                 1251,
@@ -1999,11 +1999,11 @@
     },
     "Ahmsord Outskirts": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T19:16:47.690000Z",
+        "acquired": "2025-06-01T04:14:46.772000Z",
         "location": {
             "start": [
                 1336,
@@ -2017,11 +2017,11 @@
     },
     "Swamp Island": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-10T14:22:24.891000Z",
+        "acquired": "2025-06-01T04:25:14.587000Z",
         "location": {
             "start": [
                 1178,
@@ -2035,11 +2035,11 @@
     },
     "Angel Refuge": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-16T06:36:16.338000Z",
+        "acquired": "2025-06-01T04:15:43.594000Z",
         "location": {
             "start": [
                 1354,
@@ -2053,11 +2053,11 @@
     },
     "Wybel Island": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T19:20:24.357000Z",
+        "acquired": "2025-06-01T04:11:20.098000Z",
         "location": {
             "start": [
                 1355,
@@ -2071,11 +2071,11 @@
     },
     "Central Islands": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T19:19:21.214000Z",
+        "acquired": "2025-06-01T04:06:43.407000Z",
         "location": {
             "start": [
                 1250,
@@ -2089,11 +2089,11 @@
     },
     "Sky Island Ascent": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T19:21:23.368000Z",
+        "acquired": "2025-06-01T04:13:04.181000Z",
         "location": {
             "start": [
                 1180,
@@ -2107,11 +2107,11 @@
     },
     "Sky Falls": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-16T14:06:45.767000Z",
+        "acquired": "2025-06-01T04:20:48.929000Z",
         "location": {
             "start": [
                 1380,
@@ -2125,11 +2125,11 @@
     },
     "Jofash Tunnel": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T04:56:54.133000Z",
+        "acquired": "2025-06-01T17:06:12.096000Z",
         "location": {
             "start": [
                 1304,
@@ -2143,11 +2143,11 @@
     },
     "Jofash Docks": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T05:01:46.370000Z",
+        "acquired": "2025-06-01T17:04:44.490000Z",
         "location": {
             "start": [
                 1178,
@@ -2161,11 +2161,11 @@
     },
     "Santa's Hideout": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-13T19:21:19.069000Z",
+        "acquired": "2025-06-01T17:13:10.313000Z",
         "location": {
             "start": [
                 1057,
@@ -2183,7 +2183,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T12:10:45.707000Z",
+        "acquired": "2025-06-01T04:21:32.735000Z",
         "location": {
             "start": [
                 -267,
@@ -2201,7 +2201,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T12:00:30.179000Z",
+        "acquired": "2025-06-01T13:46:35.851000Z",
         "location": {
             "start": [
                 -311,
@@ -2215,11 +2215,11 @@
     },
     "Cinfras Outskirts": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:45:29.161000Z",
+        "acquired": "2025-06-01T16:54:17.261000Z",
         "location": {
             "start": [
                 -392,
@@ -2233,11 +2233,11 @@
     },
     "Rodoroc": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-13T19:45:27.578000Z",
+        "acquired": "2025-06-01T04:41:17.777000Z",
         "location": {
             "start": [
                 1200,
@@ -2251,11 +2251,11 @@
     },
     "Llevigar": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-15T21:45:00.448000Z",
+        "acquired": "2025-06-01T19:39:31.357000Z",
         "location": {
             "start": [
                 -1800,
@@ -2269,11 +2269,11 @@
     },
     "Regular Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:37:32.121000Z",
+        "acquired": "2025-06-01T17:09:37.872000Z",
         "location": {
             "start": [
                 1202,
@@ -2287,11 +2287,11 @@
     },
     "Herb Cave": {
         "guild": {
-            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
-            "name": "Avaritia",
-            "prefix": "AVTA"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:48:13.967000Z",
+        "acquired": "2025-06-01T19:41:25.314000Z",
         "location": {
             "start": [
                 -448,
@@ -2305,11 +2305,11 @@
     },
     "Twisted Ridge": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
+            "name": "Sequoia",
+            "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T17:36:39.465000Z",
+        "acquired": "2025-06-01T18:26:47.828000Z",
         "location": {
             "start": [
                 -1020,
@@ -2323,11 +2323,11 @@
     },
     "Icy Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:13:21.997000Z",
+        "acquired": "2025-06-01T17:00:26.374000Z",
         "location": {
             "start": [
                 1001,
@@ -2341,11 +2341,11 @@
     },
     "Royal Gate": {
         "guild": {
-            "uuid": "0e9f5a88-b646-46f6-8e9c-3ea90cdc16b4",
-            "name": "Feasting Fools",
-            "prefix": "FQQL"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:49:23.153000Z",
+        "acquired": "2025-06-01T09:03:02.250000Z",
         "location": {
             "start": [
                 -1822,
@@ -2363,7 +2363,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T07:54:34.762000Z",
+        "acquired": "2025-06-01T08:14:03.163000Z",
         "location": {
             "start": [
                 -1390,
@@ -2377,11 +2377,11 @@
     },
     "Orc Battlegrounds": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T03:54:34.133000Z",
+        "acquired": "2025-06-01T19:48:44.639000Z",
         "location": {
             "start": [
                 -1460,
@@ -2399,7 +2399,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T16:32:30.185000Z",
+        "acquired": "2025-06-01T04:11:00.774000Z",
         "location": {
             "start": [
                 881,
@@ -2413,11 +2413,11 @@
     },
     "Lost Atoll": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:19:58.697000Z",
+        "acquired": "2025-06-01T16:47:29.131000Z",
         "location": {
             "start": [
                 -472,
@@ -2431,11 +2431,11 @@
     },
     "Southern Outpost": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:58:00.705000Z",
+        "acquired": "2025-06-01T16:59:40.480000Z",
         "location": {
             "start": [
                 -1258,
@@ -2449,11 +2449,11 @@
     },
     "Corkus Sea Cove": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
+            "name": "NewEridu",
+            "prefix": "SSNE"
         },
-        "acquired": "2025-05-16T22:59:18.444000Z",
+        "acquired": "2025-06-01T19:33:51.071000Z",
         "location": {
             "start": [
                 -1578,
@@ -2471,7 +2471,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T16:21:26.643000Z",
+        "acquired": "2025-06-01T19:32:55.407000Z",
         "location": {
             "start": [
                 641,
@@ -2489,7 +2489,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T02:55:36.708000Z",
+        "acquired": "2025-06-01T19:37:54.990000Z",
         "location": {
             "start": [
                 683,
@@ -2503,11 +2503,11 @@
     },
     "Forgotten Town": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T10:35:26.259000Z",
+        "acquired": "2025-06-01T20:02:44.914000Z",
         "location": {
             "start": [
                 480,
@@ -2521,11 +2521,11 @@
     },
     "Forest of Eyes": {
         "guild": {
-            "uuid": "59073257-4e7c-4cb1-98eb-bc65a005bec1",
-            "name": "Pavilion",
-            "prefix": "PAV"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:10:07.303000Z",
+        "acquired": "2025-06-01T20:05:11.931000Z",
         "location": {
             "start": [
                 813,
@@ -2539,11 +2539,11 @@
     },
     "Sinister Forest": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:01:18.956000Z",
+        "acquired": "2025-06-01T20:06:02.002000Z",
         "location": {
             "start": [
                 815,
@@ -2557,11 +2557,11 @@
     },
     "Lutho": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:33:28.424000Z",
+        "acquired": "2025-06-01T20:18:07.837000Z",
         "location": {
             "start": [
                 936,
@@ -2575,11 +2575,11 @@
     },
     "Paths of Sludge": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "36ff5dff-c193-48d6-b747-3461a6fe309e",
+            "name": "Squishmallow",
+            "prefix": "Sqm"
         },
-        "acquired": "2025-05-16T10:40:32.874000Z",
+        "acquired": "2025-06-01T20:12:43.194000Z",
         "location": {
             "start": [
                 1040,
@@ -2593,11 +2593,11 @@
     },
     "Toxic Drip": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-14T18:19:54.815000Z",
+        "acquired": "2025-06-01T20:47:44.640000Z",
         "location": {
             "start": [
                 893,
@@ -2611,11 +2611,11 @@
     },
     "Toxic Caves": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T21:15:38.340000Z",
+        "acquired": "2025-06-01T21:03:37.553000Z",
         "location": {
             "start": [
                 1017,
@@ -2629,11 +2629,11 @@
     },
     "Gateway to Nothing": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T21:18:39.934000Z",
+        "acquired": "2025-06-01T20:53:13.105000Z",
         "location": {
             "start": [
                 1120,
@@ -2647,11 +2647,11 @@
     },
     "Void Valley": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T20:45:47.365000Z",
+        "acquired": "2025-06-01T21:07:26.240000Z",
         "location": {
             "start": [
                 1082,
@@ -2665,11 +2665,11 @@
     },
     "Final Step": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T20:47:30.764000Z",
+        "acquired": "2025-06-01T20:54:52.354000Z",
         "location": {
             "start": [
                 1388,
@@ -2683,11 +2683,11 @@
     },
     "Bizarre Passage": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-13T22:34:05.438000Z",
+        "acquired": "2025-06-01T20:58:44.321000Z",
         "location": {
             "start": [
                 1187,
@@ -2701,11 +2701,11 @@
     },
     "The Gate": {
         "guild": {
-            "uuid": "adaf65a8-95db-4349-97b2-5c10753b1575",
-            "name": "Profession Heaven",
-            "prefix": "PROF"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-13T22:39:58.444000Z",
+        "acquired": "2025-06-01T21:00:12.715000Z",
         "location": {
             "start": [
                 1350,
@@ -2723,7 +2723,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-16T21:46:40.538000Z",
+        "acquired": "2025-06-01T10:36:06.358000Z",
         "location": {
             "start": [
                 -814,
@@ -2741,7 +2741,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-16T16:15:00.536000Z",
+        "acquired": "2025-06-01T10:40:59.792000Z",
         "location": {
             "start": [
                 -894,
@@ -2759,7 +2759,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-16T16:17:25.054000Z",
+        "acquired": "2025-06-01T10:42:58.444000Z",
         "location": {
             "start": [
                 -894,
@@ -2777,7 +2777,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-15T23:57:33.568000Z",
+        "acquired": "2025-06-01T10:29:12.778000Z",
         "location": {
             "start": [
                 -894,
@@ -2795,7 +2795,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-16T16:18:48.015000Z",
+        "acquired": "2025-06-01T10:24:07.592000Z",
         "location": {
             "start": [
                 -775,
@@ -2809,11 +2809,11 @@
     },
     "Nexus of Light": {
         "guild": {
-            "uuid": "f6e6ce24-c818-4ccc-8b8e-94f45fe1eb69",
-            "name": "Black Fangs",
-            "prefix": "BFS"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T16:20:33.633000Z",
+        "acquired": "2025-06-01T18:26:26.253000Z",
         "location": {
             "start": [
                 -645,
@@ -2827,11 +2827,11 @@
     },
     "Light Peninsula": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:03:31.613000Z",
+        "acquired": "2025-06-01T16:40:25.877000Z",
         "location": {
             "start": [
                 -951,
@@ -2849,7 +2849,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-16T12:50:11.342000Z",
+        "acquired": "2025-06-01T11:02:51.587000Z",
         "location": {
             "start": [
                 -894,
@@ -2863,11 +2863,11 @@
     },
     "Entrance to Nivla Woods": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:46:44.795000Z",
+        "acquired": "2025-06-01T04:50:17.391000Z",
         "location": {
             "start": [
                 -435,
@@ -2881,11 +2881,11 @@
     },
     "Riverbank Knoll": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:38:50.563000Z",
+        "acquired": "2025-06-01T05:31:28.282000Z",
         "location": {
             "start": [
                 -817,
@@ -2899,11 +2899,11 @@
     },
     "Ragni Countryside South": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:23:17.290000Z",
+        "acquired": "2025-06-01T05:32:42.607000Z",
         "location": {
             "start": [
                 -747,
@@ -2917,11 +2917,11 @@
     },
     "Ragni Countryside North": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:24:12.842000Z",
+        "acquired": "2025-06-01T05:28:53.964000Z",
         "location": {
             "start": [
                 -747,
@@ -2935,11 +2935,11 @@
     },
     "Farmers Settlement": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:49:32.521000Z",
+        "acquired": "2025-06-01T04:40:24.161000Z",
         "location": {
             "start": [
                 -564,
@@ -2953,11 +2953,11 @@
     },
     "Nomads' Refuge": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:50:13.041000Z",
+        "acquired": "2025-06-01T05:22:35.262000Z",
         "location": {
             "start": [
                 -435,
@@ -2971,11 +2971,11 @@
     },
     "Ragni South Entrance": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:32:20.983000Z",
+        "acquired": "2025-06-01T20:51:40.362000Z",
         "location": {
             "start": [
                 -924,
@@ -2989,11 +2989,11 @@
     },
     "Sulphuric Hollow": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:33:44.002000Z",
+        "acquired": "2025-06-01T20:56:59.750000Z",
         "location": {
             "start": [
                 -898,
@@ -3007,11 +3007,11 @@
     },
     "Tempo Town": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:28:22.357000Z",
+        "acquired": "2025-06-01T12:29:19.258000Z",
         "location": {
             "start": [
                 -357,
@@ -3025,11 +3025,11 @@
     },
     "Blackstring Den": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:05:06.972000Z",
+        "acquired": "2025-06-01T05:41:37.865000Z",
         "location": {
             "start": [
                 -105,
@@ -3043,11 +3043,11 @@
     },
     "Alekin": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:37:23.848000Z",
+        "acquired": "2025-06-01T04:52:04.934000Z",
         "location": {
             "start": [
                 -175,
@@ -3061,11 +3061,11 @@
     },
     "Blooming Boulders": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:26:12.638000Z",
+        "acquired": "2025-06-01T04:47:11.581000Z",
         "location": {
             "start": [
                 -350,
@@ -3079,11 +3079,11 @@
     },
     "Arachnid Woods": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:55:37.049000Z",
+        "acquired": "2025-06-01T04:52:59.603000Z",
         "location": {
             "start": [
                 -194,
@@ -3101,7 +3101,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-15T17:39:33.728000Z",
+        "acquired": "2025-06-01T04:30:05.372000Z",
         "location": {
             "start": [
                 106,
@@ -3115,11 +3115,11 @@
     },
     "Akias Ruins": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:01:45.139000Z",
+        "acquired": "2025-06-01T05:17:15.973000Z",
         "location": {
             "start": [
                 29,
@@ -3137,7 +3137,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T15:46:21.008000Z",
+        "acquired": "2025-06-01T05:16:03.845000Z",
         "location": {
             "start": [
                 188,
@@ -3151,11 +3151,11 @@
     },
     "Ancient Waterworks": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:54:15.674000Z",
+        "acquired": "2025-06-01T05:02:28.716000Z",
         "location": {
             "start": [
                 -472,
@@ -3169,11 +3169,11 @@
     },
     "Jagged Foothills": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:56:26.060000Z",
+        "acquired": "2025-06-01T05:22:32.256000Z",
         "location": {
             "start": [
                 -348,
@@ -3187,11 +3187,11 @@
     },
     "Webbed Fracture": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:57:34.581000Z",
+        "acquired": "2025-06-01T04:56:54.337000Z",
         "location": {
             "start": [
                 -261,
@@ -3209,7 +3209,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:51:20.917000Z",
+        "acquired": "2025-06-01T04:05:12.963000Z",
         "location": {
             "start": [
                 76,
@@ -3227,7 +3227,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:31:41.019000Z",
+        "acquired": "2025-06-01T04:18:02.593000Z",
         "location": {
             "start": [
                 70,
@@ -3245,7 +3245,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:34:12.806000Z",
+        "acquired": "2025-06-01T21:03:46.392000Z",
         "location": {
             "start": [
                 110,
@@ -3263,7 +3263,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:45:07.826000Z",
+        "acquired": "2025-06-01T21:11:32.951000Z",
         "location": {
             "start": [
                 70,
@@ -3281,7 +3281,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:40:38.908000Z",
+        "acquired": "2025-06-01T20:47:46.360000Z",
         "location": {
             "start": [
                 70,
@@ -3299,7 +3299,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:29:33.572000Z",
+        "acquired": "2025-06-01T04:03:58.277000Z",
         "location": {
             "start": [
                 75,
@@ -3317,7 +3317,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:53:01.756000Z",
+        "acquired": "2025-06-01T20:34:34.846000Z",
         "location": {
             "start": [
                 -115,
@@ -3335,7 +3335,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T12:14:51.288000Z",
+        "acquired": "2025-06-01T04:40:19.639000Z",
         "location": {
             "start": [
                 -140,
@@ -3353,7 +3353,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:31:35.081000Z",
+        "acquired": "2025-06-01T20:44:04.799000Z",
         "location": {
             "start": [
                 -275,
@@ -3367,11 +3367,11 @@
     },
     "Jungle Entrance": {
         "guild": {
-            "uuid": "0067039e-05d2-4c0e-bfdc-53c3deedefd4",
-            "name": "Sorciers",
-            "prefix": "SOC"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:51:05.227000Z",
+        "acquired": "2025-06-01T04:47:17.880000Z",
         "location": {
             "start": [
                 -395,
@@ -3385,11 +3385,11 @@
     },
     "Apprentice Huts": {
         "guild": {
-            "uuid": "0067039e-05d2-4c0e-bfdc-53c3deedefd4",
-            "name": "Sorciers",
-            "prefix": "SOC"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:57:44.546000Z",
+        "acquired": "2025-06-01T05:43:24.388000Z",
         "location": {
             "start": [
                 -600,
@@ -3403,11 +3403,11 @@
     },
     "Iboju Village": {
         "guild": {
-            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
-            "name": "Avaritia",
-            "prefix": "AVTA"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:57:52.744000Z",
+        "acquired": "2025-06-01T05:44:09.183000Z",
         "location": {
             "start": [
                 -671,
@@ -3421,11 +3421,11 @@
     },
     "Troms Lake": {
         "guild": {
-            "uuid": "b72cf5e8-6682-44c6-9fb2-c721a90bece7",
-            "name": "Kivotos Battlegrounds",
-            "prefix": "KBCQ"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:34:56.982000Z",
+        "acquired": "2025-06-01T04:53:37.910000Z",
         "location": {
             "start": [
                 -601,
@@ -3439,11 +3439,11 @@
     },
     "Troms": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:02:58.229000Z",
+        "acquired": "2025-06-01T05:46:30.440000Z",
         "location": {
             "start": [
                 -726,
@@ -3457,11 +3457,11 @@
     },
     "Rymek": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:30:24.611000Z",
+        "acquired": "2025-06-01T17:55:48.509000Z",
         "location": {
             "start": [
                 1210,
@@ -3475,11 +3475,11 @@
     },
     "Sunrise Plateau": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:18:53.986000Z",
+        "acquired": "2025-06-01T17:56:54.902000Z",
         "location": {
             "start": [
                 1211,
@@ -3493,11 +3493,11 @@
     },
     "Eagle Tribe": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:45:17.548000Z",
+        "acquired": "2025-06-01T17:58:38.906000Z",
         "location": {
             "start": [
                 1479,
@@ -3511,11 +3511,11 @@
     },
     "Ruined Prospect": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:31:41.585000Z",
+        "acquired": "2025-06-01T17:53:57.708000Z",
         "location": {
             "start": [
                 1209,
@@ -3529,11 +3529,11 @@
     },
     "Sunset Plateau": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:46:37.484000Z",
+        "acquired": "2025-06-01T17:52:26.738000Z",
         "location": {
             "start": [
                 1211,
@@ -3547,11 +3547,11 @@
     },
     "Owl Tribe": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:41:28.911000Z",
+        "acquired": "2025-06-01T17:50:54.127000Z",
         "location": {
             "start": [
                 1190,
@@ -3565,11 +3565,11 @@
     },
     "Invaded Barracks": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:53:25.795000Z",
+        "acquired": "2025-06-01T20:40:22.746000Z",
         "location": {
             "start": [
                 1260,
@@ -3583,11 +3583,11 @@
     },
     "Barren Sands": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:55:54.198000Z",
+        "acquired": "2025-06-01T17:47:52.670000Z",
         "location": {
             "start": [
                 1260,
@@ -3601,11 +3601,11 @@
     },
     "Accursed Dunes": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:50:39.975000Z",
+        "acquired": "2025-06-01T17:49:15.554000Z",
         "location": {
             "start": [
                 1450,
@@ -3619,11 +3619,11 @@
     },
     "Cascading Oasis": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:54:37.444000Z",
+        "acquired": "2025-06-01T18:02:20.279000Z",
         "location": {
             "start": [
                 990,
@@ -3637,11 +3637,11 @@
     },
     "Gloopy Cave": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:45:32.235000Z",
+        "acquired": "2025-06-01T17:43:30.388000Z",
         "location": {
             "start": [
                 1195,
@@ -3655,11 +3655,11 @@
     },
     "Ruined Villa": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:58:27.160000Z",
+        "acquired": "2025-06-01T05:59:09.787000Z",
         "location": {
             "start": [
                 1060,
@@ -3673,11 +3673,11 @@
     },
     "Ancient Excavation": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:37:15.978000Z",
+        "acquired": "2025-06-01T17:46:26.090000Z",
         "location": {
             "start": [
                 1210,
@@ -3691,11 +3691,11 @@
     },
     "Almuj": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T18:00:47.963000Z",
+        "acquired": "2025-06-01T17:42:35.382000Z",
         "location": {
             "start": [
                 1050,
@@ -3709,11 +3709,11 @@
     },
     "Dusty Pit": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T18:06:14.037000Z",
+        "acquired": "2025-06-01T20:38:42.968000Z",
         "location": {
             "start": [
                 990,
@@ -3727,11 +3727,11 @@
     },
     "Almuj Slums": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T17:35:37.288000Z",
+        "acquired": "2025-06-01T18:00:31.584000Z",
         "location": {
             "start": [
                 1040,
@@ -3745,11 +3745,11 @@
     },
     "Ternaves Tunnel": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T18:08:58.443000Z",
+        "acquired": "2025-06-01T15:32:34.338000Z",
         "location": {
             "start": [
                 775,
@@ -3763,11 +3763,11 @@
     },
     "Entrance to Almuj": {
         "guild": {
-            "uuid": "5ce98531-627b-4181-93ee-8a9ebe560ad0",
-            "name": "fr fr no cap",
-            "prefix": "QZZ"
+            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
+            "name": "Avaritia",
+            "prefix": "AVTA"
         },
-        "acquired": "2025-05-16T18:07:26.143000Z",
+        "acquired": "2025-06-01T20:37:17.847000Z",
         "location": {
             "start": [
                 750,
@@ -3785,7 +3785,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T17:04:58.549000Z",
+        "acquired": "2025-06-01T05:23:56.552000Z",
         "location": {
             "start": [
                 775,
@@ -3803,7 +3803,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T15:23:38.681000Z",
+        "acquired": "2025-06-01T05:41:03.625000Z",
         "location": {
             "start": [
                 750,
@@ -3817,11 +3817,11 @@
     },
     "Nemract": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:06:13.517000Z",
+        "acquired": "2025-06-01T13:49:48.918000Z",
         "location": {
             "start": [
                 10,
@@ -3835,11 +3835,11 @@
     },
     "Rocky Shore": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:00:01.368000Z",
+        "acquired": "2025-06-01T05:36:41.724000Z",
         "location": {
             "start": [
                 5,
@@ -3853,11 +3853,11 @@
     },
     "Mount Wynn Inn": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:34:14.652000Z",
+        "acquired": "2025-06-01T12:20:21.134000Z",
         "location": {
             "start": [
                 20,
@@ -3871,11 +3871,11 @@
     },
     "Nested Cliffside": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:57:51.917000Z",
+        "acquired": "2025-06-01T05:00:55.366000Z",
         "location": {
             "start": [
                 5,
@@ -3889,11 +3889,11 @@
     },
     "Razed Inn": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:35:32.525000Z",
+        "acquired": "2025-06-01T04:53:51.610000Z",
         "location": {
             "start": [
                 151,
@@ -3907,11 +3907,11 @@
     },
     "Bear Zoo": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:18:00.884000Z",
+        "acquired": "2025-06-01T17:19:30.740000Z",
         "location": {
             "start": [
                 -409,
@@ -3925,11 +3925,11 @@
     },
     "Durum Barley Islet": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:22:38.030000Z",
+        "acquired": "2025-06-01T19:08:02.351000Z",
         "location": {
             "start": [
                 537,
@@ -3943,11 +3943,11 @@
     },
     "Durum Oat Islet": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:44:57.700000Z",
+        "acquired": "2025-06-01T19:11:50.896000Z",
         "location": {
             "start": [
                 482,
@@ -3961,11 +3961,11 @@
     },
     "Durum Malt Islet": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:47:03.433000Z",
+        "acquired": "2025-06-01T17:25:25.506000Z",
         "location": {
             "start": [
                 390,
@@ -3979,11 +3979,11 @@
     },
     "Skien's Island": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-03T17:51:40.647000Z",
+        "acquired": "2025-06-01T16:52:36.344000Z",
         "location": {
             "start": [
                 527,
@@ -3997,11 +3997,11 @@
     },
     "Lifeless Forest": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:17:49.787000Z",
+        "acquired": "2025-06-01T16:59:38.050000Z",
         "location": {
             "start": [
                 870,
@@ -4015,11 +4015,11 @@
     },
     "Disturbed Crypt": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:14:06.019000Z",
+        "acquired": "2025-06-01T17:01:23.787000Z",
         "location": {
             "start": [
                 870,
@@ -4033,11 +4033,11 @@
     },
     "Derelict Mansion": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:12:59.142000Z",
+        "acquired": "2025-06-01T16:58:14.994000Z",
         "location": {
             "start": [
                 870,
@@ -4051,11 +4051,11 @@
     },
     "Dreary Docks": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T11:10:48.222000Z",
+        "acquired": "2025-06-01T16:56:31.666000Z",
         "location": {
             "start": [
                 870,
@@ -4069,11 +4069,11 @@
     },
     "Volcanic Excavation": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:11:09.515000Z",
+        "acquired": "2025-06-01T17:12:03.245000Z",
         "location": {
             "start": [
                 -1164,
@@ -4091,7 +4091,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T16:51:39.725000Z",
+        "acquired": "2025-06-01T04:30:00.506000Z",
         "location": {
             "start": [
                 770,
@@ -4109,7 +4109,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:24:55.146000Z",
+        "acquired": "2025-06-01T14:22:04.502000Z",
         "location": {
             "start": [
                 655,
@@ -4127,7 +4127,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:09:36.730000Z",
+        "acquired": "2025-06-01T14:19:07.269000Z",
         "location": {
             "start": [
                 880,
@@ -4145,7 +4145,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T21:17:52.276000Z",
+        "acquired": "2025-06-01T14:29:24.368000Z",
         "location": {
             "start": [
                 870,
@@ -4163,7 +4163,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T11:14:33.841000Z",
+        "acquired": "2025-06-01T04:11:52.099000Z",
         "location": {
             "start": [
                 75,
@@ -4181,7 +4181,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:16:05.984000Z",
+        "acquired": "2025-06-01T04:15:29.540000Z",
         "location": {
             "start": [
                 545,
@@ -4199,7 +4199,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T15:50:02.211000Z",
+        "acquired": "2025-06-01T04:11:16.080000Z",
         "location": {
             "start": [
                 115,
@@ -4217,7 +4217,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T15:14:06.001000Z",
+        "acquired": "2025-06-01T05:07:06.023000Z",
         "location": {
             "start": [
                 200,
@@ -4231,11 +4231,11 @@
     },
     "Corrupted Tower": {
         "guild": {
-            "uuid": "194cfad7-4cca-4fde-8760-e42760f9c3d9",
-            "name": "Empire of Sindria",
-            "prefix": "ESI"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T22:33:10.208000Z",
+        "acquired": "2025-06-01T05:29:25.513000Z",
         "location": {
             "start": [
                 25,
@@ -4249,11 +4249,11 @@
     },
     "Entrance to Gavel": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-15T21:49:00.799000Z",
+        "acquired": "2025-06-01T19:46:40.213000Z",
         "location": {
             "start": [
                 -2048,
@@ -4271,7 +4271,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T20:06:33.357000Z",
+        "acquired": "2025-06-01T08:30:03.469000Z",
         "location": {
             "start": [
                 -1932,
@@ -4289,7 +4289,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T20:16:15.334000Z",
+        "acquired": "2025-06-01T13:28:42.316000Z",
         "location": {
             "start": [
                 -2060,
@@ -4307,7 +4307,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T03:12:23.483000Z",
+        "acquired": "2025-06-01T05:38:12.471000Z",
         "location": {
             "start": [
                 -2059,
@@ -4325,7 +4325,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T03:17:42.325000Z",
+        "acquired": "2025-06-01T05:49:29.495000Z",
         "location": {
             "start": [
                 -2060,
@@ -4339,11 +4339,11 @@
     },
     "The Hive": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:42:07.524000Z",
+        "acquired": "2025-06-01T10:13:56.705000Z",
         "location": {
             "start": [
                 381,
@@ -4361,7 +4361,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T20:05:20.206000Z",
+        "acquired": "2025-06-01T05:39:05.287000Z",
         "location": {
             "start": [
                 -2059,
@@ -4379,7 +4379,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T03:16:47.667000Z",
+        "acquired": "2025-06-01T05:43:06.731000Z",
         "location": {
             "start": [
                 -2060,
@@ -4397,7 +4397,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:30:52.833000Z",
+        "acquired": "2025-06-01T05:41:22.280000Z",
         "location": {
             "start": [
                 -2060,
@@ -4415,7 +4415,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:51:58.210000Z",
+        "acquired": "2025-06-01T05:40:20.480000Z",
         "location": {
             "start": [
                 -2059,
@@ -4433,7 +4433,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T03:23:29.997000Z",
+        "acquired": "2025-06-01T05:10:34.482000Z",
         "location": {
             "start": [
                 -2060,
@@ -4451,7 +4451,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:23:52.852000Z",
+        "acquired": "2025-06-01T05:07:15.305000Z",
         "location": {
             "start": [
                 -2059,
@@ -4465,11 +4465,11 @@
     },
     "Floral Peaks": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T04:38:32.891000Z",
+        "acquired": "2025-06-01T20:03:46.306000Z",
         "location": {
             "start": [
                 -1955,
@@ -4487,7 +4487,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:48:23.873000Z",
+        "acquired": "2025-06-01T04:59:47.269000Z",
         "location": {
             "start": [
                 -2060,
@@ -4505,7 +4505,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:55:26.149000Z",
+        "acquired": "2025-06-01T04:54:48.480000Z",
         "location": {
             "start": [
                 -2171,
@@ -4523,7 +4523,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:57:18.838000Z",
+        "acquired": "2025-06-01T19:15:15.281000Z",
         "location": {
             "start": [
                 -2059,
@@ -4541,7 +4541,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:50:46.806000Z",
+        "acquired": "2025-06-01T04:40:01.691000Z",
         "location": {
             "start": [
                 -2171,
@@ -4555,11 +4555,11 @@
     },
     "Forgotten Burrows": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T04:51:49.175000Z",
+        "acquired": "2025-06-01T20:00:28.222000Z",
         "location": {
             "start": [
                 -1955,
@@ -4573,11 +4573,11 @@
     },
     "Bloody Trail": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T21:33:49.187000Z",
+        "acquired": "2025-06-01T19:43:20.202000Z",
         "location": {
             "start": [
                 -1519,
@@ -4591,11 +4591,11 @@
     },
     "Lizardman Lake": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T21:32:08.678000Z",
+        "acquired": "2025-06-01T19:23:45.876000Z",
         "location": {
             "start": [
                 -1519,
@@ -4609,11 +4609,11 @@
     },
     "Olux Lumberyard": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T03:36:21.132000Z",
+        "acquired": "2025-06-01T19:49:40.462000Z",
         "location": {
             "start": [
                 -1519,
@@ -4627,11 +4627,11 @@
     },
     "Lizardman Camp": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T21:29:18.683000Z",
+        "acquired": "2025-06-01T18:47:34.699000Z",
         "location": {
             "start": [
                 -1649,
@@ -4645,11 +4645,11 @@
     },
     "Swamp Mountain Arch": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T04:43:59.288000Z",
+        "acquired": "2025-06-01T19:09:09.091000Z",
         "location": {
             "start": [
                 -1776,
@@ -4663,11 +4663,11 @@
     },
     "Shady Shack": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T04:59:34.679000Z",
+        "acquired": "2025-06-01T19:13:09.633000Z",
         "location": {
             "start": [
                 -1776,
@@ -4685,7 +4685,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T03:34:47.488000Z",
+        "acquired": "2025-06-01T04:45:17.170000Z",
         "location": {
             "start": [
                 -2173,
@@ -4703,7 +4703,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:48:26.931000Z",
+        "acquired": "2025-06-01T04:46:31.271000Z",
         "location": {
             "start": [
                 -2127,
@@ -4721,7 +4721,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T04:42:57.267000Z",
+        "acquired": "2025-06-01T19:24:33.414000Z",
         "location": {
             "start": [
                 -2065,
@@ -4735,11 +4735,11 @@
     },
     "Path to the Grootslangs": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T04:38:38.494000Z",
+        "acquired": "2025-06-01T20:02:24.492000Z",
         "location": {
             "start": [
                 -1981,
@@ -4757,7 +4757,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T07:16:21.184000Z",
+        "acquired": "2025-06-01T06:13:16.134000Z",
         "location": {
             "start": [
                 -1776,
@@ -4775,7 +4775,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T07:55:06.386000Z",
+        "acquired": "2025-06-01T06:14:17.331000Z",
         "location": {
             "start": [
                 -1391,
@@ -4793,7 +4793,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T07:49:40.380000Z",
+        "acquired": "2025-06-01T06:38:10.422000Z",
         "location": {
             "start": [
                 -1776,
@@ -4811,7 +4811,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T19:25:55.699000Z",
+        "acquired": "2025-06-01T15:41:50.924000Z",
         "location": {
             "start": [
                 -1391,
@@ -4825,11 +4825,11 @@
     },
     "Sunspark Orc Camp": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T04:32:01.065000Z",
+        "acquired": "2025-06-01T19:03:47.113000Z",
         "location": {
             "start": [
                 -1930,
@@ -4843,11 +4843,11 @@
     },
     "Sablestone Orc Camp": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T07:39:13.758000Z",
+        "acquired": "2025-06-01T19:53:52.051000Z",
         "location": {
             "start": [
                 -1800,
@@ -4865,7 +4865,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T07:40:40.442000Z",
+        "acquired": "2025-06-01T08:33:05.176000Z",
         "location": {
             "start": [
                 -1800,
@@ -4879,11 +4879,11 @@
     },
     "Entrance to Bucie": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T19:19:59.568000Z",
+        "acquired": "2025-06-01T18:55:00.553000Z",
         "location": {
             "start": [
                 -1553,
@@ -4897,11 +4897,11 @@
     },
     "Centerworld Fortress": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T07:34:17.264000Z",
+        "acquired": "2025-06-01T19:58:54.380000Z",
         "location": {
             "start": [
                 -1403,
@@ -4919,7 +4919,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-15T07:43:15.228000Z",
+        "acquired": "2025-06-01T08:04:10.175000Z",
         "location": {
             "start": [
                 -1387,
@@ -4933,11 +4933,11 @@
     },
     "Efilim": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T19:30:16.647000Z",
+        "acquired": "2025-06-01T19:37:54.204000Z",
         "location": {
             "start": [
                 -1134,
@@ -4951,11 +4951,11 @@
     },
     "Efilim Crossroads": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T19:25:40.007000Z",
+        "acquired": "2025-06-01T18:29:08.916000Z",
         "location": {
             "start": [
                 -1030,
@@ -4969,11 +4969,11 @@
     },
     "Minotaur Barbecue": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T19:32:29.850000Z",
+        "acquired": "2025-06-01T19:33:28.654000Z",
         "location": {
             "start": [
                 -1014,
@@ -4987,11 +4987,11 @@
     },
     "Path to the Forgery": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T19:28:39.304000Z",
+        "acquired": "2025-06-01T18:27:39.821000Z",
         "location": {
             "start": [
                 -949,
@@ -5005,11 +5005,11 @@
     },
     "Guardian of the Forest": {
         "guild": {
-            "uuid": "3743a54c-f013-4e5c-92c8-a936eb8c55c0",
-            "name": "Pirates of the Black Scourge",
-            "prefix": "SCRG"
+            "uuid": "cecb04ef-c4a4-4d38-8a2e-f69a1ba3f5e8",
+            "name": "Poison Ivy",
+            "prefix": "POIS"
         },
-        "acquired": "2025-05-16T22:29:40.470000Z",
+        "acquired": "2025-06-01T20:24:04.223000Z",
         "location": {
             "start": [
                 -1134,
@@ -5027,7 +5027,7 @@
             "name": "Sequoia",
             "prefix": "SEQ"
         },
-        "acquired": "2025-05-10T20:55:10.003000Z",
+        "acquired": "2025-06-01T08:01:12.975000Z",
         "location": {
             "start": [
                 -1040,
@@ -5041,11 +5041,11 @@
     },
     "Path to Light's Secret": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-10T20:45:32.432000Z",
+        "acquired": "2025-06-01T20:10:29.254000Z",
         "location": {
             "start": [
                 -1134,
@@ -5059,11 +5059,11 @@
     },
     "Aldorei Valley Outskirts": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:49:11.334000Z",
+        "acquired": "2025-06-01T17:38:45.968000Z",
         "location": {
             "start": [
                 -736,
@@ -5077,11 +5077,11 @@
     },
     "Myconid Descent": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:51:28.045000Z",
+        "acquired": "2025-06-01T17:53:53.574000Z",
         "location": {
             "start": [
                 -646,
@@ -5095,11 +5095,11 @@
     },
     "Chasm Chokepoint": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:55:25.189000Z",
+        "acquired": "2025-06-01T17:53:01.486000Z",
         "location": {
             "start": [
                 -733,
@@ -5113,11 +5113,11 @@
     },
     "Luxuriant Pond": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:50:22.568000Z",
+        "acquired": "2025-06-01T17:32:46.648000Z",
         "location": {
             "start": [
                 -1014,
@@ -5131,11 +5131,11 @@
     },
     "Dodegar's Forge": {
         "guild": {
-            "uuid": "3743a54c-f013-4e5c-92c8-a936eb8c55c0",
-            "name": "Pirates of the Black Scourge",
-            "prefix": "SCRG"
+            "uuid": "c3c7816d-5a9a-4dbc-9b05-7f83d86b92f6",
+            "name": "Redhawks",
+            "prefix": "RDHK"
         },
-        "acquired": "2025-05-16T22:19:12.658000Z",
+        "acquired": "2025-06-01T17:24:45.049000Z",
         "location": {
             "start": [
                 -929,
@@ -5149,11 +5149,11 @@
     },
     "Unicorn Trail": {
         "guild": {
-            "uuid": "4c6e7702-523d-4f8c-9113-d0c3044bf13a",
-            "name": "Discoverers",
-            "prefix": "DVS"
+            "uuid": "cecb04ef-c4a4-4d38-8a2e-f69a1ba3f5e8",
+            "name": "Poison Ivy",
+            "prefix": "POIS"
         },
-        "acquired": "2025-05-16T21:50:04.221000Z",
+        "acquired": "2025-06-01T19:50:11.404000Z",
         "location": {
             "start": [
                 -1014,
@@ -5167,11 +5167,11 @@
     },
     "The Forgery": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T19:14:06.004000Z",
+        "acquired": "2025-06-01T18:24:40.785000Z",
         "location": {
             "start": [
                 -926,
@@ -5185,11 +5185,11 @@
     },
     "Collapsed Bridge": {
         "guild": {
-            "uuid": "3743a54c-f013-4e5c-92c8-a936eb8c55c0",
-            "name": "Pirates of the Black Scourge",
-            "prefix": "SCRG"
+            "uuid": "cecb04ef-c4a4-4d38-8a2e-f69a1ba3f5e8",
+            "name": "Poison Ivy",
+            "prefix": "POIS"
         },
-        "acquired": "2025-05-16T22:20:36.757000Z",
+        "acquired": "2025-06-01T19:44:45.691000Z",
         "location": {
             "start": [
                 -834,
@@ -5203,11 +5203,11 @@
     },
     "Mycelial Expanse": {
         "guild": {
-            "uuid": "3743a54c-f013-4e5c-92c8-a936eb8c55c0",
-            "name": "Pirates of the Black Scourge",
-            "prefix": "SCRG"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:16:10.078000Z",
+        "acquired": "2025-06-01T19:23:21.404000Z",
         "location": {
             "start": [
                 -926,
@@ -5221,11 +5221,11 @@
     },
     "The Shiar": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:48:04.223000Z",
+        "acquired": "2025-06-01T17:35:46.284000Z",
         "location": {
             "start": [
                 -926,
@@ -5239,11 +5239,11 @@
     },
     "Chasm Overlook": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T20:06:06.757000Z",
+        "acquired": "2025-06-01T17:57:38.198000Z",
         "location": {
             "start": [
                 -738,
@@ -5257,11 +5257,11 @@
     },
     "Enchanted River": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:13:59.781000Z",
+        "acquired": "2025-06-01T17:58:27.531000Z",
         "location": {
             "start": [
                 -942,
@@ -5275,11 +5275,11 @@
     },
     "Gelibord Watermill": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-10T23:54:34.477000Z",
+        "acquired": "2025-06-01T20:05:02.950000Z",
         "location": {
             "start": [
                 -1056,
@@ -5293,11 +5293,11 @@
     },
     "Castle Dullahan": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-10T23:58:32.550000Z",
+        "acquired": "2025-06-01T19:51:49.004000Z",
         "location": {
             "start": [
                 -1027,
@@ -5311,11 +5311,11 @@
     },
     "Fading Forest": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T03:38:24.841000Z",
+        "acquired": "2025-06-01T19:48:26.627000Z",
         "location": {
             "start": [
                 -1425,
@@ -5329,11 +5329,11 @@
     },
     "Overtaken Outpost": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T21:21:41.987000Z",
+        "acquired": "2025-06-01T19:46:02.637000Z",
         "location": {
             "start": [
                 -1452,
@@ -5347,11 +5347,11 @@
     },
     "Mangled Lake": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T21:24:52.072000Z",
+        "acquired": "2025-06-01T19:38:11.131000Z",
         "location": {
             "start": [
                 -1460,
@@ -5365,11 +5365,11 @@
     },
     "Caritat Mansion": {
         "guild": {
-            "uuid": "ee860b7c-9a1d-49cf-9f19-ab673ba0f23b",
-            "name": "Sequoia",
-            "prefix": "SEQ"
+            "uuid": "226bba42-00b8-4b86-920f-2ea00fb641dd",
+            "name": "Cant Touch",
+            "prefix": "This"
         },
-        "acquired": "2025-05-15T08:00:00.326000Z",
+        "acquired": "2025-06-01T19:53:23.368000Z",
         "location": {
             "start": [
                 -1237,
@@ -5383,11 +5383,11 @@
     },
     "Lexdale Penitentiary": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T16:55:20.338000Z",
+        "acquired": "2025-06-01T17:10:54.303000Z",
         "location": {
             "start": [
                 -873,
@@ -5401,11 +5401,11 @@
     },
     "Path to the Penitentiary": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:42:03.401000Z",
+        "acquired": "2025-06-01T17:08:08.721000Z",
         "location": {
             "start": [
                 -771,
@@ -5419,11 +5419,11 @@
     },
     "Faltach Manor": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:08:04.176000Z",
+        "acquired": "2025-06-01T19:36:44.789000Z",
         "location": {
             "start": [
                 -896,
@@ -5437,11 +5437,11 @@
     },
     "Viscera Pits": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T17:45:05.525000Z",
+        "acquired": "2025-06-01T17:43:04.527000Z",
         "location": {
             "start": [
                 -659,
@@ -5455,11 +5455,11 @@
     },
     "Talor Cemetery": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:45:42.839000Z",
+        "acquired": "2025-06-01T16:57:22.011000Z",
         "location": {
             "start": [
                 -648,
@@ -5473,11 +5473,11 @@
     },
     "Old Crossroads": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:22:55.104000Z",
+        "acquired": "2025-06-01T16:58:44.063000Z",
         "location": {
             "start": [
                 -648,
@@ -5491,11 +5491,11 @@
     },
     "Entrance to Cinfras": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:20:30.919000Z",
+        "acquired": "2025-06-01T18:23:18.882000Z",
         "location": {
             "start": [
                 -555,
@@ -5509,11 +5509,11 @@
     },
     "Weird Clearing": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:51:29.040000Z",
+        "acquired": "2025-06-01T18:15:45.725000Z",
         "location": {
             "start": [
                 -288,
@@ -5527,11 +5527,11 @@
     },
     "Big Mushroom Cave": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:47:34.943000Z",
+        "acquired": "2025-06-01T20:33:03.497000Z",
         "location": {
             "start": [
                 -130,
@@ -5545,11 +5545,11 @@
     },
     "Paper Trail": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:44:50.800000Z",
+        "acquired": "2025-06-01T20:30:55.590000Z",
         "location": {
             "start": [
                 3,
@@ -5563,11 +5563,11 @@
     },
     "Silverbull Headquarters": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:54:19.777000Z",
+        "acquired": "2025-06-01T19:50:04.640000Z",
         "location": {
             "start": [
                 -127,
@@ -5581,11 +5581,11 @@
     },
     "Celestial Impact": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:47:28.569000Z",
+        "acquired": "2025-06-01T16:49:35.777000Z",
         "location": {
             "start": [
                 -127,
@@ -5599,11 +5599,11 @@
     },
     "Gylia Fisherman Camp": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:54:07.254000Z",
+        "acquired": "2025-06-01T18:35:54.437000Z",
         "location": {
             "start": [
                 -127,
@@ -5617,11 +5617,11 @@
     },
     "Cosmic Fissures": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:40:16.879000Z",
+        "acquired": "2025-06-01T18:30:58.780000Z",
         "location": {
             "start": [
                 30,
@@ -5635,11 +5635,11 @@
     },
     "Gylia Research Cabin": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:21:35.132000Z",
+        "acquired": "2025-06-01T18:19:41.901000Z",
         "location": {
             "start": [
                 -130,
@@ -5653,11 +5653,11 @@
     },
     "Gylia Lakehouse": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T19:00:23.391000Z",
+        "acquired": "2025-06-01T18:27:34.225000Z",
         "location": {
             "start": [
                 -218,
@@ -5671,11 +5671,11 @@
     },
     "Gylia Watchtower": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:29:05.883000Z",
+        "acquired": "2025-06-01T18:29:12.212000Z",
         "location": {
             "start": [
                 -128,
@@ -5689,11 +5689,11 @@
     },
     "Aldorei Springs": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T22:58:36.582000Z",
+        "acquired": "2025-06-01T17:07:47.582000Z",
         "location": {
             "start": [
                 -714,
@@ -5707,11 +5707,11 @@
     },
     "Outer Aldorei Town": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T23:02:30.509000Z",
+        "acquired": "2025-06-01T17:04:56.218000Z",
         "location": {
             "start": [
                 -322,
@@ -5725,11 +5725,11 @@
     },
     "Aldorei Valley": {
         "guild": {
-            "uuid": "705c25a5-7fb3-4977-be26-099e43798a4c",
-            "name": "Chiefs Of Corkus",
-            "prefix": "HOC"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T22:48:53.485000Z",
+        "acquired": "2025-06-01T17:04:03.549000Z",
         "location": {
             "start": [
                 -557,
@@ -5743,11 +5743,11 @@
     },
     "Aldorei River": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:32:08.295000Z",
+        "acquired": "2025-06-01T18:10:37.818000Z",
         "location": {
             "start": [
                 -437,
@@ -5761,11 +5761,11 @@
     },
     "Aldorei Cliffside Waterfalls": {
         "guild": {
-            "uuid": "705c25a5-7fb3-4977-be26-099e43798a4c",
-            "name": "Chiefs Of Corkus",
-            "prefix": "HOC"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T22:53:03.877000Z",
+        "acquired": "2025-06-01T17:01:19.701000Z",
         "location": {
             "start": [
                 -237,
@@ -5779,11 +5779,11 @@
     },
     "Waterfall Cave": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:31:16.545000Z",
+        "acquired": "2025-06-01T20:27:56.748000Z",
         "location": {
             "start": [
                 -127,
@@ -5797,11 +5797,11 @@
     },
     "Timeworn Arch": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:40:23.133000Z",
+        "acquired": "2025-06-01T20:57:57.096000Z",
         "location": {
             "start": [
                 33,
@@ -5815,11 +5815,11 @@
     },
     "Pine Pillar Forest": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:27:56.436000Z",
+        "acquired": "2025-06-01T20:53:00.186000Z",
         "location": {
             "start": [
                 35,
@@ -5833,11 +5833,11 @@
     },
     "Evergreen Outbreak": {
         "guild": {
-            "uuid": "975ee0ad-6e50-4760-80c3-dfd3b162fe1e",
-            "name": "NewEridu",
-            "prefix": "SSNE"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-16T22:34:17.214000Z",
+        "acquired": "2025-06-01T20:56:00.632000Z",
         "location": {
             "start": [
                 35,
@@ -5851,11 +5851,11 @@
     },
     "Secluded Ponds": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-13T19:52:36.336000Z",
+        "acquired": "2025-06-01T20:09:49.495000Z",
         "location": {
             "start": [
                 98,
@@ -5869,11 +5869,11 @@
     },
     "Path to Thanos": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-14T14:44:31.389000Z",
+        "acquired": "2025-06-01T18:36:46.002000Z",
         "location": {
             "start": [
                 98,
@@ -5887,11 +5887,11 @@
     },
     "Kitrios Armory": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:31:53.772000Z",
+        "acquired": "2025-06-01T18:35:29.711000Z",
         "location": {
             "start": [
                 51,
@@ -5905,11 +5905,11 @@
     },
     "Kitrios Barracks": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:33:48.404000Z",
+        "acquired": "2025-06-01T18:37:15.938000Z",
         "location": {
             "start": [
                 104,
@@ -5923,11 +5923,11 @@
     },
     "Colourful Mountaintop": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:37:11.293000Z",
+        "acquired": "2025-06-01T18:39:05.925000Z",
         "location": {
             "start": [
                 168,
@@ -5941,11 +5941,11 @@
     },
     "Upper Thanos": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:39:12.182000Z",
+        "acquired": "2025-06-01T18:43:28.533000Z",
         "location": {
             "start": [
                 260,
@@ -5959,11 +5959,11 @@
     },
     "Molten Passage": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:48:31.300000Z",
+        "acquired": "2025-06-01T04:18:21.927000Z",
         "location": {
             "start": [
                 199,
@@ -5981,7 +5981,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T19:51:02.679000Z",
+        "acquired": "2025-06-01T18:48:15.307000Z",
         "location": {
             "start": [
                 194,
@@ -5999,7 +5999,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T20:00:15.277000Z",
+        "acquired": "2025-06-01T18:49:46.302000Z",
         "location": {
             "start": [
                 111,
@@ -6013,11 +6013,11 @@
     },
     "Bandit Cave": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T20:02:24.886000Z",
+        "acquired": "2025-06-01T21:03:38.797000Z",
         "location": {
             "start": [
                 194,
@@ -6031,11 +6031,11 @@
     },
     "Cascading Basins": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T20:03:52.496000Z",
+        "acquired": "2025-06-01T21:02:20.395000Z",
         "location": {
             "start": [
                 110,
@@ -6049,11 +6049,11 @@
     },
     "Cyclospordial Hazard": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T20:02:59.306000Z",
+        "acquired": "2025-06-01T21:01:02.960000Z",
         "location": {
             "start": [
                 110,
@@ -6067,11 +6067,11 @@
     },
     "Winding Waters": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-13T20:06:31.360000Z",
+        "acquired": "2025-06-01T20:47:57.910000Z",
         "location": {
             "start": [
                 194,
@@ -6085,11 +6085,11 @@
     },
     "Panda Path": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-15T15:17:37.859000Z",
+        "acquired": "2025-06-01T20:49:18.233000Z",
         "location": {
             "start": [
                 115,
@@ -6103,11 +6103,11 @@
     },
     "Panda Kingdom": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-15T15:13:40.597000Z",
+        "acquired": "2025-06-01T20:22:09.121000Z",
         "location": {
             "start": [
                 200,
@@ -6121,11 +6121,11 @@
     },
     "Parasitic Slime Mine": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-05-13T20:05:44.321000Z",
+        "acquired": "2025-06-01T20:50:55.395000Z",
         "location": {
             "start": [
                 265,
@@ -6139,11 +6139,11 @@
     },
     "Turncoat Turnabout": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T19:55:54.084000Z",
+        "acquired": "2025-06-01T21:04:47.226000Z",
         "location": {
             "start": [
                 265,
@@ -6157,11 +6157,11 @@
     },
     "Wayward Split": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T19:53:46.386000Z",
+        "acquired": "2025-06-01T21:09:41.407000Z",
         "location": {
             "start": [
                 200,
@@ -6175,11 +6175,11 @@
     },
     "Perilous Passage": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:49:22.667000Z",
+        "acquired": "2025-06-01T18:11:23.725000Z",
         "location": {
             "start": [
                 264,
@@ -6193,11 +6193,11 @@
     },
     "Perilous Grotto": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:45:11.829000Z",
+        "acquired": "2025-06-01T18:16:01.043000Z",
         "location": {
             "start": [
                 263,
@@ -6211,11 +6211,11 @@
     },
     "Thanos Underpass": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:39:19.922000Z",
+        "acquired": "2025-06-01T18:45:06.617000Z",
         "location": {
             "start": [
                 250,
@@ -6229,11 +6229,11 @@
     },
     "Canyon Walkway": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-16T18:21:36.543000Z",
+        "acquired": "2025-06-01T04:15:57.606000Z",
         "location": {
             "start": [
                 271,
@@ -6247,11 +6247,11 @@
     },
     "Wizard's Warning": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:43:29.813000Z",
+        "acquired": "2025-06-01T18:19:08.379000Z",
         "location": {
             "start": [
                 271,
@@ -6265,11 +6265,11 @@
     },
     "Harpy's Haunt North": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:58:11.401000Z",
+        "acquired": "2025-06-01T07:13:54.796000Z",
         "location": {
             "start": [
                 271,
@@ -6283,11 +6283,11 @@
     },
     "Fleris Cranny": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T19:58:05.561000Z",
+        "acquired": "2025-06-01T21:12:01.403000Z",
         "location": {
             "start": [
                 271,
@@ -6305,7 +6305,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T19:51:00.236000Z",
+        "acquired": "2025-06-01T19:03:37.887000Z",
         "location": {
             "start": [
                 338,
@@ -6319,11 +6319,11 @@
     },
     "Illuminant Path": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-16T18:19:02.635000Z",
+        "acquired": "2025-06-01T04:03:41.875000Z",
         "location": {
             "start": [
                 347,
@@ -6337,11 +6337,11 @@
     },
     "Bandit's Toll": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-16T18:23:11.098000Z",
+        "acquired": "2025-06-01T04:04:29.912000Z",
         "location": {
             "start": [
                 439,
@@ -6355,11 +6355,11 @@
     },
     "Wizard Tower": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-16T18:12:19.374000Z",
+        "acquired": "2025-06-01T08:41:32.246000Z",
         "location": {
             "start": [
                 438,
@@ -6377,7 +6377,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T20:08:57.019000Z",
+        "acquired": "2025-06-01T19:11:08.094000Z",
         "location": {
             "start": [
                 334,
@@ -6395,7 +6395,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T19:55:51.621000Z",
+        "acquired": "2025-06-01T19:07:46.108000Z",
         "location": {
             "start": [
                 437,
@@ -6413,7 +6413,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:52:04.108000Z",
+        "acquired": "2025-06-01T19:06:28.795000Z",
         "location": {
             "start": [
                 340,
@@ -6431,7 +6431,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:56:15.576000Z",
+        "acquired": "2025-06-01T19:02:46.105000Z",
         "location": {
             "start": [
                 435,
@@ -6445,11 +6445,11 @@
     },
     "Path to the Dojo": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:44:46.929000Z",
+        "acquired": "2025-06-01T10:09:59.974000Z",
         "location": {
             "start": [
                 440,
@@ -6463,11 +6463,11 @@
     },
     "Wanderer's Way": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:51:23.356000Z",
+        "acquired": "2025-06-01T04:04:11.602000Z",
         "location": {
             "start": [
                 440,
@@ -6481,11 +6481,11 @@
     },
     "Workshop Glade": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-16T18:13:59.670000Z",
+        "acquired": "2025-06-01T04:19:30.997000Z",
         "location": {
             "start": [
                 563,
@@ -6499,11 +6499,11 @@
     },
     "Bantisu Approach": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:52:02.253000Z",
+        "acquired": "2025-06-01T04:28:15.490000Z",
         "location": {
             "start": [
                 445,
@@ -6517,11 +6517,11 @@
     },
     "Bantisu Air Temple": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-16T19:04:29.017000Z",
+        "acquired": "2025-06-01T04:30:31.882000Z",
         "location": {
             "start": [
                 570,
@@ -6539,7 +6539,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:59:27.279000Z",
+        "acquired": "2025-06-01T19:03:57.259000Z",
         "location": {
             "start": [
                 445,
@@ -6557,7 +6557,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T18:44:50.308000Z",
+        "acquired": "2025-06-01T19:10:08.552000Z",
         "location": {
             "start": [
                 443,
@@ -6575,7 +6575,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-16T19:00:51.409000Z",
+        "acquired": "2025-06-01T11:17:19.916000Z",
         "location": {
             "start": [
                 699,
@@ -6589,11 +6589,11 @@
     },
     "Thesead Underpass": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:40:31.235000Z",
+        "acquired": "2025-06-01T04:25:14.167000Z",
         "location": {
             "start": [
                 572,
@@ -6607,11 +6607,11 @@
     },
     "Entrance to Thesead": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:40:45.315000Z",
+        "acquired": "2025-06-01T04:20:28.649000Z",
         "location": {
             "start": [
                 700,
@@ -6625,11 +6625,11 @@
     },
     "Displaced Housing": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:48:27.976000Z",
+        "acquired": "2025-06-01T04:10:46.386000Z",
         "location": {
             "start": [
                 574,
@@ -6643,11 +6643,11 @@
     },
     "Cherry Blossom Grove": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:49:53.525000Z",
+        "acquired": "2025-06-01T11:46:43.052000Z",
         "location": {
             "start": [
                 699,
@@ -6661,11 +6661,11 @@
     },
     "Entrance to Molten Heights": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-05-13T19:44:03.577000Z",
+        "acquired": "2025-06-01T04:11:32.815000Z",
         "location": {
             "start": [
                 854,
@@ -6679,11 +6679,11 @@
     },
     "Dogun Ritual Site": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-13T18:46:27.641000Z",
+        "acquired": "2025-06-01T04:46:40.890000Z",
         "location": {
             "start": [
                 1535,
@@ -6697,11 +6697,11 @@
     },
     "Freezing Heights": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-11T00:07:13.616000Z",
+        "acquired": "2025-06-01T04:54:38.287000Z",
         "location": {
             "start": [
                 1531,
@@ -6715,11 +6715,11 @@
     },
     "Lava Lakes": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-10T23:50:28.055000Z",
+        "acquired": "2025-06-01T04:47:41.237000Z",
         "location": {
             "start": [
                 1230,
@@ -6733,11 +6733,11 @@
     },
     "Dragonbone Graveyard": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-16T18:37:57.224000Z",
+        "acquired": "2025-06-01T04:52:41.819000Z",
         "location": {
             "start": [
                 1531,
@@ -6751,11 +6751,11 @@
     },
     "Entamis Village": {
         "guild": {
-            "uuid": "b72cf5e8-6682-44c6-9fb2-c721a90bece7",
-            "name": "Kivotos Battlegrounds",
-            "prefix": "KBCQ"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:27:32.537000Z",
+        "acquired": "2025-06-01T05:47:32.142000Z",
         "location": {
             "start": [
                 -737,
@@ -6769,11 +6769,11 @@
     },
     "Fountain of Youth": {
         "guild": {
-            "uuid": "b72cf5e8-6682-44c6-9fb2-c721a90bece7",
-            "name": "Kivotos Battlegrounds",
-            "prefix": "KBCQ"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:29:39.108000Z",
+        "acquired": "2025-06-01T05:46:36.941000Z",
         "location": {
             "start": [
                 -744,
@@ -6787,11 +6787,11 @@
     },
     "Delnar Manor": {
         "guild": {
-            "uuid": "b72cf5e8-6682-44c6-9fb2-c721a90bece7",
-            "name": "Kivotos Battlegrounds",
-            "prefix": "KBCQ"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T22:47:28.176000Z",
+        "acquired": "2025-06-01T05:45:25.503000Z",
         "location": {
             "start": [
                 -970,
@@ -6805,11 +6805,11 @@
     },
     "Corkus City Crossroads": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:12:50.955000Z",
+        "acquired": "2025-06-01T20:33:08.028000Z",
         "location": {
             "start": [
                 -1559,
@@ -6823,11 +6823,11 @@
     },
     "Road to Mine": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:44:13.427000Z",
+        "acquired": "2025-06-01T14:16:16.951000Z",
         "location": {
             "start": [
                 -1467,
@@ -6841,11 +6841,11 @@
     },
     "Industrial Clearing": {
         "guild": {
-            "uuid": "c019d096-c7dd-43d2-8c20-3da88d2ca303",
-            "name": "The Nameless Samurai",
-            "prefix": "TNSR"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T23:03:11.079000Z",
+        "acquired": "2025-06-01T13:59:16.378000Z",
         "location": {
             "start": [
                 -1683,
@@ -6859,11 +6859,11 @@
     },
     "Corkus Forest": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:17:16.990000Z",
+        "acquired": "2025-06-01T20:40:06.736000Z",
         "location": {
             "start": [
                 -1681,
@@ -6877,11 +6877,11 @@
     },
     "Picnic Pond": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:18:27.206000Z",
+        "acquired": "2025-06-01T20:37:01.336000Z",
         "location": {
             "start": [
                 -1888,
@@ -6895,11 +6895,11 @@
     },
     "Avos Territory": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:56:40.389000Z",
+        "acquired": "2025-06-01T09:32:00.943000Z",
         "location": {
             "start": [
                 -1888,
@@ -6913,11 +6913,11 @@
     },
     "Overrun Docks": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:59:45.211000Z",
+        "acquired": "2025-06-01T09:42:51.768000Z",
         "location": {
             "start": [
                 -1891,
@@ -6931,11 +6931,11 @@
     },
     "Retrofitted Manufactory": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:12:06.505000Z",
+        "acquired": "2025-06-01T20:47:03.988000Z",
         "location": {
             "start": [
                 -1503,
@@ -6949,11 +6949,11 @@
     },
     "Relos": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:15:34.313000Z",
+        "acquired": "2025-06-01T20:29:22.720000Z",
         "location": {
             "start": [
                 -1680,
@@ -6967,11 +6967,11 @@
     },
     "Founder's Statue": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:45:37.365000Z",
+        "acquired": "2025-06-01T09:36:32.932000Z",
         "location": {
             "start": [
                 -1322,
@@ -6985,11 +6985,11 @@
     },
     "Path to Ahmsord": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-10T23:09:01.643000Z",
+        "acquired": "2025-06-01T04:22:14.219000Z",
         "location": {
             "start": [
                 779,
@@ -7003,11 +7003,11 @@
     },
     "Aerial Descent": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-15T09:57:34.188000Z",
+        "acquired": "2025-06-01T04:22:14.409000Z",
         "location": {
             "start": [
                 885,
@@ -7021,11 +7021,11 @@
     },
     "Raiders' Stronghold": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T13:18:16.372000Z",
+        "acquired": "2025-06-01T04:17:09.330000Z",
         "location": {
             "start": [
                 1380,
@@ -7039,11 +7039,11 @@
     },
     "Raiders' Airbase": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-09T13:16:26.733000Z",
+        "acquired": "2025-06-01T04:26:31.069000Z",
         "location": {
             "start": [
                 1558,
@@ -7057,11 +7057,11 @@
     },
     "Lighthouse Lookout": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:40:15.844000Z",
+        "acquired": "2025-06-01T09:07:59.326000Z",
         "location": {
             "start": [
                 -1633,
@@ -7075,11 +7075,11 @@
     },
     "Felroc Fields": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:29:30.004000Z",
+        "acquired": "2025-06-01T17:00:25.596000Z",
         "location": {
             "start": [
                 -337,
@@ -7093,11 +7093,11 @@
     },
     "Balloon Airbase": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:53:37.661000Z",
+        "acquired": "2025-06-01T14:10:36.531000Z",
         "location": {
             "start": [
                 -1633,
@@ -7115,7 +7115,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T19:20:22.067000Z",
+        "acquired": "2025-06-01T21:00:23.464000Z",
         "location": {
             "start": [
                 540,
@@ -7133,7 +7133,7 @@
             "name": "Avicia",
             "prefix": "AVO"
         },
-        "acquired": "2025-05-16T16:17:48.782000Z",
+        "acquired": "2025-06-01T20:52:20.265000Z",
         "location": {
             "start": [
                 686,
@@ -7151,7 +7151,7 @@
             "name": "Black Fangs",
             "prefix": "BFS"
         },
-        "acquired": "2025-05-16T16:18:40.467000Z",
+        "acquired": "2025-06-01T10:38:01.622000Z",
         "location": {
             "start": [
                 -775,
@@ -7165,11 +7165,11 @@
     },
     "Monte's Village": {
         "guild": {
-            "uuid": "c39a4636-1646-4b5a-88cc-a9a28b915c6a",
-            "name": "Avaritia",
-            "prefix": "AVTA"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-05-16T23:04:41.168000Z",
+        "acquired": "2025-06-01T04:53:53.011000Z",
         "location": {
             "start": [
                 -515,
@@ -7183,11 +7183,11 @@
     },
     "Durum Isles Barn": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-14T10:43:05.219000Z",
+        "acquired": "2025-06-01T19:13:44.754000Z",
         "location": {
             "start": [
                 405,
@@ -7201,11 +7201,11 @@
     },
     "Volcanic Isles": {
         "guild": {
-            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
-            "name": "Titans Valor",
-            "prefix": "ANO"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T22:35:08.955000Z",
+        "acquired": "2025-06-01T16:44:04.853000Z",
         "location": {
             "start": [
                 -929,
@@ -7219,11 +7219,11 @@
     },
     "Troll's Challenge": {
         "guild": {
-            "uuid": "0dd24dcc-370c-4e27-a1b4-2dfa92e76667",
-            "name": "Aequitas",
-            "prefix": "Aeq"
+            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
+            "name": "TruthSworD",
+            "prefix": "Tsd"
         },
-        "acquired": "2025-05-15T18:38:12.369000Z",
+        "acquired": "2025-06-01T18:42:08.379000Z",
         "location": {
             "start": [
                 244,
@@ -7237,11 +7237,11 @@
     },
     "Harpy's Haunt South": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "6f1e973b-5f2e-49f2-9203-977983ec991d",
+            "name": "BuggCraft",
+            "prefix": "BUGG"
         },
-        "acquired": "2025-05-13T19:58:32.146000Z",
+        "acquired": "2025-06-01T21:10:03.419000Z",
         "location": {
             "start": [
                 337,
@@ -7259,7 +7259,7 @@
             "name": "TruthSworD",
             "prefix": "Tsd"
         },
-        "acquired": "2025-05-13T19:41:36.646000Z",
+        "acquired": "2025-06-01T18:59:58.366000Z",
         "location": {
             "start": [
                 440,
@@ -7273,11 +7273,11 @@
     },
     "Pyroclastic Flow": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "cef53bae-dc42-46aa-8ccf-1b10d282b420",
+            "name": "Titans Valor",
+            "prefix": "ANO"
         },
-        "acquired": "2025-05-11T00:04:51.076000Z",
+        "acquired": "2025-06-01T04:49:37.747000Z",
         "location": {
             "start": [
                 1233,
@@ -7291,11 +7291,11 @@
     },
     "Ava's Workshop": {
         "guild": {
-            "uuid": "dc7a38fa-f7cb-47e4-a2bb-6c1384632622",
-            "name": "Sins of Seedia",
-            "prefix": "SDU"
+            "uuid": "c2cb97e5-5970-4d4d-8489-18a9c0d255a6",
+            "name": "Kanack",
+            "prefix": "Knck"
         },
-        "acquired": "2025-05-16T21:41:44.944000Z",
+        "acquired": "2025-06-01T09:41:38.535000Z",
         "location": {
             "start": [
                 -1681,
