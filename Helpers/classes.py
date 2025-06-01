@@ -109,7 +109,7 @@ class PlayerStats:
             self.guild_joined = parser.isoparse(guild_stats['joined'])
             now_utc   = datetime.now(timezone.utc)
             delta     = now_utc - self.guild_joined
-            self.in_guild_for = delta + timedelta(days=1) 
+            self.in_guild_for = delta
         else:
             self.guild = None
             self.guild_rank = None

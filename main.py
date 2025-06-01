@@ -101,7 +101,7 @@ if not test or test:
 client.load_extension('Commands.online')
 # client.load_extension('Commands.activity')
 client.load_extension('Commands.profile')  # Profile needs work but has shell count
-#client.load_extension('Commands.progress')
+client.load_extension('Commands.progress')
 client.load_extension('Commands.worlds')
 client.load_extension('Commands.leaderboard')  # Leaderboard needs work too, functional tho
 client.load_extension('Commands.background_admin')
@@ -131,6 +131,7 @@ client.load_extension('Commands.send_changelog')
 client.load_extension('Commands.preview_changelog')
 #client.load_extension('Commands.check_app')
 #client.load_extension('Commands.custom_profile')
+client.load_extension('Commands.progress_bar')
 client.load_extension('Commands.rank_badge')
 client.load_extension('Commands.restart')
 
