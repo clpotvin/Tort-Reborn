@@ -163,11 +163,11 @@
     },
     "Little Wood": {
         "guild": {
-            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
-            "name": "Avicia",
-            "prefix": "AVO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-06-01T05:40:19.852000Z",
+        "acquired": "2025-06-02T01:20:45.198000Z",
         "location": {
             "start": [
                 -812,
@@ -559,11 +559,11 @@
     },
     "Ancient Nemract": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-06-02T01:03:04.448000Z",
+        "acquired": "2025-06-02T01:21:43.971000Z",
         "location": {
             "start": [
                 152,
@@ -3799,11 +3799,11 @@
     },
     "Savannah Plains": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-06-02T01:03:05.914000Z",
+        "acquired": "2025-06-02T01:20:06.009000Z",
         "location": {
             "start": [
                 750,
@@ -5527,11 +5527,11 @@
     },
     "Big Mushroom Cave": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-06-02T00:23:34.074000Z",
+        "acquired": "2025-06-02T01:20:40.897000Z",
         "location": {
             "start": [
                 -130,
@@ -5545,11 +5545,11 @@
     },
     "Paper Trail": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-06-02T00:22:53.636000Z",
+        "acquired": "2025-06-02T01:19:32.368000Z",
         "location": {
             "start": [
                 3,
