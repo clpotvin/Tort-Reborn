@@ -595,11 +595,11 @@
     },
     "Cathedral Harbour": {
         "guild": {
-            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
-            "name": "The Rat Colony",
-            "prefix": "RATC"
+            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
+            "name": "Avicia",
+            "prefix": "AVO"
         },
-        "acquired": "2025-06-02T00:58:04.489000Z",
+        "acquired": "2025-06-02T01:18:40.010000Z",
         "location": {
             "start": [
                 385,
@@ -1387,11 +1387,11 @@
     },
     "Burning Farm": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-06-01T23:45:57.048000Z",
+        "acquired": "2025-06-02T01:15:59.255000Z",
         "location": {
             "start": [
                 107,
@@ -3205,11 +3205,11 @@
     },
     "Wolves' Den": {
         "guild": {
-            "uuid": "00ccf9d3-6670-4cd7-a447-f7fec684129d",
-            "name": "Avicia",
-            "prefix": "AVO"
+            "uuid": "ddbdac33-9f3c-4e25-af92-2071d127a246",
+            "name": "The Rat Colony",
+            "prefix": "RATC"
         },
-        "acquired": "2025-06-01T04:05:12.963000Z",
+        "acquired": "2025-06-02T01:16:10.239000Z",
         "location": {
             "start": [
                 76,
@@ -5833,11 +5833,11 @@
     },
     "Evergreen Outbreak": {
         "guild": {
-            "uuid": "4f434df0-87b0-4a31-8bd4-83a6b5cd02f7",
-            "name": "TruthSworD",
-            "prefix": "Tsd"
+            "uuid": "cc1157d0-cd70-4d5c-8a68-0cc6ff75e51c",
+            "name": "The Whimsical Warlords",
+            "prefix": "TWHW"
         },
-        "acquired": "2025-06-01T23:46:47.585000Z",
+        "acquired": "2025-06-02T01:14:49.850000Z",
         "location": {
             "start": [
                 35,
