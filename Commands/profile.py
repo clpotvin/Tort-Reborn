@@ -35,12 +35,12 @@ class Profile(commands.Cog):
         card = round_corners(card)
         draw = ImageDraw.Draw(card)
 
-        # TODO: Custom card color
         # Card Color/Pattern
-        if player.background == 2:
+        if player.background == 2 and player.gradient == ['#293786', '#1d275e']:    # Set gradient for TAq Sea Turtle BG
             card_color = vertical_gradient(width=850, height=1130, main_color='#4585db', secondary_color='#2f2b73')
         else:
-            card_color = vertical_gradient(width=850, height=1130, main_color="#293786", secondary_color="#1d275e")
+            card_color = vertical_gradient(width=850, height=1130, main_color=player.gradient[0], secondary_color=player.gradient[1])
+
         card.paste(card_color, (25, 25), card_color)
 
         # Background Outline
