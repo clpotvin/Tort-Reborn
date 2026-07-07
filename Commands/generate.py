@@ -51,41 +51,40 @@ def _custom_emoji(name: str, emoji_id: int) -> discord.PartialEmoji:
 class RoleButtonConfig:
     key: str
     label: str
-    role_name: str
+    role_id: int
     emoji: str | discord.PartialEmoji | None = None
     row: int | None = None
     gate_role_id: int | None = None
-    gate_role_name: str | None = None
 
 
 REACTION_ROLES = (
-    RoleButtonConfig("reaction_class_builder", "Class Builder", "Class Builder", "\U0001F3D7\ufe0f", row=0),
-    RoleButtonConfig("reaction_crafter", "Crafter", "Crafter", "\U0001F477", row=0),
-    RoleButtonConfig("reaction_ingredient_grinder", "Ingredient Grinder", "Ingredient Grinder", "\U0001F41A", row=0),
-    RoleButtonConfig("reaction_merman", "Merman", "Merman", "\U0001F468", row=1),
-    RoleButtonConfig("reaction_mermaid", "Mermaid", "Mermaid", "\U0001F469", row=1),
-    RoleButtonConfig("reaction_ghost_fish", "Ghost Fish", "Ghost Fish", "\U0001F47B", row=1),
-    RoleButtonConfig("reaction_america", "America", "America", "\U0001F30E", row=2),
-    RoleButtonConfig("reaction_europe_africa", "Europe/Africa", "Europe/Africa", "\U0001F30D", row=2),
-    RoleButtonConfig("reaction_asia_oceania", "Asia/Oceania", "Asia/Oceania", "\U0001F30F", row=2),
-    RoleButtonConfig("reaction_events", "Events", "Events", "\U0001F389", row=3),
-    RoleButtonConfig("reaction_giveaways", "Giveaways", "Giveaways", "\U0001F381", row=3),
-    RoleButtonConfig("reaction_annihilation", "Annihilation", "Annihilation", "\U0001F479", row=3),
+    RoleButtonConfig("reaction_class_builder", "Class Builder", 906269952938475602, "\U0001F3D7\ufe0f", row=0),
+    RoleButtonConfig("reaction_crafter", "Crafter", 906265677667663902, "\U0001F477", row=0),
+    RoleButtonConfig("reaction_ingredient_grinder", "Ingredient Grinder", 1050233131183112255, "\U0001F41A", row=0),
+    RoleButtonConfig("reaction_merman", "Merman", 796817826987114557, "\U0001F468", row=1),
+    RoleButtonConfig("reaction_mermaid", "Mermaid", 796817681276862485, "\U0001F469", row=1),
+    RoleButtonConfig("reaction_ghost_fish", "Ghost Fish", 796817901188808796, "\U0001F47B", row=1),
+    RoleButtonConfig("reaction_america", "America", 939940600248160316, "\U0001F30E", row=2),
+    RoleButtonConfig("reaction_europe", "Europe", 939940342457856000, "\U0001F30D", row=2),
+    RoleButtonConfig("reaction_asia_oceania", "Asia/Oceania", 939944900227657728, "\U0001F30F", row=2),
+    RoleButtonConfig("reaction_events", "Events", 1209952006144401500, "\U0001F389", row=3),
+    RoleButtonConfig("reaction_giveaways", "Giveaways", 919714824731127818, "\U0001F381", row=3),
+    RoleButtonConfig("reaction_prelude_annihilation", "Prelude to Annihilation", 1275082923812458506, "\U0001F479", row=3),
 )
 
 PING_ROLES = (
-    RoleButtonConfig("ping_notg", "NOTG", "NOTG", _custom_emoji("notg", 1316539942524031017), row=0),
-    RoleButtonConfig("ping_nol", "NOL", "NOL", _custom_emoji("nol", 1316539940418621530), row=0),
-    RoleButtonConfig("ping_tcc", "TCC", "TCC", _custom_emoji("tcc", 1316539938917060658), row=0),
-    RoleButtonConfig("ping_tna", "TNA", "TNA", _custom_emoji("tna", 1316539936438222850), row=0),
-    RoleButtonConfig("ping_wtp", "WTP", "WTP", _custom_emoji("wtp", 1498097156282781847), row=0),
-    RoleButtonConfig("ping_any_guild_raid", "Any Guild Raid", "Any Guild Raid", _custom_emoji("graid", 1515117095250301018), row=1),
-    RoleButtonConfig("ping_combat_xp", "Combat XP", "Combat XP", "\U0001F5E1\ufe0f", row=2),
-    RoleButtonConfig("ping_double_loot", "Double Loot", "Double Loot", "\U0001F48E", row=2),
-    RoleButtonConfig("ping_loot_chest", "Loot Chest", "Loot Chest", "\U0001F4E6", row=2),
-    RoleButtonConfig("ping_profession_xp", "Profession XP", "Profession XP", "\u26CF\ufe0f", row=3),
-    RoleButtonConfig("ping_profession_speed", "Profession Speed", "Profession Speed", "\U0001F6E0\ufe0f", row=3),
-    RoleButtonConfig("ping_dungeon_bomb", "Dungeon Bomb", "Dungeon Bomb", "\U0001F3F0", row=3),
+    RoleButtonConfig("ping_notg", "NOTG", 1316539196378452039, _custom_emoji("notg", 1316539942524031017), row=0),
+    RoleButtonConfig("ping_nol", "NOL", 1316539324006666300, _custom_emoji("nol", 1316539940418621530), row=0),
+    RoleButtonConfig("ping_tcc", "TCC", 1316539449299173447, _custom_emoji("tcc", 1316539938917060658), row=0),
+    RoleButtonConfig("ping_tna", "TNA", 1316539530655825930, _custom_emoji("tna", 1316539936438222850), row=0),
+    RoleButtonConfig("ping_wtp", "WTP", 1485993226794962974, _custom_emoji("wtp", 1498097156282781847), row=0),
+    RoleButtonConfig("ping_graid", "Graid", 1485993830778929182, _custom_emoji("graid", 1515117095250301018), row=1),
+    RoleButtonConfig("ping_combat_xp_bomb", "Combat XP Bomb", 1423301085350858832, "\U0001F5E1\ufe0f", row=2),
+    RoleButtonConfig("ping_loot_bomb", "Loot Bomb", 1423302359014047764, "\U0001F48E", row=2),
+    RoleButtonConfig("ping_loot_chest_bomb", "Loot Chest Bomb", 1423302456091213978, "\U0001F4E6", row=2),
+    RoleButtonConfig("ping_profession_xp_bomb", "Profession XP Bomb", 1423302526874292279, "\u26CF\ufe0f", row=3),
+    RoleButtonConfig("ping_profession_speed_bomb", "Profession Speed Bomb", 1423302571640229961, "\U0001F6E0\ufe0f", row=3),
+    RoleButtonConfig("ping_dungeon_bomb", "Dungeon Bomb", 1423302825651212349, "\U0001F3F0", row=3),
 )
 
 
@@ -111,14 +110,8 @@ class SelfRoleView(View):
             self.add_item(SelfRoleButton(spec))
 
     @staticmethod
-    def _resolve_role(guild: discord.Guild, role_id: int | None, role_name: str | None) -> discord.Role | None:
-        if role_id:
-            role = guild.get_role(role_id)
-            if role:
-                return role
-        if role_name:
-            return discord.utils.get(guild.roles, name=role_name)
-        return None
+    def _resolve_role(guild: discord.Guild, role_id: int) -> discord.Role | None:
+        return guild.get_role(role_id)
 
     async def toggle_role(self, interaction: discord.Interaction, spec: RoleButtonConfig):
         await interaction.response.defer(ephemeral=True)
@@ -131,13 +124,14 @@ class SelfRoleView(View):
         if not isinstance(member, discord.Member):
             member = await guild.fetch_member(interaction.user.id)
 
-        gate_role = self._resolve_role(guild, spec.gate_role_id, spec.gate_role_name)
-        if (spec.gate_role_id or spec.gate_role_name) and gate_role is None:
-            return await interaction.followup.send("Gate role not found.", ephemeral=True)
-        if gate_role and gate_role not in member.roles:
-            return await interaction.followup.send("Missing required role.", ephemeral=True)
+        if spec.gate_role_id:
+            gate_role = self._resolve_role(guild, spec.gate_role_id)
+            if gate_role is None:
+                return await interaction.followup.send("Gate role not found.", ephemeral=True)
+            if gate_role not in member.roles:
+                return await interaction.followup.send("Missing required role.", ephemeral=True)
 
-        role = self._resolve_role(guild, None, spec.role_name)
+        role = self._resolve_role(guild, spec.role_id)
         if role is None:
             return await interaction.followup.send("Role not found.", ephemeral=True)
 
