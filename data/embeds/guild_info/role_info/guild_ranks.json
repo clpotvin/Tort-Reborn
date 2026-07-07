@@ -1,0 +1,34 @@
+{
+  "content": "",
+  "embeds": [
+    {
+      "type": "rich",
+      "description": "𓆉 Our custom rank system is designed with more roles than those available on Wynncraft, providing different sets of permissions and enabling more progressive promotions.\n\n✫✪✫ **Hydra** \n<@&729151133758783549> = Guild Leader\n\n★★★★ **Abyss Waters**\n<@&729151168374243378> = 2nd Stage Chief\n\n★★★ **Dark Sea**\n<@&812108768526467103> = 1st Stage Chief \n<@&791790893098991647> = 3rd Stage Strategist \n\n★★☆ **Deep Sea**\n<@&791797705718235146> = 2nd Stage Strategist\n\n★☆☆ **Blue Ocean**\n<@&1492707123153473637> = 1st Stage Strategist\n\n★★ **Azure Ocean**\n<@&906943713295622204> = 2nd Stage Captain\n<@&817495947398610994> = 1st Stage Captain \n\n★ **Coastal Waters**\n<@&755823665333141716> = Recruiter\n\n☆ **Reef**\n<@&791817409412988928> = Recruit\n** **\n** **",
+      "color": 10721252,
+      "footer": {
+        "text": "After getting promoted to Angler, you are allowed apply for Hammerhead and join our High Ranks! After Swordfish, the only way to rank up is by applying for Hammerhead."
+      },
+      "content_scan_version": 4
+    }
+  ],
+  "attachments": [
+    {
+      "id": "1493547808844943390",
+      "filename": "guild_ranks.PNG",
+      "size": 399272,
+      "url": "https://cdn.discordapp.com/attachments/752917987853467669/1493547808844943390/guild_ranks.PNG?ex=6a4d738a&is=6a4c220a&hm=687574d69c494c1904b60ce4a10afd904049685f084a21ab83487841e7fdcbf4&",
+      "proxy_url": "https://media.discordapp.net/attachments/752917987853467669/1493547808844943390/guild_ranks.PNG?ex=6a4d738a&is=6a4c220a&hm=687574d69c494c1904b60ce4a10afd904049685f084a21ab83487841e7fdcbf4&",
+      "width": 1194,
+      "height": 214,
+      "content_type": "image/png",
+      "content_scan_version": 4,
+      "placeholder": "ruaFCYIsTIOPlngvjdT2WS1McXiAJzc=",
+      "placeholder_version": 1,
+      "title": "guild ranks",
+      "placement_count": 0
+    }
+  ],
+  "webhook_id": "1136647750629466193",
+  "components": [],
+  "flags": 0
+}

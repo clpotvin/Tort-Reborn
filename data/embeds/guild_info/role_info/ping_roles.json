@@ -1,0 +1,55 @@
+{
+  "content": "",
+  "embeds": [
+    {
+      "type": "rich",
+      "color": 10721252,
+      "fields": [
+        {
+          "name": "𓆉 Guild Raid roles",
+          "value": "Get pinged when raiding parties are looking for members to join!\n<:notg:1316539942524031017> - NOTG - Nest of the Grootslangs\n<:nol:1316539940418621530> - NOL - Orphion's Nexus of Light\n<:tcc:1316539938917060658> - TCC - The Canyon Colossus\n<:tna:1316539936438222850> - TNA - The Nameless Anomaly\n<:wtp:1498097156282781847> - WTP - The Queen's Wartorn Palace\n<:graid:1515117095250301018> - Any Guild Raid",
+          "inline": false
+        }
+      ],
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "color": 10721252,
+      "fields": [
+        {
+          "name": "𓆉 Bomb Bell roles",
+          "value": "🗡️ - Combat XP\n💎 - Double Loot\n📦 - Loot Chest\n⛏️ - Profession XP\n🛠️ - Profession Speed\n🏰 - Dungeon Bomb",
+          "inline": false
+        }
+      ],
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "description": "Click the reactions below to get the roles from this list!",
+      "color": 10721252,
+      "content_scan_version": 4
+    }
+  ],
+  "attachments": [
+    {
+      "id": "1515120749797707806",
+      "filename": "ping_roles.PNG",
+      "size": 397731,
+      "url": "https://cdn.discordapp.com/attachments/752917987853467669/1515120749797707806/ping_roles.PNG?ex=6a4d7da8&is=6a4c2c28&hm=3e507bec911eeda01cbd81608f241df30cb05218d99fefa00254803c72b30a37&",
+      "proxy_url": "https://media.discordapp.net/attachments/752917987853467669/1515120749797707806/ping_roles.PNG?ex=6a4d7da8&is=6a4c2c28&hm=3e507bec911eeda01cbd81608f241df30cb05218d99fefa00254803c72b30a37&",
+      "width": 1194,
+      "height": 214,
+      "content_type": "image/png",
+      "content_scan_version": 4,
+      "placeholder": "r+aFCYIsPIOPlngfjuX1WS1McXiAJzc=",
+      "placeholder_version": 1,
+      "title": "ping roles",
+      "placement_count": 0
+    }
+  ],
+  "webhook_id": "1136647750629466193",
+  "components": [],
+  "flags": 0
+}
