@@ -23,6 +23,7 @@ from Helpers.variables import (
     TAQ_GUILD_ID,
     WEBSITE_URL,
     RAID_COLLECTING_CHANNEL_ID,
+    TAQ_ROLES_CHANNEL_ID,
     WAR_INFO_CHANNEL_ID,
     SHELL_EXCHANGE_CHANNEL_ID,
     SHELL_EMOJI,
@@ -41,6 +42,7 @@ GUILD_INFO_BANNER = "guild_info_banner.png"
 RAID_COLLECTING_BANNER = "raidcollectingbanner.png"
 TAQ_FAQ_BANNER = "taq_faq.png"
 APPLICATIONS_BANNER = "applications.png"
+TAQ_ROLES_CHANNEL_MENTION = f"<#{TAQ_ROLES_CHANNEL_ID}>"
 
 
 def _custom_emoji(name: str, emoji_id: int) -> discord.PartialEmoji:
@@ -225,7 +227,7 @@ def _build_guild_info_embed() -> discord.Embed:
     fields = (
         (
             "𓆉  Membership",
-            "You can apply for Guild or Community Membership in <#1476866917854609408>! Once you are either a guild or community member, you gain access to <#1386413126697877626> where you can find more info about the guild and <#752917987853467669> where you can assign roles for the server.",
+            f"You can apply for Guild or Community Membership in <#1476866917854609408>! Once you are either a guild or community member, you gain access to <#1386413126697877626> where you can find more info about the guild and {TAQ_ROLES_CHANNEL_MENTION} where you can assign roles for the server.",
         ),
         (
             "𓆉  Permanent Discord Link",
@@ -233,7 +235,7 @@ def _build_guild_info_embed() -> discord.Embed:
         ),
         (
             "𓆉  Ally Guild Raids",
-            "If you want to ally guild raid and want to recruit in our raid channels, apply for community member, then you can get the raid specific roles in <#752917987853467669> to be pinged by our members too or recruit members by pinging the respective roles in <#1320140705602998282>.",
+            f"If you want to ally guild raid and want to recruit in our raid channels, apply for community member, then you can get the raid specific roles in {TAQ_ROLES_CHANNEL_MENTION} to be pinged by our members too or recruit members by pinging the respective roles in <#1320140705602998282>.",
         ),
     )
     for name, value in fields:
@@ -713,7 +715,7 @@ def _build_taq_faq_embeds_page1() -> list[discord.Embed]:
                 "Our Discord server offers lots of content to help you progress, whether you are a new player "
                 "or an experienced Wynncraft warrior. Feel free to ask any questions, game-related or not!\n\n"
                 "Some shortcuts for you:\n"
-                "<#752917987853467669>\n"
+                f"{TAQ_ROLES_CHANNEL_MENTION}\n"
                 "<#1062062453137080462> \n"
                 "<#1152966582834827344> \n"
                 "<#736920151081091122> \n"
@@ -744,7 +746,7 @@ def _build_taq_faq_embeds_page1() -> list[discord.Embed]:
             description=(
                 "Wynn has 6 official ranks: Recruit, Recruiter, Captain, Strategist, Chief, and Owner. We've added "
                 "our own custom ranks too — for better permissions and smoother promotions. Curious? You can read a "
-                "full breakdown right here <#752917987853467669>!\n\n"
+                f"full breakdown right here {TAQ_ROLES_CHANNEL_MENTION}!\n\n"
                 "**Promotions** are based on your role in the guild and how you help it! We value all sorts of "
                 "contributions and try our best to give everyone a chance to rank up regardless of their interests and skills.\n\n"
                 ":clock8: **Passive contributions**\n"
