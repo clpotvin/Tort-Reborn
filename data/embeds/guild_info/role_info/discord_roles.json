@@ -1,0 +1,55 @@
+{
+  "content": "",
+  "embeds": [
+    {
+      "type": "rich",
+      "description": "𓆉 <@&764893711939141633>\n Ex-Chiefs of TAq who have decided to retire from the guild or Wynn.\nAccess to: ⁠<#748900470575071293>, ⁠<#776139325960093715>, and more.",
+      "color": 10721252,
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "description": "𓆉 <@&766796820789067846>\nEx-Member of TAq who contributed a lot to the guild before leaving.\nAccess to: <#748900470575071293>, ⁠<#776139325960093715>, <#805229462777364520>.",
+      "color": 10721252,
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "description": "𓆉 <@&906294857587388446>\nGiven to community members who apply for the role. \nAccess to: <#748900470575071293>, <#805229462777364520>, and more.",
+      "color": 10721252,
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "description": "𓆉 <@&1019293480125730897>\nEx-Member of TAq.",
+      "color": 10721252,
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "description": "𓆉 <@&729152005011931218>\nRegular Member of the Discord.",
+      "color": 10721252,
+      "content_scan_version": 4
+    }
+  ],
+  "attachments": [
+    {
+      "id": "1515125382465196042",
+      "filename": "discord_roles.PNG",
+      "size": 398187,
+      "url": "https://cdn.discordapp.com/attachments/752917987853467669/1515125382465196042/discord_roles.PNG?ex=6a4d81f8&is=6a4c3078&hm=9f6114cf1dbed776715aae5025dc1482a60e1238e0e56ecf826b885aa9c8a037&",
+      "proxy_url": "https://media.discordapp.net/attachments/752917987853467669/1515125382465196042/discord_roles.PNG?ex=6a4d81f8&is=6a4c3078&hm=9f6114cf1dbed776715aae5025dc1482a60e1238e0e56ecf826b885aa9c8a037&",
+      "width": 1194,
+      "height": 214,
+      "content_type": "image/png",
+      "content_scan_version": 4,
+      "placeholder": "ruaFCYIsO5OPlogfjtP1WS1McXiAJzc=",
+      "placeholder_version": 1,
+      "title": "discord roles",
+      "placement_count": 0
+    }
+  ],
+  "webhook_id": "1136647750629466193",
+  "components": [],
+  "flags": 0
+}
