@@ -190,7 +190,11 @@ ROLE_INFO_MESSAGE_FILES = (
 def _load_discohook_embeds(json_filename: str) -> list[discord.Embed]:
     with open(ROLE_INFO_EMBED_DIR / json_filename, "r", encoding="utf-8") as f:
         payload = json.load(f)
-    return [discord.Embed.from_dict(embed_data) for embed_data in payload.get("embeds", [])]
+    embeds = []
+    for embed_data in payload.get("embeds", []):
+        embed_data = {**embed_data, "color": GENERATE_EMBED_COLOR}
+        embeds.append(discord.Embed.from_dict(embed_data))
+    return embeds
 
 
 def _build_guild_rules_embed() -> discord.Embed:
