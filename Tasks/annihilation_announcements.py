@@ -145,7 +145,7 @@ def build_annihilation_embed(schedule_dt: datetime.datetime, alert_type: str) ->
     if alert_type == "one_hour":
         description = (
             "1 hour left before it starts!\n"
-            f"Event starting in {_discord_timestamp(schedule_dt)}"
+            f"Event starting {_discord_timestamp(schedule_dt)}"
         )
     else:
         description = (
