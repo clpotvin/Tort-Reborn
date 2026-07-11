@@ -1,0 +1,78 @@
+{
+  "content": "",
+  "embeds": [
+    {
+      "type": "rich",
+      "color": 10721252,
+      "fields": [
+        {
+          "name": "𓆉 Support Roles",
+          "value": "🏗️ - Class Builder: Guild Member who is experienced with class builds and is ready to help others when pinged\n👷 - Crafter: Guild Member with their professions levelled up who can craft items on request when pinged\n🐚 - Ingredient Grinder: Guild members who wants to help out with gathering ingredients and/or wants to be pinged when shell rates are updated.",
+          "inline": false
+        }
+      ],
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "color": 10721252,
+      "fields": [
+        {
+          "name": "𓆉 Pronoun Roles",
+          "value": "👨 - Merman: For people that want to be referred to as he/him.\n👩 - Mermaid: For people that want to be referred to as she/her.\n👻 - Ghost Fish: For people that want to be referred to as they/them. ‎",
+          "inline": false
+        }
+      ],
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "color": 10721252,
+      "fields": [
+        {
+          "name": "𓆉 Timezone Roles",
+          "value": "🌎 - America: Members that primarily play in American (NA/SA) timezones.\n🌍 - Europe/Africa: Members that primarily play in European/African timezones.\n🌏 - Asia/Oceania: Members that primarily play in Asian/Oceanian timezones.",
+          "inline": false
+        }
+      ],
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "color": 10721252,
+      "fields": [
+        {
+          "name": "𓆉 Event roles",
+          "value": "🎉 - Events: Role to be pinged when our guild organizes events.\n🎁 - Giveaways: Role to be pinged when giveaways are happening in the ⁠giveaways channel.\n:japanese_ogre: - Annihilation: Get pinged when Annihilation party is happening",
+          "inline": false
+        }
+      ],
+      "content_scan_version": 4
+    },
+    {
+      "type": "rich",
+      "description": "Click the reactions below to get the roles from this list!",
+      "color": 10721252,
+      "content_scan_version": 4
+    }
+  ],
+  "attachments": [
+    {
+      "id": "1424040735916953781",
+      "filename": "reaction_roles.PNG",
+      "size": 397145,
+      "url": "attachment://reaction_roles.PNG",
+      "proxy_url": "attachment://reaction_roles.PNG",
+      "width": 1194,
+      "height": 214,
+      "content_type": "image/png",
+      "content_scan_version": 4,
+      "placeholder": "r+aFCYIsO5SPlocfj9P1WS1McXiAJzc=",
+      "placeholder_version": 1,
+      "placement_count": 0
+    }
+  ],
+  "webhook_id": "1136647750629466193",
+  "components": [],
+  "flags": 0
+}

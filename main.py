@@ -245,6 +245,7 @@ extensions = [
     'Tasks.process_website_decisions',
     'Tasks.sync_war_builds',
     'Tasks.daily_musing',
+    'Tasks.annihilation_announcements',
 ]
 
 for ext in extensions:

@@ -5,6 +5,8 @@ import hmac
 import json
 import os
 import time
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 from textwrap import dedent
 
@@ -21,6 +23,7 @@ from Helpers.variables import (
     TAQ_GUILD_ID,
     WEBSITE_URL,
     RAID_COLLECTING_CHANNEL_ID,
+    TAQ_ROLES_CHANNEL_ID,
     WAR_INFO_CHANNEL_ID,
     SHELL_EXCHANGE_CHANNEL_ID,
     SHELL_EMOJI,
@@ -29,16 +32,169 @@ from Helpers.variables import (
 
 APPLICATION_TOKEN_SECRET = os.getenv("APPLICATION_TOKEN_SECRET", "")
 GENERATE_EMBED_COLOR = 0x94C1FF
+PROJECT_ROOT = Path(__file__).parent.parent
+EMBED_DATA_DIR = PROJECT_ROOT / "data" / "embeds"
 GUILD_INFO_ASSET_DIR = Path(__file__).parent.parent / "images" / "guild_info"
+ROLE_INFO_ASSET_DIR = GUILD_INFO_ASSET_DIR / "role_info"
+ROLE_INFO_EMBED_DIR = EMBED_DATA_DIR / "guild_info" / "role_info"
 GUILD_RULES_BANNER = "guild_rules_banner.png"
 GUILD_INFO_BANNER = "guild_info_banner.png"
 RAID_COLLECTING_BANNER = "raidcollectingbanner.png"
 TAQ_FAQ_BANNER = "taq_faq.png"
 APPLICATIONS_BANNER = "applications.png"
+TAQ_ROLES_CHANNEL_MENTION = f"<#{TAQ_ROLES_CHANNEL_ID}>"
 
 
 def _custom_emoji(name: str, emoji_id: int) -> discord.PartialEmoji:
     return discord.PartialEmoji(name=name, id=emoji_id)
+
+
+@dataclass(frozen=True)
+class RoleButtonConfig:
+    key: str
+    label: str
+    role_id: int
+    emoji: str | discord.PartialEmoji | None = None
+    row: int | None = None
+    gate_role_id: int | None = None
+
+
+REACTION_ROLES = (
+    RoleButtonConfig("reaction_class_builder", "Class Builder", 906269952938475602, "\U0001F3D7\ufe0f", row=0),
+    RoleButtonConfig("reaction_crafter", "Crafter", 906265677667663902, "\U0001F477", row=0),
+    RoleButtonConfig("reaction_ingredient_grinder", "Ingredient Grinder", 1050233131183112255, "\U0001F41A", row=0),
+    RoleButtonConfig("reaction_merman", "Merman", 796817826987114557, "\U0001F468", row=1),
+    RoleButtonConfig("reaction_mermaid", "Mermaid", 796817681276862485, "\U0001F469", row=1),
+    RoleButtonConfig("reaction_ghost_fish", "Ghost Fish", 796817901188808796, "\U0001F47B", row=1),
+    RoleButtonConfig("reaction_america", "America", 939940600248160316, "\U0001F30E", row=2),
+    RoleButtonConfig("reaction_europe", "Europe", 939940342457856000, "\U0001F30D", row=2),
+    RoleButtonConfig("reaction_asia_oceania", "Asia/Oceania", 939944900227657728, "\U0001F30F", row=2),
+    RoleButtonConfig("reaction_events", "Events", 1209952006144401500, "\U0001F389", row=3),
+    RoleButtonConfig("reaction_giveaways", "Giveaways", 919714824731127818, "\U0001F381", row=3),
+    RoleButtonConfig("reaction_prelude_annihilation", "Prelude to Annihilation", 1275082923812458506, "\U0001F479", row=3),
+)
+
+PING_ROLES = (
+    RoleButtonConfig("ping_notg", "NOTG", 1316539196378452039, _custom_emoji("notg", 1316539942524031017), row=0),
+    RoleButtonConfig("ping_nol", "NOL", 1316539324006666300, _custom_emoji("nol", 1316539940418621530), row=0),
+    RoleButtonConfig("ping_tcc", "TCC", 1316539449299173447, _custom_emoji("tcc", 1316539938917060658), row=0),
+    RoleButtonConfig("ping_tna", "TNA", 1316539530655825930, _custom_emoji("tna", 1316539936438222850), row=0),
+    RoleButtonConfig("ping_wtp", "WTP", 1485993226794962974, _custom_emoji("wtp", 1498097156282781847), row=0),
+    RoleButtonConfig("ping_graid", "Graid", 1485993830778929182, _custom_emoji("graid", 1515117095250301018), row=1),
+    RoleButtonConfig("ping_combat_xp_bomb", "Combat XP Bomb", 1423301085350858832, "\U0001F5E1\ufe0f", row=2),
+    RoleButtonConfig("ping_loot_bomb", "Loot Bomb", 1423302359014047764, "\U0001F48E", row=2),
+    RoleButtonConfig("ping_loot_chest_bomb", "Loot Chest Bomb", 1423302456091213978, "\U0001F4E6", row=2),
+    RoleButtonConfig("ping_profession_xp_bomb", "Profession XP Bomb", 1423302526874292279, "\u26CF\ufe0f", row=3),
+    RoleButtonConfig("ping_profession_speed_bomb", "Profession Speed Bomb", 1423302571640229961, "\U0001F6E0\ufe0f", row=3),
+    RoleButtonConfig("ping_dungeon_bomb", "Dungeon Bomb", 1423302825651212349, "\U0001F3F0", row=3),
+)
+
+
+class SelfRoleButton(discord.ui.Button):
+    def __init__(self, spec: RoleButtonConfig):
+        super().__init__(
+            label=spec.label,
+            style=discord.ButtonStyle.secondary,
+            custom_id=f"role_info:{spec.key}",
+            emoji=spec.emoji,
+            row=spec.row,
+        )
+        self.spec = spec
+
+    async def callback(self, interaction: discord.Interaction):
+        await self.view.toggle_role(interaction, self.spec)
+
+
+class SelfRoleView(View):
+    def __init__(self, specs: tuple[RoleButtonConfig, ...]):
+        super().__init__(timeout=None)
+        for spec in specs:
+            self.add_item(SelfRoleButton(spec))
+
+    @staticmethod
+    def _resolve_role(guild: discord.Guild, role_id: int) -> discord.Role | None:
+        return guild.get_role(role_id)
+
+    async def toggle_role(self, interaction: discord.Interaction, spec: RoleButtonConfig):
+        await interaction.response.defer(ephemeral=True)
+
+        guild = interaction.guild
+        if not guild:
+            return await interaction.followup.send("Server only.", ephemeral=True)
+
+        member = interaction.user
+        if not isinstance(member, discord.Member):
+            member = await guild.fetch_member(interaction.user.id)
+
+        if spec.gate_role_id:
+            gate_role = self._resolve_role(guild, spec.gate_role_id)
+            if gate_role is None:
+                return await interaction.followup.send("Gate role not found.", ephemeral=True)
+            if gate_role not in member.roles:
+                return await interaction.followup.send("Missing required role.", ephemeral=True)
+
+        role = self._resolve_role(guild, spec.role_id)
+        if role is None:
+            return await interaction.followup.send("Role not found.", ephemeral=True)
+
+        bot_member = guild.me
+        if bot_member is None and interaction.client.user:
+            bot_member = guild.get_member(interaction.client.user.id)
+        if not bot_member or not bot_member.guild_permissions.manage_roles:
+            return await interaction.followup.send("I need Manage Roles.", ephemeral=True)
+        if bot_member and role >= bot_member.top_role:
+            return await interaction.followup.send("I can't manage that role.", ephemeral=True)
+
+        reason = f"Role info button used by {member} ({member.id})"
+        try:
+            if role in member.roles:
+                await member.remove_roles(role, reason=reason)
+                return await interaction.followup.send(f"Removed {role.name}.", ephemeral=True)
+
+            await member.add_roles(role, reason=reason)
+            await interaction.followup.send(f"Added {role.name}.", ephemeral=True)
+        except discord.Forbidden:
+            await interaction.followup.send("I can't manage that role.", ephemeral=True)
+        except discord.HTTPException:
+            await interaction.followup.send("Role update failed.", ephemeral=True)
+
+
+@dataclass(frozen=True)
+class RoleInfoMessage:
+    json_filename: str
+    banner_filename: str
+    legacy_banner_filenames: tuple[str, ...] = ()
+    view_factory: Callable[[], View] | None = None
+
+
+def _reaction_role_view() -> SelfRoleView:
+    return SelfRoleView(REACTION_ROLES)
+
+
+def _ping_role_view() -> SelfRoleView:
+    return SelfRoleView(PING_ROLES)
+
+
+ROLE_INFO_MESSAGE_FILES = (
+    RoleInfoMessage("guild_ranks.json", "guild_ranks.PNG"),
+    RoleInfoMessage("discord_roles.json", "discord_roles.PNG"),
+    RoleInfoMessage(
+        "reaction_roles.json",
+        "reaction_roles.PNG",
+        view_factory=_reaction_role_view,
+    ),
+    RoleInfoMessage("ping_roles.json", "ping_roles.PNG", view_factory=_ping_role_view),
+)
+
+
+def _load_discohook_embeds(json_filename: str) -> list[discord.Embed]:
+    with open(ROLE_INFO_EMBED_DIR / json_filename, "r", encoding="utf-8") as f:
+        payload = json.load(f)
+    embeds = []
+    for embed_data in payload.get("embeds", []):
+        embed_data = {**embed_data, "color": GENERATE_EMBED_COLOR}
+        embeds.append(discord.Embed.from_dict(embed_data))
+    return embeds
 
 
 def _build_guild_rules_embed() -> discord.Embed:
@@ -75,7 +231,7 @@ def _build_guild_info_embed() -> discord.Embed:
     fields = (
         (
             "𓆉  Membership",
-            "You can apply for Guild or Community Membership in <#1476866917854609408>! Once you are either a guild or community member, you gain access to <#1386413126697877626> where you can find more info about the guild and <#752917987853467669> where you can assign roles for the server.",
+            f"You can apply for Guild or Community Membership in <#1476866917854609408>! Once you are either a guild or community member, you gain access to <#1386413126697877626> where you can find more info about the guild and {TAQ_ROLES_CHANNEL_MENTION} where you can assign roles for the server.",
         ),
         (
             "𓆉  Permanent Discord Link",
@@ -83,7 +239,7 @@ def _build_guild_info_embed() -> discord.Embed:
         ),
         (
             "𓆉  Ally Guild Raids",
-            "If you want to ally guild raid and want to recruit in our raid channels, apply for community member, then you can get the raid specific roles in <#752917987853467669> to be pinged by our members too or recruit members by pinging the respective roles in <#1320140705602998282>.",
+            f"If you want to ally guild raid and want to recruit in our raid channels, apply for community member, then you can get the raid specific roles in {TAQ_ROLES_CHANNEL_MENTION} to be pinged by our members too or recruit members by pinging the respective roles in <#1320140705602998282>.",
         ),
     )
     for name, value in fields:
@@ -563,7 +719,7 @@ def _build_taq_faq_embeds_page1() -> list[discord.Embed]:
                 "Our Discord server offers lots of content to help you progress, whether you are a new player "
                 "or an experienced Wynncraft warrior. Feel free to ask any questions, game-related or not!\n\n"
                 "Some shortcuts for you:\n"
-                "<#752917987853467669>\n"
+                f"{TAQ_ROLES_CHANNEL_MENTION}\n"
                 "<#1062062453137080462> \n"
                 "<#1152966582834827344> \n"
                 "<#736920151081091122> \n"
@@ -594,7 +750,7 @@ def _build_taq_faq_embeds_page1() -> list[discord.Embed]:
             description=(
                 "Wynn has 6 official ranks: Recruit, Recruiter, Captain, Strategist, Chief, and Owner. We've added "
                 "our own custom ranks too — for better permissions and smoother promotions. Curious? You can read a "
-                "full breakdown right here <#752917987853467669>!\n\n"
+                f"full breakdown right here {TAQ_ROLES_CHANNEL_MENTION}!\n\n"
                 "**Promotions** are based on your role in the guild and how you help it! We value all sorts of "
                 "contributions and try our best to give everyone a chance to rank up regardless of their interests and skills.\n\n"
                 ":clock8: **Passive contributions**\n"
@@ -993,6 +1149,66 @@ class Generate(commands.Cog):
         )
         await ctx.followup.send("Posted the guild rules and info messages.", ephemeral=True)
 
+    @generate.command(name="role_info", description="ADMIN: Post or update role info embeds with buttons")
+    async def role_info(self, ctx: discord.ApplicationContext):
+        await ctx.defer(ephemeral=True)
+
+        missing_files = []
+        for spec in ROLE_INFO_MESSAGE_FILES:
+            json_path = ROLE_INFO_EMBED_DIR / spec.json_filename
+            banner_path = ROLE_INFO_ASSET_DIR / spec.banner_filename
+            if not json_path.exists():
+                missing_files.append(str(json_path.relative_to(PROJECT_ROOT)))
+            if not banner_path.exists():
+                missing_files.append(str(banner_path.relative_to(PROJECT_ROOT)))
+
+        if missing_files:
+            return await ctx.followup.send(
+                f"Missing role info file(s): {', '.join(missing_files)}",
+                ephemeral=True,
+            )
+
+        existing_by_banner = {}
+        async for msg in ctx.channel.history(limit=100):
+            if msg.author.id != self.client.user.id:
+                continue
+
+            filenames = {attachment.filename for attachment in msg.attachments}
+            for spec in ROLE_INFO_MESSAGE_FILES:
+                match_filenames = {spec.banner_filename, *spec.legacy_banner_filenames}
+                if filenames & match_filenames and spec.banner_filename not in existing_by_banner:
+                    existing_by_banner[spec.banner_filename] = msg
+            if len(existing_by_banner) == len(ROLE_INFO_MESSAGE_FILES):
+                break
+
+        found_all = len(existing_by_banner) == len(ROLE_INFO_MESSAGE_FILES)
+
+        if found_all:
+            for spec in ROLE_INFO_MESSAGE_FILES:
+                await existing_by_banner[spec.banner_filename].edit(
+                    embeds=_load_discohook_embeds(spec.json_filename),
+                    attachments=[],
+                    files=[discord.File(str(ROLE_INFO_ASSET_DIR / spec.banner_filename), filename=spec.banner_filename)],
+                    view=spec.view_factory() if spec.view_factory else None,
+                )
+            return await ctx.followup.send("Updated the role info messages.", ephemeral=True)
+
+        deleted_message_ids = set()
+        for msg in existing_by_banner.values():
+            if msg.id in deleted_message_ids:
+                continue
+            deleted_message_ids.add(msg.id)
+            await msg.delete()
+
+        for spec in ROLE_INFO_MESSAGE_FILES:
+            await ctx.channel.send(
+                embeds=_load_discohook_embeds(spec.json_filename),
+                file=discord.File(str(ROLE_INFO_ASSET_DIR / spec.banner_filename), filename=spec.banner_filename),
+                view=spec.view_factory() if spec.view_factory else None,
+            )
+
+        await ctx.followup.send("Posted the role info messages.", ephemeral=True)
+
     @generate.command(name="promotions", description="ADMIN: Post the promotions / rank-up info message")
     async def promotions(self, ctx: discord.ApplicationContext):
         await ctx.defer(ephemeral=True)
@@ -1106,6 +1322,8 @@ class Generate(commands.Cog):
         self.client.add_view(ApplicationButtonView())
         self.client.add_view(ClaimView())
         self.client.add_view(ShellConvertView())
+        self.client.add_view(_reaction_role_view())
+        self.client.add_view(_ping_role_view())
 
 
 def setup(client):

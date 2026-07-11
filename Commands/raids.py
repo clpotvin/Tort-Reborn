@@ -393,7 +393,7 @@ class Raids(commands.Cog):
             bn = None
 
         guild_badge_x = 108
-        guild_badge_y = 620
+        guild_badge_y = 620 - (12 if not use_taq else 0) # offset of non TAq Rank Badges
         card.paste(g_badge, (guild_badge_x, guild_badge_y), g_badge)
         card.paste(gr_badge, (guild_badge_x, guild_badge_y + g_badge.height), gr_badge)
         if bn is not None:
@@ -507,7 +507,7 @@ class Raids(commands.Cog):
         if badge.width <= max_w:
             return badge
         ratio = max_w / badge.width
-        return badge.resize((max_w, max(1, int(badge.height * ratio))), Image.Resampling.NEAREST)
+        return badge.resize((max_w, max(1, round(badge.height * ratio))), Image.Resampling.NEAREST)
 
     @staticmethod
     def _scale_badge(badge: Image.Image, scale: float, max_w: int) -> Image.Image:
@@ -517,7 +517,7 @@ class Raids(commands.Cog):
         if badge.width <= max_w:
             return badge
         ratio = max_w / badge.width
-        return badge.resize((max_w, max(1, int(badge.height * ratio))), Image.Resampling.NEAREST)
+        return badge.resize((max_w, max(1, round(badge.height * ratio))), Image.Resampling.NEAREST)
 
     @classmethod
     def _font(cls, path: str, size: int) -> ImageFont.FreeTypeFont:

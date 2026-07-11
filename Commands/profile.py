@@ -133,6 +133,8 @@ class Profile(commands.Cog):
             except:
                 guild_colour = "WHITE"
 
+            rank_row_y = 663
+
             # Guild Name Badge
             guild_badge = generate_badge(text=player.guild, base_color='#{:02x}{:02x}{:02x}'.format(*minecraft_banner_colors[guild_colour]), scale=3)
             guild_badge.crop(guild_badge.getbbox())
@@ -154,13 +156,13 @@ class Profile(commands.Cog):
 
             # Insert Membership & Rank Badges
             grb_w = guild_rank_badge.width
-            card.paste(member_for_badge, (90 + grb_w, 667), member_for_badge)
-            card.paste(guild_rank_badge, (108, 667), guild_rank_badge)
+            card.paste(member_for_badge, (90 + grb_w, rank_row_y), member_for_badge)
+            card.paste(guild_rank_badge, (108, rank_row_y), guild_rank_badge)
 
             # Guild Banner
             banner = generate_banner(player.guild, 15, "2", guild_data=player.guild_data)
             banner.thumbnail((157, 157))
-            card.paste(banner, (41, 562))
+            card.paste(banner, (41, 558))
 
         # Build out data to place in boxes
         card_entries = {}
