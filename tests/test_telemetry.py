@@ -119,3 +119,38 @@ def test_finish_emits_one_json_line(monkeypatch, capsys):
     assert payload["queue_ms"] == 12.5
     assert payload["ok"] is True
     assert payload["buckets"]["db.query"]["n"] == 1
+
+
+def test_sys_exc_info_is_visible_inside_async_finally():
+    """py-cord runs after_invoke inside a `finally` while an exception propagates.
+
+    `ok` is derived from sys.exc_info() there, so pin that semantic down.
+    """
+    seen = {}
+
+    async def hook():
+        await asyncio.sleep(0)
+        seen["exc"] = sys.exc_info()[0]
+
+    async def body():
+        try:
+            raise ValueError("boom")
+        finally:
+            await hook()
+
+    async def main():
+        with pytest.raises(ValueError):
+            await body()
+
+    asyncio.run(main())
+    assert seen["exc"] is ValueError
+
+
+def test_finish_marks_failure(monkeypatch, capsys):
+    monkeypatch.setenv("LATENCY_TELEMETRY", "1")
+    telemetry.begin("profile", None, None, None)
+    telemetry.finish(ok=False)
+
+    import json
+    payload = json.loads(capsys.readouterr().out.strip())
+    assert payload["ok"] is False

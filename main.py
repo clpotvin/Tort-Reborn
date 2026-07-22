@@ -15,6 +15,7 @@ from Helpers.database import get_last_online, set_last_online
 from Helpers.variables import IS_TEST_MODE, ERROR_CHANNEL_ID, PUBLIC_COMMANDS, ERROR_PING_USER_ID
 from Helpers.logger import log, SYSTEM, SUCCESS, ERROR, INFO
 from Helpers import logger
+from Helpers import telemetry
 from Commands.generate import ApplicationButtonView
 from Helpers.views import ApplicationVoteView, ThreadVoteView
 
@@ -119,6 +120,39 @@ async def on_connect():
         "timestamp": int(time.time())
     }
     set_last_online(last_online)
+
+
+@client.before_invoke
+async def _telemetry_before(ctx: discord.ApplicationContext):
+    """Start a timing accumulator for this invocation.
+
+    queue_ms is the gap between Discord creating the interaction and the bot
+    starting to run it — it separates "the bot was busy" from "the work was slow".
+    """
+    queue_ms = None
+    try:
+        created = ctx.interaction.created_at
+        now = datetime.datetime.now(datetime.timezone.utc)
+        queue_ms = round((now - created).total_seconds() * 1000.0, 2)
+    except Exception:
+        pass
+
+    telemetry.begin(
+        ctx.command.qualified_name if ctx.command else "unknown",
+        guild_id=ctx.guild.id if ctx.guild else None,
+        user_id=ctx.author.id if ctx.author else None,
+        queue_ms=queue_ms,
+    )
+
+
+@client.after_invoke
+async def _telemetry_after(ctx: discord.ApplicationContext):
+    """Emit the invocation record.
+
+    py-cord calls this from a `finally`, so it also runs for failed commands;
+    sys.exc_info() is how we tell the two apart.
+    """
+    telemetry.finish(ok=sys.exc_info()[0] is None)
 
 
 @client.event
