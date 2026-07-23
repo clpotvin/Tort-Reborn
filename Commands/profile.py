@@ -5,7 +5,6 @@ from io import BytesIO
 import asyncio
 
 import discord
-import requests
 from PIL import Image, ImageDraw, ImageFont
 from discord.ext import commands
 from discord.commands import slash_command

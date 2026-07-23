@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 import json
-import requests
 import os
 
 from PIL import Image, ImageOps
