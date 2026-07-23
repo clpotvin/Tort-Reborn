@@ -288,37 +288,38 @@ def generate_rank_old_badge(text, colour, scale=4):
 
 
 def generate_rank_badge(text, colour, scale=4):
-    if colour[0] != '#':
-        colour = '#' + colour
-    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', colour)
-    if not match:
-        return False
-    color = Color(colour)
-    img_width = len(text) * 12 + 12
-    img = Image.new('RGBA', (img_width, 18), (255, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
+    with telemetry.track("render"):
+        if colour[0] != '#':
+            colour = '#' + colour
+        match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', colour)
+        if not match:
+            return False
+        color = Color(colour)
+        img_width = len(text) * 12 + 12
+        img = Image.new('RGBA', (img_width, 18), (255, 0, 0, 0))
+        draw = ImageDraw.Draw(img)
 
-    font = _cached_font('images/profile/5x5.ttf', 20)
+        font = _cached_font('images/profile/5x5.ttf', 20)
 
-    draw.rectangle([(0, 1), (img.width, 14)], fill=color.light)
-    draw.rectangle([(2, 3), (img.width - 3, 12)], fill=color.hex)
-    draw.rectangle([(0, 11), (3, 14)], fill=color.shadow)
-    draw.rectangle([(img.width - 4, 11), (img.width, 14)], fill=color.shadow)
-    draw.rectangle([(2, 15), (img.width - 3, 16)], fill=color.shadow)
-    draw.rectangle([(2, 11), (3, 12)], fill=color.light)
-    draw.rectangle([(img.width - 4, 11), (img.width - 3, 12)], fill=color.light)
-    draw.text((img.width / 2 + 2, img.height / 2 - 3), text, font=font, anchor="mm", fill=color.shadow)
-    draw.text((img.width / 2, img.height / 2 - 3), text, font=font, anchor="mm")
+        draw.rectangle([(0, 1), (img.width, 14)], fill=color.light)
+        draw.rectangle([(2, 3), (img.width - 3, 12)], fill=color.hex)
+        draw.rectangle([(0, 11), (3, 14)], fill=color.shadow)
+        draw.rectangle([(img.width - 4, 11), (img.width, 14)], fill=color.shadow)
+        draw.rectangle([(2, 15), (img.width - 3, 16)], fill=color.shadow)
+        draw.rectangle([(2, 11), (3, 12)], fill=color.light)
+        draw.rectangle([(img.width - 4, 11), (img.width - 3, 12)], fill=color.light)
+        draw.text((img.width / 2 + 2, img.height / 2 - 3), text, font=font, anchor="mm", fill=color.shadow)
+        draw.text((img.width / 2, img.height / 2 - 3), text, font=font, anchor="mm")
 
-    # textshade = Image.new("RGBA", (img.width, 4), (255, 0, 0, 0))
-    # shadedraw = ImageDraw.Draw(textshade)
-    # shadedraw.text((img.width / 2, textshade.height), text, font=font, anchor="mb", fill=color.shade)
+        # textshade = Image.new("RGBA", (img.width, 4), (255, 0, 0, 0))
+        # shadedraw = ImageDraw.Draw(textshade)
+        # shadedraw.text((img.width / 2, textshade.height), text, font=font, anchor="mb", fill=color.shade)
 
-    # img.paste(textshade, (0, 10), textshade)
+        # img.paste(textshade, (0, 10), textshade)
 
-    img = img.resize((img.width * scale, img.height * scale), resample=Image.Resampling.NEAREST)
+        img = img.resize((img.width * scale, img.height * scale), resample=Image.Resampling.NEAREST)
 
-    return img
+        return img
 
 
 def get_guild_badge_colors_with_text(colour):
@@ -386,125 +387,129 @@ def generate_badge(text, base_color, scale=3):
 
 
 def vertical_gradient(width=900, height=1180, main_color='#66ccff', secondary_color=False, reverse=False):
-    if main_color[0] != '#':
-        main_color = '#' + main_color
-    match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', main_color)
-    if not match:
-        return False
-    if secondary_color is not False:
-        if secondary_color[0] != '#':
-            secondary_color = '#' + secondary_color
-        match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', secondary_color)
+    with telemetry.track("render"):
+        if main_color[0] != '#':
+            main_color = '#' + main_color
+        match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', main_color)
         if not match:
             return False
-        top_color = ImageColor.getrgb(main_color)
-        bottom_color = ImageColor.getrgb(secondary_color)
-    else:
-        color = Color(main_color)
-        if not reverse:
-            top_color = ImageColor.getrgb(color.light)
-            bottom_color = ImageColor.getrgb(color.shadow)
+        if secondary_color is not False:
+            if secondary_color[0] != '#':
+                secondary_color = '#' + secondary_color
+            match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', secondary_color)
+            if not match:
+                return False
+            top_color = ImageColor.getrgb(main_color)
+            bottom_color = ImageColor.getrgb(secondary_color)
         else:
-            top_color = ImageColor.getrgb(color.shadow)
-            bottom_color = ImageColor.getrgb(color.light)
+            color = Color(main_color)
+            if not reverse:
+                top_color = ImageColor.getrgb(color.light)
+                bottom_color = ImageColor.getrgb(color.shadow)
+            else:
+                top_color = ImageColor.getrgb(color.shadow)
+                bottom_color = ImageColor.getrgb(color.light)
 
-    strip = Image.new('RGBA', (1, height), (0, 0, 0, 0))
-    denom = max(height, 1)
-    for y in range(height):
-        ratio = y / denom
-        r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
-        g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
-        b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
-        strip.putpixel((0, y), (r, g, b, 255))
-    return strip.resize((width, height), Image.Resampling.NEAREST)
+        strip = Image.new('RGBA', (1, height), (0, 0, 0, 0))
+        denom = max(height, 1)
+        for y in range(height):
+            ratio = y / denom
+            r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+            g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+            b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+            strip.putpixel((0, y), (r, g, b, 255))
+        return strip.resize((width, height), Image.Resampling.NEAREST)
 
 
 def round_corners(img, radius=25):
-    img = img.convert("RGBA")
-    rounded_mask = Image.new("L", img.size, 0)
-    draw = ImageDraw.Draw(rounded_mask)
-    draw.rounded_rectangle([(0, 0), img.size], radius=radius, fill=255)
-    img.putalpha(rounded_mask)
-    return img
+    with telemetry.track("render"):
+        img = img.convert("RGBA")
+        rounded_mask = Image.new("L", img.size, 0)
+        draw = ImageDraw.Draw(rounded_mask)
+        draw.rounded_rectangle([(0, 0), img.size], radius=radius, fill=255)
+        img.putalpha(rounded_mask)
+        return img
 
 
 def generate_banner(guild, scale, style='', guild_data=None):
-    data = guild_data
-    if data is None:
-        url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
-        try:
-            resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
-            resp.raise_for_status()
-            data = resp.json()
-        except requests.RequestException:
-            return Image.open(f'images/banner{style}/base.png')
+    with telemetry.track("render"):
+        data = guild_data
+        if data is None:
+            url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
+            try:
+                resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
+                resp.raise_for_status()
+                data = resp.json()
+            except requests.RequestException:
+                return Image.open(f'images/banner{style}/base.png')
 
-    if data['banner']:
-        banner = data['banner']
+        if data['banner']:
+            banner = data['banner']
 
-        bg = Image.open(f'images/banner{style}/base.png')
+            bg = Image.open(f'images/banner{style}/base.png')
 
-        w, h = bg.size
+            w, h = bg.size
 
-        crop_x1 = w / 64
-        crop_y1 = h / 64
-        crop_x2 = (w / 2) - (11 * crop_x1)
-        crop_y2 = h - (24 * crop_y1)
+            crop_x1 = w / 64
+            crop_y1 = h / 64
+            crop_x2 = (w / 2) - (11 * crop_x1)
+            crop_y2 = h - (24 * crop_y1)
 
-        bg = bg.crop((crop_x1, crop_y1, crop_x2, crop_y2))
+            bg = bg.crop((crop_x1, crop_y1, crop_x2, crop_y2))
 
-        bg = bg.convert("L")
+            bg = bg.convert("L")
 
-        bg = ImageOps.colorize(bg, "black", minecraft_banner_colors[banner['base']])
+            bg = ImageOps.colorize(bg, "black", minecraft_banner_colors[banner['base']])
 
-        for layer in banner['layers']:
-            if w == 64:
-                mask = Image.open(f'images/banner/{layer["pattern"].lower()}.png')
-                mask = mask.crop((crop_x1, crop_y1, crop_x2, crop_y2))
-            pattern = Image.open(f'images/banner{style}/{layer["pattern"].lower()}.png')
-            pattern = pattern.crop((crop_x1, crop_y1, crop_x2, crop_y2))
-            pattern = pattern.convert("RGBA")
+            for layer in banner['layers']:
+                if w == 64:
+                    mask = Image.open(f'images/banner/{layer["pattern"].lower()}.png')
+                    mask = mask.crop((crop_x1, crop_y1, crop_x2, crop_y2))
+                pattern = Image.open(f'images/banner{style}/{layer["pattern"].lower()}.png')
+                pattern = pattern.crop((crop_x1, crop_y1, crop_x2, crop_y2))
+                pattern = pattern.convert("RGBA")
 
-            pattern2 = pattern.convert("L")
+                pattern2 = pattern.convert("L")
 
-            pattern2 = ImageOps.colorize(pattern2, "black", minecraft_banner_colors[layer['colour']])
+                pattern2 = ImageOps.colorize(pattern2, "black", minecraft_banner_colors[layer['colour']])
 
-            bg.paste(pattern2, (0, 0), mask)
+                bg.paste(pattern2, (0, 0), mask)
 
-    else:
-        bg = Image.open(f'images/banner{style}/base.png')
+        else:
+            bg = Image.open(f'images/banner{style}/base.png')
 
-        w, h = bg.size
+            w, h = bg.size
 
-        crop_x1 = w / 64
-        crop_y1 = h / 64
-        crop_x2 = (w / 2) - (11 * crop_x1)
-        crop_y2 = h - (24 * crop_y1)
+            crop_x1 = w / 64
+            crop_y1 = h / 64
+            crop_x2 = (w / 2) - (11 * crop_x1)
+            crop_y2 = h - (24 * crop_y1)
 
-        bg = bg.crop((crop_x1, crop_y1, crop_x2, crop_y2))
+            bg = bg.crop((crop_x1, crop_y1, crop_x2, crop_y2))
 
-    bg = bg.resize((bg.width * scale, bg.height * scale), Image.NEAREST)
+        bg = bg.resize((bg.width * scale, bg.height * scale), Image.NEAREST)
 
-    return bg
+        return bg
 
 
 def addLine(text, draw, font, x, y, drop_x=2, drop_y=2, anchor=None):
-    if text[0] != '&':
-        text = f'&f{text}'
+    with telemetry.track("render"):
+        if text[0] != '&':
+            text = f'&f{text}'
 
-    strlist = re.findall('&[^&]+', text)
+        strlist = re.findall('&[^&]+', text)
 
-    for word in strlist:
-        if word[1] == '#':
-            _, _, w, h = draw.textbbox((0, 0), word[8::], font=font)
-            draw.text((x + drop_x, y + drop_y), word[8::], font=font, fill=darken_color(word[1:8], 0.72), anchor=anchor)
-            draw.text((x, y), word[8::], font=font, fill=word[1:8], anchor=anchor)
-        else:
-            _, _, w, h = draw.textbbox((0, 0), word[2::], font=font)
-            draw.text((x + drop_x, y + drop_y), word[2::], font=font, fill=shadows[word[1]], anchor=anchor)
-            draw.text((x, y), word[2::], font=font, fill=colours[word[1]], anchor=anchor)
-        x += w
-    return x
+        for word in strlist:
+            if word[1] == '#':
+                _, _, w, h = draw.textbbox((0, 0), word[8::], font=font)
+                draw.text((x + drop_x, y + drop_y), word[8::], font=font, fill=darken_color(word[1:8], 0.72), anchor=anchor)
+                draw.text((x, y), word[8::], font=font, fill=word[1:8], anchor=anchor)
+            else:
+                _, _, w, h = draw.textbbox((0, 0), word[2::], font=font)
+                draw.text((x + drop_x, y + drop_y), word[2::], font=font, fill=shadows[word[1]], anchor=anchor)
+                draw.text((x, y), word[2::], font=font, fill=colours[word[1]], anchor=anchor)
+            x += w
+        return x
 
 
 def interpolate_color(start_color, end_color, percentage):
