@@ -1,6 +1,6 @@
 # Command latency investigation
 
-**Status:** parked. Investigation only — no code changes made. Pick up at [Phase 0](#phase-0--measure-first) when this becomes a priority.
+**Status:** Phase 0 instrumentation is implemented (measurement only, behaviourally neutral). It has not yet been analysed — deploy, capture a data window, then work through [Reading the telemetry](#reading-the-telemetry). Phase 1 (the fixes) has not been started.
 
 ## Symptom
 
@@ -68,23 +68,71 @@ These are worth fixing regardless of which hypothesis wins.
    fetches the avatar synchronously, hits S3 synchronously, and renders the Pillow card inline.
    This stalls the gateway heartbeat, not just other commands.
 3. **No shared HTTP session.** There is no keep-alive anywhere in the outbound path.
-4. **No latency instrumentation.** Nothing measures where time goes, so everything above is
-   inference rather than measurement. This is the real blocker.
+4. **No latency instrumentation.** Nothing measured where time goes, so everything above is
+   inference rather than measurement. This is the gap Phase 0 closes.
 
 ## Plan
 
-### Phase 0 — measure first
+### Phase 0 — measure (implemented)
 
-Do not fix anything until these land and produce a deploy cycle's worth of data.
+Instrumentation is in place. It is measurement-only and behaviourally neutral: it wraps existing
+code and times it, changing no runtime behaviour, so the numbers form a valid baseline to judge
+Phase 1 against. Toggle with the `LATENCY_TELEMETRY` env var — any of `0` / `false` / `no`
+(case-insensitive) disables it; default on.
 
-- **Event-loop lag monitor.** A one-second task recording scheduling drift. If lag spikes into the
-  seconds on the three-minute boundary, H1 is confirmed and the rest is secondary.
-- **Per-command timing.** Wrap command invocation to log total wall time, split by boundary:
-  database connect vs. query, each outbound host, S3, render.
-- **Correlation.** Line slow commands up against task-loop start times. `update_member_data`
-  already logs a loop-start marker.
+What it emits — one JSON line per record to **stdout** (deliberately not the Discord log channel,
+so it never spams `#logs`):
 
-Estimated at well under a hundred lines.
+- `command` — one per slash-command invocation: `queue_ms` (the gap between Discord creating the
+  interaction and the bot starting to run it), `total_ms`, `ok`, and `buckets` splitting time by
+  `db.connect` / `db.query` / `db.commit` / `http.<host>` / `s3.get` / `s3.put` / `render`.
+- `loop_lag` — emitted whenever a single one-second tick drifts more than 250 ms.
+- `loop_lag_summary` — once a minute: p50 / p95 / max drift.
+- `probe` — only when `scripts/latency_probe.py` is run by hand (idle → cold timings → warm
+  timings → delta). Read-only, and not part of the deployed bot.
+
+Scope limits to keep in mind when reading the data:
+
+- Timing records are **command-scoped**. Background task loops call the same DB and HTTP layers but
+  run outside any command, so their own calls emit no bucket record. Their impact shows up
+  indirectly, through `loop_lag` and through `queue_ms` on commands that land mid-cycle.
+- A few `requests.get` calls inside individual command files (snipe, worlds, lootpool, manage,
+  raids, map, progress) are not routed through the timed wrapper, so their HTTP time appears in no
+  `http.*` bucket. The shared hot paths are covered; the picture is not exhaustive.
+- A command cancelled mid-flight (shutdown, gateway disconnect) records `ok: true`, because
+  py-cord swallows the cancellation before the timing hook runs. Documented, not fixed.
+
+### Reading the telemetry
+
+Read stdout in this order:
+
+1. `loop_lag_summary` p95 first. Seconds-scale drift means the event loop is being blocked — direct
+   support for H1.
+2. `queue_ms` outliers on `command` records, cross-referenced against task-loop start times
+   (`update_member_data` logs a `STARTING LOOP` marker).
+3. Only if those look clean, the `buckets` split on the slowest `command` records.
+4. `scripts/latency_probe.py --idle-minutes 10` (or more), run separately, to settle H2 on its own
+   terms: it runs with no event loop and no task loops, so a cold/warm delta there is attributable
+   to connections going cold rather than to loop contention.
+
+The decision that falls out: whether Phase 1 needs the task fleet split off the event loop (H1), or
+whether pooling and HTTP session reuse are enough (H2).
+
+### Capturing the data (Railway retention)
+
+Railway keeps logs for a limited window by plan — 7 days on Hobby, 30 on Pro. Telemetry lands on
+the same stdout stream as the normal logs, interleaved; filter with
+`railway logs | grep '"type":' | jq`.
+
+Two consequences:
+
+- The measurement window must fit inside retention. This is an active, bounded measurement (cycles
+  are minutes-to-hours apart, so a couple of days suffices), so 7 days is enough — but don't deploy
+  and leave it; the early data ages out.
+- Anything worth keeping past the window — in particular the baseline run to diff Phase 1 against —
+  must be pulled down deliberately: `railway logs > phase0-baseline.jsonl` during the run, or
+  forward logs to an external sink (Railway suggests Vector / Fluent Bit / OTEL). For a one-off
+  investigation, teeing to a file is enough; a forwarder is overkill.
 
 ### Phase 1 — fixes, highest payoff first
 
@@ -98,6 +146,8 @@ Estimated at well under a hundred lines.
 
 ## Picking this back up
 
-Start at Phase 0. The single highest-information measurement is the event-loop lag monitor: it
-either confirms or kills H1 in one deploy, and that decides whether Phase 1 step 4 is needed at
-all.
+Phase 0 is built and deployed-ready; the next action is to run it and read the output, not to write
+more code. Deploy, let it run through several quiet-then-active cycles, capture the window before it
+ages out, then work through [Reading the telemetry](#reading-the-telemetry). The single
+highest-information signal is the event-loop lag monitor: it either confirms or kills H1, and that
+decides whether Phase 1's task-fleet split is needed at all.
