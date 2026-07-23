@@ -154,3 +154,31 @@ def test_finish_marks_failure(monkeypatch, capsys):
     import json
     payload = json.loads(capsys.readouterr().out.strip())
     assert payload["ok"] is False
+
+
+def test_cancellation_is_not_visible_to_after_hook():
+    """py-cord's hooked_wrapped_callback catches asyncio.CancelledError and
+    `return`s before its `finally` block runs, so sys.exc_info() is already
+    (None, None, None) by the time the after-hook fires there.
+
+    This means `_telemetry_after`'s `ok = sys.exc_info()[0] is None` derivation
+    records a cancelled command invocation as ok=True -- the opposite of the
+    ordinary-raise case pinned by test_sys_exc_info_is_visible_inside_async_finally.
+    This is a known, accepted limitation: a cancelled command's timing record is
+    truncated regardless, so the mislabeled `ok` is not being fixed.
+    """
+    seen = {}
+
+    async def body():
+        try:
+            raise asyncio.CancelledError()
+        except asyncio.CancelledError:
+            return
+        finally:
+            seen["exc"] = sys.exc_info()[0]
+
+    async def main():
+        await body()
+
+    asyncio.run(main())
+    assert seen["exc"] is None
