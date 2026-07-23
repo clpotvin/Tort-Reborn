@@ -432,17 +432,20 @@ def round_corners(img, radius=25):
 
 
 def generate_banner(guild, scale, style='', guild_data=None):
-    with telemetry.track("render"):
-        data = guild_data
-        if data is None:
-            url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
-            try:
-                resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
-                resp.raise_for_status()
-                data = resp.json()
-            except requests.RequestException:
-                return Image.open(f'images/banner{style}/base.png')
+    # The optional guild fetch stays OUTSIDE the render bucket: it is already
+    # timed by timed_get's http.<host> bucket, and counting it under "render"
+    # too would double-count network latency for callers that omit guild_data.
+    data = guild_data
+    if data is None:
+        url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
+        try:
+            resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
+            resp.raise_for_status()
+            data = resp.json()
+        except requests.RequestException:
+            return Image.open(f'images/banner{style}/base.png')
 
+    with telemetry.track("render"):
         if data['banner']:
             banner = data['banner']
 
