@@ -13,7 +13,7 @@ from Helpers.database import (
     get_current_guild_data_and_snapshot_count_with_db,
     get_player_activity_baselines_with_db,
 )
-from Helpers.functions import getPlayerUUID, getPlayerDatav3, getPlayerProfileDatav3, urlify, determine_starting_rank
+from Helpers.functions import getPlayerUUID, getPlayerDatav3, getPlayerProfileDatav3, urlify, determine_starting_rank, timed_get
 from discord.ext.pages import Page as _Page
 
 from Helpers.variables import wynn_ranks, WELCOME_CHANNEL_ID, discord_ranks
@@ -28,7 +28,7 @@ class Guild:
         else:
             url = f'https://api.wynncraft.com/v3/guild/{urlify(guild)}'
 
-        resp = requests.get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         resp.raise_for_status()
         guild_data = resp.json()
 

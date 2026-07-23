@@ -6,7 +6,7 @@ import json
 import re
 from functools import lru_cache
 from io import BytesIO
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 from uuid import UUID
 
 import certifi
@@ -15,11 +15,26 @@ from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont, ImageOps
 
 from Helpers.variables import minecraft_colors, minecraft_banner_colors, colours, shadows, IS_TEST_MODE
 from Helpers.logger import log, WARN, ERROR
+from Helpers import telemetry
 
 
 @lru_cache(maxsize=64)
 def _cached_font(path, size):
     return ImageFont.truetype(path, size)
+
+
+def timed_get(url, **kwargs):
+    """requests.get with per-host timing.
+
+    Deliberately does NOT reuse a Session. Phase 0 must not change behaviour, and
+    session reuse is a Phase 1 fix whose benefit is measured against these numbers.
+    """
+    try:
+        host = urlparse(url).hostname or "unknown"
+    except Exception:
+        host = "unknown"
+    with telemetry.track(f"http.{host}"):
+        return requests.get(url, **kwargs)
 
 
 def isInCurrDay(data, uuid):
@@ -45,7 +60,7 @@ def getPlayerData(name, token=None):
         name = 'aa7402cc-bf1c-4aed-838b-fd8897d38836'
     url = f'https://api.wynncraft.com/v2/player/{name}/stats'
     try:
-        resp = requests.get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         resp.raise_for_status()
         return resp.json()
     except requests.RequestException:
@@ -55,7 +70,7 @@ def getPlayerData(name, token=None):
 def getPlayerDatav3(uuid, token=None):
     url = f'https://api.wynncraft.com/v3/player/{uuid}?fullResult'
     try:
-        resp = requests.get(url, timeout=20, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(url, timeout=20, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         resp.raise_for_status()
         return resp.json()
     except requests.RequestException:
@@ -66,7 +81,7 @@ def getPlayerProfileDatav3(player, token=None):
     """Fetch a full player profile by username or UUID, preserving old fallbacks for ambiguous names."""
     url = f'https://api.wynncraft.com/v3/player/{quote(str(player))}?fullResult'
     try:
-        resp = requests.get(url, timeout=20, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(url, timeout=20, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         if resp.status_code == 300:
             return False
         resp.raise_for_status()
@@ -79,7 +94,7 @@ def getPlayerProfileDatav3(player, token=None):
 def getData(guild, token=None):
     url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
     try:
-        resp = requests.get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         resp.raise_for_status()
         return resp.json()
     except requests.RequestException:
@@ -158,7 +173,7 @@ def getGuildMembers(guild, token=None):
       f'?action=guildStats&command={urlify(guild)}'
     )
     try:
-        resp = requests.get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         resp.raise_for_status()
         return resp.json().get('members', [])
     except requests.RequestException:
@@ -179,13 +194,13 @@ def dropShadow(image):
 
 def getPlayerUUID(player, token=None):
     try:
-        req = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{player}")
+        req = timed_get(f"https://api.mojang.com/users/profiles/minecraft/{player}")
         username = req.json()['name']
         player_uuid = UUID(req.json()['id'])
         return [username, str(player_uuid)]
     except:
         try:
-            req = requests.get(f"https://api.wynncraft.com/v3/player/{player}", headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"}, timeout=10)
+            req = timed_get(f"https://api.wynncraft.com/v3/player/{player}", headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"}, timeout=10)
             username = req.json()['username']
             player_uuid = UUID(req.json()['uuid'])
             return [username, str(player_uuid)]
@@ -210,7 +225,7 @@ def determine_starting_rank(member):
 
 def getNameFromUUID(uuid):
     try:
-        req = requests.get(f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}")
+        req = timed_get(f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}")
         username = req.json()['name']
         player_uuid = UUID(req.json()['id'])
         return [username, str(player_uuid)]
@@ -418,7 +433,7 @@ def generate_banner(guild, scale, style='', guild_data=None):
     if data is None:
         url = f"https://api.wynncraft.com/v3/guild/{urlify(guild)}"
         try:
-            resp = requests.get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
+            resp = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
             resp.raise_for_status()
             data = resp.json()
         except requests.RequestException:
@@ -582,7 +597,7 @@ def generate_applicant_info(pdata):
     try:
         headers = {'User-Agent': os.getenv("visage_UA")}
         url = f"https://visage.surgeplay.com/bust/190/{pdata.UUID}"
-        response = requests.get(url, headers=headers)
+        response = timed_get(url, headers=headers)
         skin = Image.open(BytesIO(response.content))
     except:
         skin = Image.open('images/profile/X-Steve.webp')
@@ -701,7 +716,7 @@ def getOnlinePlayers(token=None):
     # Preferred v3 endpoint (30 seconds TTL)
     v3_url = "https://api.wynncraft.com/v3/player"
     try:
-        resp = requests.get(v3_url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(v3_url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         if resp.status_code == 200:
             data = resp.json()
             if 'players' in data and isinstance(data['players'], dict):
@@ -712,7 +727,7 @@ def getOnlinePlayers(token=None):
     # Fallback to legacy endpoint (using a different timeout for the fallback)
     legacy_url = "https://api.wynncraft.com/public_api.php?action=onlinePlayers"
     try:
-        resp = requests.get(legacy_url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(legacy_url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         if resp.status_code == 200:
             data = resp.json()
             # Legacy format returns a list of servers, each with a list of players
@@ -748,7 +763,7 @@ def getOnlinePlayersUUID(token=None):
     uuid_url = "https://api.wynncraft.com/v3/player?identifier=uuid"
 
     try:
-        resp = requests.get(uuid_url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
+        resp = timed_get(uuid_url, timeout=10, headers={"Authorization": f"Bearer {os.getenv(token or 'WYNN_TOKEN')}"})
         if resp.status_code == 200:
             data = resp.json()
             players = data.get("players", {})
@@ -798,7 +813,7 @@ def getUsernameFromUUID(uuid: str) -> str | None:
 
     url = f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid_nodash}"
     try:
-        resp = requests.get(url, timeout=8, verify=certifi.where())
+        resp = timed_get(url, timeout=8, verify=certifi.where())
         if resp.status_code == 200:
             data = resp.json()
             name = data.get("name")

@@ -12,7 +12,7 @@ from discord.commands import slash_command
 import json
 
 from Helpers.classes import PlayerStats
-from Helpers.functions import pretty_date, generate_rank_badge, generate_banner, getData, format_number, addLine, vertical_gradient, round_corners, generate_badge
+from Helpers.functions import pretty_date, generate_rank_badge, generate_banner, getData, format_number, addLine, vertical_gradient, round_corners, generate_badge, timed_get
 from Helpers.logger import log, ERROR
 from Helpers.variables import discord_ranks, minecraft_colors, minecraft_banner_colors
 from Helpers.rate_limiter import external_rate_limit
@@ -98,7 +98,7 @@ class Profile(commands.Cog):
             else:
                 headers = {'User-Agent': os.getenv("visage_UA")}
                 url = f"https://visage.surgeplay.com/bust/500/{player.UUID}"
-                response = requests.get(url, headers=headers, timeout=6)
+                response = timed_get(url, headers=headers, timeout=6)
                 response.raise_for_status()
                 try:
                     save_cached_avatar(player.UUID, response.content)
