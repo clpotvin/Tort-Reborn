@@ -7,7 +7,59 @@ import time
 import psycopg2
 from psycopg2 import OperationalError
 
+from Helpers import telemetry
 from Helpers.logger import log, ERROR
+
+
+class _TimedCursor:
+    """Times execute/executemany into db.query; delegates everything else.
+
+    Delegation is via __getattr__ rather than an explicit method list so that
+    fetchone/fetchall/close and anything else keep working untouched.
+    """
+
+    def __init__(self, cursor):
+        self.__dict__["_cursor"] = cursor
+
+    def execute(self, *args, **kwargs):
+        with telemetry.track("db.query"):
+            return self.__dict__["_cursor"].execute(*args, **kwargs)
+
+    def executemany(self, *args, **kwargs):
+        with telemetry.track("db.query"):
+            return self.__dict__["_cursor"].executemany(*args, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self.__dict__["_cursor"], name)
+
+    def __setattr__(self, name, value):
+        setattr(self.__dict__["_cursor"], name, value)
+
+    def __iter__(self):
+        return iter(self.__dict__["_cursor"])
+
+    def __enter__(self):
+        return self.__dict__["_cursor"].__enter__()
+
+    def __exit__(self, *exc):
+        return self.__dict__["_cursor"].__exit__(*exc)
+
+
+class _TimedConnection:
+    """Times commit into db.commit; delegates everything else."""
+
+    def __init__(self, connection):
+        self.__dict__["_connection"] = connection
+
+    def commit(self, *args, **kwargs):
+        with telemetry.track("db.commit"):
+            return self.__dict__["_connection"].commit(*args, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self.__dict__["_connection"], name)
+
+    def __setattr__(self, name, value):
+        setattr(self.__dict__["_connection"], name, value)
 
 
 class DB:
@@ -18,33 +70,37 @@ class DB:
     def connect(self):
         try:
             if os.getenv("TEST_MODE").lower() == "true":
-                self.connection = psycopg2.connect(
-                    user=os.getenv("TEST_DB_LOGIN"),
-                    password=os.getenv("TEST_DB_PASS"),
-                    host=os.getenv("TEST_DB_HOST"),
-                    port=int(os.getenv("TEST_DB_PORT")),
-                    database=os.getenv("TEST_DB_DATABASE", "postgres"),
-                    sslmode=os.getenv("TEST_DB_SSLMODE"),
-                    keepalives=1,
-                    keepalives_idle=30,
-                    keepalives_interval=10,
-                    keepalives_count=5
-                )
-                self.cursor = self.connection.cursor()
+                with telemetry.track("db.connect"):
+                    raw_connection = psycopg2.connect(
+                        user=os.getenv("TEST_DB_LOGIN"),
+                        password=os.getenv("TEST_DB_PASS"),
+                        host=os.getenv("TEST_DB_HOST"),
+                        port=int(os.getenv("TEST_DB_PORT")),
+                        database=os.getenv("TEST_DB_DATABASE", "postgres"),
+                        sslmode=os.getenv("TEST_DB_SSLMODE"),
+                        keepalives=1,
+                        keepalives_idle=30,
+                        keepalives_interval=10,
+                        keepalives_count=5
+                    )
+                self.connection = _TimedConnection(raw_connection)
+                self.cursor = _TimedCursor(raw_connection.cursor())
             elif os.getenv("TEST_MODE").lower() == "false":
-                self.connection = psycopg2.connect(
-                    user=os.getenv("DB_LOGIN"),
-                    password=os.getenv("DB_PASS"),
-                    host=os.getenv("DB_HOST"),
-                    port=int(os.getenv("DB_PORT")),
-                    database=os.getenv("DB_DATABASE", "postgres"),
-                    sslmode=os.getenv("DB_SSLMODE"),
-                    keepalives=1,
-                    keepalives_idle=30,
-                    keepalives_interval=10,
-                    keepalives_count=5
-                )
-                self.cursor = self.connection.cursor()
+                with telemetry.track("db.connect"):
+                    raw_connection = psycopg2.connect(
+                        user=os.getenv("DB_LOGIN"),
+                        password=os.getenv("DB_PASS"),
+                        host=os.getenv("DB_HOST"),
+                        port=int(os.getenv("DB_PORT")),
+                        database=os.getenv("DB_DATABASE", "postgres"),
+                        sslmode=os.getenv("DB_SSLMODE"),
+                        keepalives=1,
+                        keepalives_idle=30,
+                        keepalives_interval=10,
+                        keepalives_count=5
+                    )
+                self.connection = _TimedConnection(raw_connection)
+                self.cursor = _TimedCursor(raw_connection.cursor())
             else:
                 log(ERROR, "Problem logging into db", context="database")
                 exit(-1)
