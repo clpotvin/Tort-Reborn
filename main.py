@@ -280,6 +280,7 @@ extensions = [
     'Tasks.sync_war_builds',
     'Tasks.daily_musing',
     'Tasks.annihilation_announcements',
+    'Tasks.loop_lag',
 ]
 
 for ext in extensions:
