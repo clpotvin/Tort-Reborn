@@ -16,6 +16,7 @@ from botocore.exceptions import ClientError
 from PIL import Image
 
 from Helpers.logger import log, WARN, ERROR
+from Helpers import telemetry
 
 AVATAR_TTL_SECONDS = 3 * 24 * 60 * 60  # 3 days
 
@@ -53,8 +54,11 @@ class S3Storage:
         if not self._is_configured:
             return None
         try:
-            resp = self.client.get_object(Bucket=self._bucket, Key=key)
-            return resp["Body"].read()
+            with telemetry.track("s3.get"):
+                resp = self.client.get_object(Bucket=self._bucket, Key=key)
+                data = resp["Body"].read()
+                resp["Body"].close()
+                return data
         except Exception:
             return None
 
@@ -69,24 +73,26 @@ class S3Storage:
         if not self._is_configured:
             return None
         try:
-            resp = self.client.get_object(Bucket=self._bucket, Key=key)
-            age = (datetime.now(timezone.utc) - resp["LastModified"]).total_seconds()
-            if age > max_age_seconds:
+            with telemetry.track("s3.get"):
+                resp = self.client.get_object(Bucket=self._bucket, Key=key)
+                age = (datetime.now(timezone.utc) - resp["LastModified"]).total_seconds()
+                if age > max_age_seconds:
+                    resp["Body"].close()
+                    return None
+                data = resp["Body"].read()
                 resp["Body"].close()
-                return None
-            data = resp["Body"].read()
-            resp["Body"].close()
-            return data
+                return data
         except Exception:
             return None
 
     def put_bytes(self, key: str, data: bytes, content_type: str = "image/png"):
-        self.client.put_object(
-            Bucket=self._bucket,
-            Key=key,
-            Body=data,
-            ContentType=content_type,
-        )
+        with telemetry.track("s3.put"):
+            self.client.put_object(
+                Bucket=self._bucket,
+                Key=key,
+                Body=data,
+                ContentType=content_type,
+            )
 
     def put_image(self, key: str, image: Image.Image):
         buf = io.BytesIO()
