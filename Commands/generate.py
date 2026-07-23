@@ -898,6 +898,65 @@ def _build_taq_faq_embeds_page2() -> list[discord.Embed]:
     ]
 
 
+def _build_promotions_embeds() -> list[discord.Embed]:
+    description = (
+        "Promotions rely on your role in the guild and how you help it! We value all sorts of "
+        "contributions, trying our best to give everyone a chance to rank up regardless of "
+        "their interests and skills.\n"
+        "\n"
+        "🕗‎ ‎ ‎ **Passive contributions**\n"
+        "> • Being active in guild chat and/or on Discord\n"
+        "> • Joining voice calls\n"
+        "> • Playing with other guild members\n"
+        "> • Helping out a fellow guild member\n"
+        "> • Giving recommendations, advice and feedback.\n"
+        "\n"
+        "We are thankful for any positive effort that contributes to making TAq a friendly "
+        "and welcoming community! ♡\n"
+        "\n"
+        f"🔧‎ ‎ ‎ **Active contributions**\n"
+        f"> • Joining the [war](https://discord.com/channels/{TAQ_GUILD_ID}/{WAR_INFO_CHANNEL_ID}) effort\n"
+        f"> • Completing [Guild Raids](https://discord.com/channels/{TAQ_GUILD_ID}/{RAID_COLLECTING_CHANNEL_ID})\n"
+        "> • Starting up giveaways (DM any chief)\n"
+        "> • Recruiting new guild members\n"
+        f"> • Donating [ingredients or materials](https://discord.com/channels/{TAQ_GUILD_ID}/{SHELL_EXCHANGE_CHANNEL_ID})\n"
+        "\n"
+        "The first rank-ups are easy to achieve. To get promoted to Manatee (recruiter), "
+        "something as easy as regularly chatting with the guild is enough!\n"
+        f"After reaching Angler, an [application]({WEBSITE_URL}/login?redirect=/apply/hammerhead) "
+        "is required in order to rank up and become a part of our HR team."
+    )
+
+    warring_description = (
+        "⚔️ **Ranking up through warring**\n"
+        "Jumping into guild wars is like hitting the fast lane to rank up in no time! It's an "
+        "absolute blast and a great way to dive into exciting end-game content. You get to "
+        "team up with fellow guild members, form strategies, and kick some towers!\n"
+        "\n"
+        "> Being active in wars is super important for our guild because it keeps us strong "
+        "and competitive. Plus, it's not just about the thrill – having war power means we "
+        "get to hold territories and generate sweet emeralds, which we can then spend on "
+        "guild events and community giveaways. So, if you're up for some action-packed fun "
+        "and want to help our guild thrive, join the war efforts today!\n"
+        "\n"
+        "The amount of wars you participate in will always be taken into account for "
+        "promotion waves. Bonus points if you help with starting rounds of FFA, teaching "
+        "other members, pinging when we get attacked, etc!\n"
+        "\n"
+        "⏩ Rank up shortcuts\n"
+        "```\n"
+        "- Starfish/Manatee → Piranha = learn how to queue\n"
+        "- Piranha → Angler = learning about defending our claim\n"
+        "- Angler → Swordfish = learn how to eco\n"
+        "```\n"
+        "We are always looking for new warrers, so do not hesitate to ask for information!"
+    )
+
+    embed1 = discord.Embed(description=description, color=GENERATE_EMBED_COLOR)
+    embed2 = discord.Embed(description=warring_description, color=GENERATE_EMBED_COLOR)
+    return [embed1, embed2]
+
+
 # ---- Cog ----
 
 class Generate(commands.Cog):
@@ -1208,114 +1267,6 @@ class Generate(commands.Cog):
             )
 
         await ctx.followup.send("Posted the role info messages.", ephemeral=True)
-
-    @generate.command(name="promotions", description="ADMIN: Post the promotions / rank-up info message")
-    async def promotions(self, ctx: discord.ApplicationContext):
-        await ctx.defer(ephemeral=True)
-
-        description = (
-            "Promotions rely on your role in the guild and how you help it! We value all sorts of "
-            "contributions, trying our best to give everyone a chance to rank up regardless of "
-            "their interests and skills.\n"
-            "\n"
-            "🕗\u200e \u200e \u200e **Passive contributions**\n"
-            "> • Being active in guild chat and/or on Discord\n"
-            "> • Joining voice calls\n"
-            "> • Playing with other guild members\n"
-            "> • Helping out a fellow guild member\n"
-            "> • Giving recommendations, advice and feedback.\n"
-            "\n"
-            "We are thankful for any positive effort that contributes to making TAq a friendly "
-            "and welcoming community! ♡\n"
-            "\n"
-            f"🔧\u200e \u200e \u200e **Active contributions**\n"
-            f"> • Joining the [war](https://discord.com/channels/{TAQ_GUILD_ID}/{WAR_INFO_CHANNEL_ID}) effort\n"
-            f"> • Completing [Guild Raids](https://discord.com/channels/{TAQ_GUILD_ID}/{RAID_COLLECTING_CHANNEL_ID})\n"
-            "> • Starting up giveaways (DM any chief)\n"
-            "> • Recruiting new guild members\n"
-            f"> • Donating [ingredients or materials](https://discord.com/channels/{TAQ_GUILD_ID}/{SHELL_EXCHANGE_CHANNEL_ID})\n"
-            "\n"
-            "The first rank-ups are easy to achieve. To get promoted to Manatee (recruiter), "
-            "something as easy as regularly chatting with the guild is enough!\n"
-            f"After reaching Angler, an [application]({WEBSITE_URL}/login?redirect=/apply/hammerhead) "
-            "is required in order to rank up and become a part of our HR team."
-        )
-
-        warring_description = (
-            "⚔️ **Ranking up through warring**\n"
-            "Jumping into guild wars is like hitting the fast lane to rank up in no time! It's an "
-            "absolute blast and a great way to dive into exciting end-game content. You get to "
-            "team up with fellow guild members, form strategies, and kick some towers!\n"
-            "\n"
-            "> Being active in wars is super important for our guild because it keeps us strong "
-            "and competitive. Plus, it's not just about the thrill – having war power means we "
-            "get to hold territories and generate sweet emeralds, which we can then spend on "
-            "guild events and community giveaways. So, if you're up for some action-packed fun "
-            "and want to help our guild thrive, join the war efforts today!\n"
-            "\n"
-            "The amount of wars you participate in will always be taken into account for "
-            "promotion waves. Bonus points if you help with starting rounds of FFA, teaching "
-            "other members, pinging when we get attacked, etc!\n"
-            "\n"
-            "⏩ Rank up shortcuts\n"
-            "```\n"
-            "- Starfish/Manatee → Piranha = learn how to queue\n"
-            "- Piranha → Angler = learning about defending our claim\n"
-            "- Angler → Swordfish = learn how to eco\n"
-            "```\n"
-            "We are always looking for new warrers, so do not hesitate to ask for information!"
-        )
-
-        embed1 = discord.Embed(description=description, color=GENERATE_EMBED_COLOR)
-        embed2 = discord.Embed(description=warring_description, color=GENERATE_EMBED_COLOR)
-        await ctx.channel.send(embeds=[embed1, embed2])
-        await ctx.followup.send("Posted the promotions info message.", ephemeral=True)
-
-    @generate.command(name="taq-faq", description="ADMIN: Post or update the TAq FAQ messages")
-    async def taq_faq(self, ctx: discord.ApplicationContext):
-        await ctx.defer(ephemeral=True)
-
-        banner_path = GUILD_INFO_ASSET_DIR / TAQ_FAQ_BANNER
-        if not banner_path.exists():
-            return await ctx.followup.send(
-                f"Missing TAq FAQ banner asset: {banner_path.relative_to(Path(__file__).parent.parent)}",
-                ephemeral=True,
-            )
-
-        page1 = _build_taq_faq_embeds_page1()
-        page2 = _build_taq_faq_embeds_page2()
-
-        banner_msg = None
-        page2_msg = None
-        async for msg in ctx.channel.history(limit=100):
-            if msg.author.id != self.client.user.id:
-                continue
-            filenames = {a.filename for a in msg.attachments}
-            if banner_msg is None and TAQ_FAQ_BANNER in filenames:
-                banner_msg = msg
-            if page2_msg is None and msg.embeds and msg.embeds[0].title == "𓆉 Vanity Roles":
-                page2_msg = msg
-            if banner_msg and page2_msg:
-                break
-
-        if banner_msg:
-            await banner_msg.edit(
-                embeds=page1,
-                attachments=[],
-                files=[discord.File(str(banner_path), filename=TAQ_FAQ_BANNER)],
-            )
-            if page2_msg:
-                await page2_msg.edit(embeds=page2)
-            else:
-                await ctx.channel.send(embeds=page2)
-            return await ctx.followup.send("✅ Updated the TAq FAQ messages.", ephemeral=True)
-
-        await ctx.channel.send(
-            embeds=page1,
-            file=discord.File(str(banner_path), filename=TAQ_FAQ_BANNER),
-        )
-        await ctx.channel.send(embeds=page2)
-        await ctx.followup.send("✅ Posted the TAq FAQ messages.", ephemeral=True)
 
     @commands.Cog.listener()
     async def on_ready(self):

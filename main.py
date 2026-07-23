@@ -246,6 +246,8 @@ extensions = [
     'Tasks.sync_war_builds',
     'Tasks.daily_musing',
     'Tasks.annihilation_announcements',
+    'Tasks.sync_discord_channels',
+    'Tasks.publish_panels',
 ]
 
 for ext in extensions:
