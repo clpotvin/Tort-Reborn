@@ -56,16 +56,18 @@ class LoopLag(commands.Cog):
         self._last = now
 
     def _emit_summary(self, now):
+        # Emit every window, even one with no positive-drift samples, so the
+        # summary is a reliable once-a-minute heartbeat: absence of a line then
+        # means the monitor (or the loop) is dead, not merely a quiet window.
         samples = sorted(self._samples)
-        if samples:
-            telemetry.emit({
-                "type": "loop_lag_summary",
-                "window_s": round(now - self._window_started, 1),
-                "n": len(samples),
-                "p50_ms": round(_percentile(samples, 0.50), 2),
-                "p95_ms": round(_percentile(samples, 0.95), 2),
-                "max_ms": round(samples[-1], 2),
-            })
+        telemetry.emit({
+            "type": "loop_lag_summary",
+            "window_s": round(now - self._window_started, 1),
+            "n": len(samples),
+            "p50_ms": round(_percentile(samples, 0.50), 2),
+            "p95_ms": round(_percentile(samples, 0.95), 2),
+            "max_ms": round(samples[-1], 2) if samples else 0.0,
+        })
         self._samples = []
         self._window_started = now
 

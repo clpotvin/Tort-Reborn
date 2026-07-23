@@ -50,6 +50,27 @@ def test_emit_summary_shape_and_reset(monkeypatch, capsys):
     assert cog._window_started == 60.0
 
 
+def test_emit_summary_on_empty_window_is_a_heartbeat(monkeypatch, capsys):
+    """A window with no positive-drift samples still emits a summary with n=0,
+    so the once-a-minute line is a reliable liveness signal."""
+    monkeypatch.setenv("LATENCY_TELEMETRY", "1")
+
+    cog = loop_lag.LoopLag.__new__(loop_lag.LoopLag)
+    cog._samples = []
+    cog._window_started = 0.0
+
+    cog._emit_summary(60.0)
+
+    payload = json.loads(capsys.readouterr().out.strip())
+    assert payload["type"] == "loop_lag_summary"
+    assert payload["n"] == 0
+    assert payload["p50_ms"] == 0.0
+    assert payload["p95_ms"] == 0.0
+    assert payload["max_ms"] == 0.0
+    assert cog._samples == []
+    assert cog._window_started == 60.0
+
+
 def test_first_tick_is_noop(monkeypatch):
     """With no prior tick recorded, one tick must not compute drift or emit."""
     monkeypatch.setattr(loop_lag.time, "perf_counter", lambda: 100.0)

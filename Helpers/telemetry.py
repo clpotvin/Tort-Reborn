@@ -116,7 +116,10 @@ def track(bucket: str):
         yield
         return
 
-    start = time.perf_counter()
+    # Only the outermost span for a bucket records, so skip the clock reads
+    # entirely when nested — this timer sits on the instrumented hot paths
+    # (render primitives call each other) and shouldn't add its own overhead.
+    start = time.perf_counter() if depth == 0 else None
     try:
         yield
     finally:

@@ -56,7 +56,9 @@ class S3Storage:
         try:
             with telemetry.track("s3.get"):
                 resp = self.client.get_object(Bucket=self._bucket, Key=key)
-                return resp["Body"].read()
+                data = resp["Body"].read()
+                resp["Body"].close()
+                return data
         except Exception:
             return None
 
