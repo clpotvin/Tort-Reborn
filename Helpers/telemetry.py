@@ -11,11 +11,29 @@ a command.
 """
 
 import contextvars
+import datetime
 import json
 import os
 import sys
 import time
 from contextlib import contextmanager
+
+
+def queue_ms_from(created, now=None):
+    """Milliseconds between an interaction's creation time and `now`.
+
+    `created` is a timezone-aware datetime (from discord.utils.snowflake_time on
+    the interaction id). Returns None on missing/bad input rather than raising —
+    a telemetry field must never break a command.
+    """
+    try:
+        if created is None:
+            return None
+        if now is None:
+            now = datetime.datetime.now(datetime.timezone.utc)
+        return round((now - created).total_seconds() * 1000.0, 2)
+    except Exception:
+        return None
 
 # Holds the accumulator for the in-flight command invocation.
 #
