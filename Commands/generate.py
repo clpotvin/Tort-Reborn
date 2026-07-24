@@ -32,6 +32,9 @@ from Helpers.variables import (
 
 APPLICATION_TOKEN_SECRET = os.getenv("APPLICATION_TOKEN_SECRET", "")
 GENERATE_EMBED_COLOR = 0x94C1FF
+SHELLS_PER_ASPECT = 3
+MAX_ASPECTS_PER_SHELL_CONVERSION = 40
+SHELL_CONVERT_BUTTON_ID = "shells_to_aspects"
 PROJECT_ROOT = Path(__file__).parent.parent
 EMBED_DATA_DIR = PROJECT_ROOT / "data" / "embeds"
 GUILD_INFO_ASSET_DIR = Path(__file__).parent.parent / "images" / "guild_info"
@@ -498,7 +501,7 @@ class ShellConvertView(View):
     def __init__(self):
         super().__init__(timeout=None)
 
-    @button(label="Shells -> Aspects", style=discord.ButtonStyle.green, custom_id="shells_to_aspects")
+    @button(label="Shells -> Aspects", style=discord.ButtonStyle.green, custom_id=SHELL_CONVERT_BUTTON_ID)
     async def shells_to_aspects(self, _: discord.ui.Button, interaction: discord.Interaction):
         # Linked account check
         db = DB(); db.connect()
@@ -529,17 +532,18 @@ class ShellConvertView(View):
                 ephemeral=True
             )
 
-        # Shell balance check (need at least 4 for one aspect)
+        # Shell balance check
         db.cursor.execute(
             'SELECT balance, last_aspect_convert_at FROM shells WHERE "user" = %s',
             (str(interaction.user.id),)
         )
         shells_row = db.cursor.fetchone()
         balance = shells_row[0] if shells_row else 0
-        if balance < 6:
+        if balance < SHELLS_PER_ASPECT:
             db.close()
             return await interaction.response.send_message(
-                f"You need at least **6** shells to convert (you have **{balance}**).",
+                f"You need at least **{SHELLS_PER_ASPECT}** shells to convert "
+                f"(you have **{balance}**).",
                 ephemeral=True
             )
 
@@ -556,8 +560,11 @@ class ShellConvertView(View):
                 )
         db.close()
 
-        # All guards passed -- open the amount modal (cap at 40 per conversion)
-        max_aspects = min(balance // 6, 40)
+        # All guards passed -- open the amount modal
+        max_aspects = min(
+            balance // SHELLS_PER_ASPECT,
+            MAX_ASPECTS_PER_SHELL_CONVERSION,
+        )
         modal = ShellsToAspectsModal(
             discord_id=interaction.user.id,
             uuid=uuid,
@@ -578,7 +585,10 @@ class ShellsToAspectsModal(discord.ui.Modal):
         self.max_aspects = max_aspects
 
         self.amount_input = discord.ui.InputText(
-            label=f"How many aspects? (max {max_aspects}, 6 shells each)",
+            label=(
+                f"How many aspects? "
+                f"(max {max_aspects}, {SHELLS_PER_ASPECT} shells each)"
+            ),
             placeholder=f"Enter a number from 1 to {max_aspects}",
             style=discord.InputTextStyle.short,
             max_length=4,
@@ -604,7 +614,7 @@ class ShellsToAspectsModal(discord.ui.Modal):
                 ephemeral=True
             )
 
-        cost = amount * 6
+        cost = amount * SHELLS_PER_ASPECT
         remaining = self.balance - cost
 
         # Preview embed with conversion breakdown -- user must confirm
@@ -1068,12 +1078,12 @@ class Generate(commands.Cog):
 
             Spend your shells to earn aspects directly. Shell conversion lets you use your shell balance to receive aspects without needing to complete additional raids.
 
-            Conversion rate: **6 {SHELL_EMOJI} = 1 {ASPECT_EMOJI}**
+            Conversion rate: **{SHELLS_PER_ASPECT} {SHELL_EMOJI} = 1 {ASPECT_EMOJI}**
 
             **Requirements**
             - No uncollected aspects already waiting
-            - At least **6** shells in balance
-            - At most **40** aspects per conversion
+            - At least **{SHELLS_PER_ASPECT}** shells in balance
+            - At most **{MAX_ASPECTS_PER_SHELL_CONVERSION}** aspects per conversion
             - 3-day cooldown between conversions
 
             **How to Convert**
@@ -1083,6 +1093,26 @@ class Generate(commands.Cog):
 
             _Your aspects will be added to the collection queue automatically. Note: depending on current demand, it may take up to a week or two for your aspects to be delivered._
             """)
+
+        existing_msg = None
+        async for msg in ctx.channel.history(limit=100):
+            if msg.author.id != self.client.user.id:
+                continue
+
+            if any(
+                getattr(child, "custom_id", None) == SHELL_CONVERT_BUTTON_ID
+                for row in msg.components
+                for child in row.children
+            ):
+                existing_msg = msg
+                break
+
+        if existing_msg:
+            await existing_msg.edit(embed=embed, view=view)
+            return await ctx.followup.send(
+                "Updated the shell conversion panel.",
+                ephemeral=True,
+            )
 
         await ctx.channel.send(embed=embed, view=view)
         await ctx.followup.send("Posted the shell conversion panel.", ephemeral=True)
