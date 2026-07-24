@@ -1,6 +1,6 @@
 # Command latency investigation
 
-**Status:** Phase 0 instrumentation is implemented (measurement only, behaviourally neutral). It has not yet been analysed — deploy, capture a data window, then work through [Reading the telemetry](#reading-the-telemetry). Phase 1 (the fixes) has not been started.
+**Status:** Phase 0 is deployed and the first two days have been analysed — see [Findings](#findings--first-two-days-of-telemetry). The measured result promotes H2 (cold connections) over H1 and rescopes the fixes; [Phase 1](#phase-1--fixes-evidence-ranked) is evidence-ranked and not yet started.
 
 ## Symptom
 
@@ -39,14 +39,18 @@ The "something is asleep" model does not survive the evidence:
 
 ## Hypotheses, ranked
 
-**H1 — Event-loop contention with the background task fleet.** *(best fit)*
+*This was the ranking before any measurement. The [Findings](#findings--first-two-days-of-telemetry)
+section has the measured result, which reordered these: H2 is the dominant cost and H1 is
+secondary.*
+
+**H1 — Event-loop contention with the background task fleet.** *(pre-measurement: best guess)*
 The task loops in `Tasks/` run on 1/2/3/5/10-minute cycles and several perform blocking work
 directly on the event loop. A command arriving mid-cycle queues behind that work; one arriving in
 a gap returns immediately. The apparent sleep/wake periodicity is the task schedule.
 `Tasks/update_member_data.py` is the prime suspect — it runs every three minutes and iterates the
 full guild roster.
 
-**H2 — Cold connection paths after idle.** *(contributing)*
+**H2 — Cold connection paths after idle.** *(pre-measurement: contributing; measured: dominant)*
 Every database helper opens a fresh TLS connection to Neon. Every outbound API call builds a new
 `requests` session, so nothing reuses a socket. botocore's connection pool idles out. Under
 sustained traffic some of this amortises; after a quiet spell everything re-handshakes at once. A
@@ -134,20 +138,55 @@ Two consequences:
   forward logs to an external sink (Railway suggests Vector / Fluent Bit / OTEL). For a one-off
   investigation, teeing to a file is enough; a forwarder is overkill.
 
-### Phase 1 — fixes, highest payoff first
+### Findings — first two days of telemetry
 
-1. Connection pool in `DB`. Single file, removes N handshakes per command.
-2. Move remaining blocking work off the loop: module-level `requests.Session`, and `to_thread` for
-   the Pillow render and the S3 calls.
-3. Stagger task-loop start offsets so they do not all fire on the same minute boundary.
-4. Split the task fleet into its own service or process so background work cannot contend with
-   interaction handling. This is the real fix for H1 and the largest change — only worth doing if
-   Phase 0 confirms H1.
+Measured over roughly the first day and a half after deployment (~1,800 one-minute drift windows,
+~70 drift excursions, 15 commands). Low command traffic, which is itself part of the story.
+
+- **The event loop is healthy at baseline.** p95 drift is ~2 ms (median across all windows), p90
+  ~2.5 ms. A congested loop is ruled out. Brief single-tick bumps occur (about a quarter of minutes
+  touch >100 ms once) but nothing sustained.
+- **Every command is slow — 2 to 6.5 seconds — and the cost is cold external I/O.** Supabase S3
+  reads dominate: `s3.get` ranged 0.7–4.0 s. Then outbound HTTP (visage avatar, Wynncraft) and
+  fresh DB connects (0.1–0.7 s each, no pool).
+- **H2 (cold connections) is confirmed on real traffic.** Two `profile` calls a minute apart showed
+  `s3.get` drop from ~3.95 s to ~0.73 s — a ~5× cold penalty. With traffic this sparse, paths are
+  almost always cold, so nearly every command is a first-after-idle. That is the reported symptom.
+- **Commands block the loop themselves.** The largest drift excursions (up to ~5.1 s) coincide with
+  commands, because the card-render path runs S3, HTTP and Pillow inline on the event loop. A slow
+  command stalls the loop for everyone during it.
+- **H1 (task contention) is real but secondary.** About half the excursions are
+  `update_member_data`'s recurring ~300 ms stalls; the rest are other task loops. None of this is
+  the main driver of command latency.
+
+The data redirects Phase 1: the event loop is not congested, so **splitting the task fleet into its
+own service — the largest planned change — is not justified.** The win is getting command I/O off
+the loop and making it not-cold.
+
+### Phase 1 — fixes, evidence-ranked
+
+1. **Get command I/O off the loop and de-cold it.** Highest payoff, addresses both the slow command
+   and the loop stalls it causes:
+   - `to_thread` the blocking S3 / avatar-fetch / Pillow work in `profile` and the other card
+     commands.
+   - Attack the S3 cost directly — it is the fattest bucket by far. Backgrounds and avatars are
+     near-static, and the avatar's 3-day cache currently lives in S3, so the cache *read* itself
+     costs 0.7–1.6 s. Move that cache to local disk or an in-process LRU.
+   - Connection pool in `DB` (removes the per-command connect cost) and a warm/keepalive HTTP
+     session (helps visage / Wynncraft).
+2. **Stagger task-loop start offsets** so `update_member_data` and siblings do not all fire on the
+   same minute boundary — cheap mitigation for the ~300 ms task stalls.
+3. **Split the task fleet into its own service** — parked. Not justified while the loop is healthy;
+   revisit only if traffic grows enough to congest it.
+
+`queue_ms` recorded null for every command in the first window because `discord.Interaction`
+(py-cord 2.6) has no `created_at`; it is now derived from the interaction snowflake id, so the
+queue-delay discriminator works from the next deploy onward.
 
 ## Picking this back up
 
-Phase 0 is built and deployed-ready; the next action is to run it and read the output, not to write
-more code. Deploy, let it run through several quiet-then-active cycles, capture the window before it
-ages out, then work through [Reading the telemetry](#reading-the-telemetry). The single
-highest-information signal is the event-loop lag monitor: it either confirms or kills H1, and that
-decides whether Phase 1's task-fleet split is needed at all.
+Phase 0 is deployed and the first read is done (see Findings). Re-run the analysis on a fresh
+capture with `scripts/analyze_telemetry.py` (it prints drift health, excursion correlation, and the
+per-command bucket breakdown from a `railway logs --json` dump), then start Phase 1 at item 1 —
+threading the card-command I/O and moving the S3 background/avatar cache off S3. Keep the `db.*` /
+`s3.*` / `http.*` bucket names stable through the fixes so before/after captures stay comparable.
