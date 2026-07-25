@@ -123,7 +123,17 @@ class DB:
     def connect(self):
         try:
             with telemetry.track("db.connect"):
-                raw_connection = _get_pool().getconn()
+                retry_delays = (0.2, 0.4)
+                attempt = 0
+                while True:
+                    try:
+                        raw_connection = _get_pool().getconn()
+                        break
+                    except _pg_pool.PoolError:
+                        if attempt >= len(retry_delays):
+                            raise
+                        time.sleep(retry_delays[attempt])
+                        attempt += 1
             try:
                 self.connection = _TimedConnection(raw_connection)
                 self.cursor = _TimedCursor(raw_connection.cursor())

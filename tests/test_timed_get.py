@@ -5,6 +5,7 @@ Tests:
 1. Timing lands in a bucket named for the URL's host
 2. The response object is returned unchanged
 3. A URL with no parseable host uses the 'unknown' bucket
+4. The shared session never stores or sends cookies (stateless across token identities)
 """
 
 import os
@@ -55,3 +56,14 @@ def test_timed_get_uses_shared_session():
     assert out == "r"
     mock_get.assert_called_once()
     mock_bare.assert_not_called()
+
+
+def test_session_blocks_all_cookies():
+    """The session is shared across three token identities; a shared cookie
+    jar (e.g. Cloudflare's __cf_bm) would leak state between them and isn't
+    thread-safe to write. The policy must refuse to set or send cookies."""
+    from Helpers import functions
+
+    policy = functions._session.cookies.get_policy()
+    assert policy.set_ok(None, None) is False
+    assert policy.return_ok(None, None) is False

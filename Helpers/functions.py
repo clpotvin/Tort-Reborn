@@ -5,6 +5,7 @@ import os
 import json
 import re
 from functools import lru_cache
+from http import cookiejar as _cookiejar
 from io import BytesIO
 from urllib.parse import quote, urlparse
 from uuid import UUID
@@ -28,6 +29,22 @@ def _cached_font(path, size):
 # request execution is thread-safe; pool sized for concurrent commands + tasks.
 _session = requests.Session()
 _session.mount("https://", requests.adapters.HTTPAdapter(pool_connections=16, pool_maxsize=16))
+
+
+class _BlockAllCookies(_cookiejar.CookiePolicy):
+    """Cookie policy: never store or send cookies.
+
+    The shared session is used concurrently by three distinct token
+    identities; a shared cookie jar (e.g. Cloudflare's __cf_bm from
+    api.wynncraft.com) would leak state between them, and jar writes
+    aren't thread-safe. Keeping the session stateless sidesteps both.
+    """
+    return_ok = set_ok = domain_return_ok = path_return_ok = lambda self, *args, **kwargs: False
+    netscape = True
+    rfc2965 = hide_cookie2 = False
+
+
+_session.cookies.set_policy(_BlockAllCookies())
 
 
 def timed_get(url, **kwargs):

@@ -67,7 +67,6 @@ class Guild:
 class PlayerStats:
     def __init__(self, name, days, load_timed_stats=True):
         db = DB()
-        db.connect()
         try:
             pdata = self._load_player_payload(name)
             if self.error:
@@ -76,6 +75,7 @@ class PlayerStats:
             self.player_data = pdata
             self._load_player_fields(pdata)
             self._load_guild_fields(pdata)
+            db.connect()
             self._load_profile_db_state(db)
             if load_timed_stats:
                 self._load_timed_stats(db, days)

@@ -7,7 +7,6 @@ Currently backed by Supabase Storage (S3-compatible API).
 
 import io
 import os
-from datetime import datetime, timezone
 
 import certifi
 import boto3
@@ -66,23 +65,6 @@ class S3Storage:
             return Image.open(io.BytesIO(data)).convert("RGBA")
         return None
 
-    def get_bytes_if_fresh(self, key: str, max_age_seconds: int) -> bytes | None:
-        """Return object bytes only if younger than max_age_seconds."""
-        if not self._is_configured:
-            return None
-        try:
-            with telemetry.track("s3.get"):
-                resp = self.client.get_object(Bucket=self._bucket, Key=key)
-                age = (datetime.now(timezone.utc) - resp["LastModified"]).total_seconds()
-                if age > max_age_seconds:
-                    resp["Body"].close()
-                    return None
-                data = resp["Body"].read()
-                resp["Body"].close()
-                return data
-        except Exception:
-            return None
-
     def put_bytes(self, key: str, data: bytes, content_type: str = "image/png"):
         with telemetry.track("s3.put"):
             self.client.put_object(
@@ -124,7 +106,12 @@ def get_background(bg_id) -> Image.Image:
         _bg_cache[bg_id] = img
         return img.copy()
     if bg_id != 1:
-        return get_background(1)
+        try:
+            return get_background(1)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"Background {bg_id} not found in S3 (fallback background 1 also missing)"
+            ) from None
     if IS_TEST_MODE:
         return Image.open("images/profile_pictures/default.png")
     raise FileNotFoundError(f"Background {bg_id} not found in S3")

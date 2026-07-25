@@ -1063,9 +1063,9 @@ class UpdateMemberData(commands.Cog):
 
         log(INFO, f"Running snapshot for date: {target_date}", context="update_member_data")
 
+        guild = Guild("The Aquarium", "WYNN_LOOP_TOKEN")
         db = DB()
         db.connect()
-        guild = Guild("The Aquarium", "WYNN_LOOP_TOKEN")
         snap = {'time': int(time.time()), 'members': []}
 
         total_members = len(guild.all_members)
