@@ -1064,8 +1064,6 @@ class UpdateMemberData(commands.Cog):
         log(INFO, f"Running snapshot for date: {target_date}", context="update_member_data")
 
         guild = Guild("The Aquarium", "WYNN_LOOP_TOKEN")
-        db = DB()
-        db.connect()
         snap = {'time': int(time.time()), 'members': []}
 
         total_members = len(guild.all_members)
@@ -1092,27 +1090,36 @@ class UpdateMemberData(commands.Cog):
                     failed_members.append(m)
                     continue
 
-                # shells
-                db.cursor.execute(
-                    "SELECT COALESCE(s.shells, 0) "
-                    "FROM discord_links dl "
-                    "LEFT JOIN shells s ON dl.discord_id = s.user "
-                    "WHERE dl.uuid = %s",
-                    (uuid,)
-                )
-                row = db.cursor.fetchone()
-                sh = row[0] if row else 0
+                # Short-lived checkout scoped to this member's reads only. It is
+                # opened after the external API fetch above and closed before the
+                # next iteration's fetch (and before any retry sleep), so no pool
+                # slot is held across an API call or a retry sleep.
+                db = DB()
+                db.connect()
+                try:
+                    # shells
+                    db.cursor.execute(
+                        "SELECT COALESCE(s.shells, 0) "
+                        "FROM discord_links dl "
+                        "LEFT JOIN shells s ON dl.discord_id = s.user "
+                        "WHERE dl.uuid = %s",
+                        (uuid,)
+                    )
+                    row = db.cursor.fetchone()
+                    sh = row[0] if row else 0
 
-                # raids
-                db.cursor.execute(
-                    "SELECT COALESCE(ur.uncollected_raids, 0) + COALESCE(ur.collected_raids, 0) "
-                    "FROM discord_links dl "
-                    "LEFT JOIN uncollected_raids ur ON dl.uuid = ur.uuid "
-                    "WHERE dl.uuid = %s",
-                    (uuid,)
-                )
-                row = db.cursor.fetchone()
-                rd = row[0] if row else 0
+                    # raids
+                    db.cursor.execute(
+                        "SELECT COALESCE(ur.uncollected_raids, 0) + COALESCE(ur.collected_raids, 0) "
+                        "FROM discord_links dl "
+                        "LEFT JOIN uncollected_raids ur ON dl.uuid = ur.uuid "
+                        "WHERE dl.uuid = %s",
+                        (uuid,)
+                    )
+                    row = db.cursor.fetchone()
+                    rd = row[0] if row else 0
+                finally:
+                    db.close()
 
                 snap['members'].append({
                     'name': username,
@@ -1141,7 +1148,12 @@ class UpdateMemberData(commands.Cog):
 
         failed_fetches = len(failed_members) if failed_members else 0
 
-        # 3: write to player_activity database table (uses UPSERT for deduplication)
+        # 3: write to player_activity database table (uses UPSERT for deduplication).
+        # Own checkout for the whole write transaction: per-member carry-forward
+        # reads + UPSERTs + a single commit. No API fetches or sleeps happen here,
+        # so the slot is held only for DB work.
+        db = DB()
+        db.connect()
         try:
             db_rows_written = 0
             for member in snap['members']:
@@ -1187,13 +1199,13 @@ class UpdateMemberData(commands.Cog):
             db.connection.commit()
             private_profiles = sum(1 for m in snap['members'] if m.get('playtime') is None)
             log(INFO, f"Snapshot written to DB ({db_rows_written} rows, {failed_fetches} failed API, {private_profiles} private profiles)", context="update_member_data")
-            db.close()
             return (True, db_rows_written, total_members, failed_fetches, private_profiles)
         except Exception as e:
             log(ERROR, f"Failed to write to DB: {e}", context="update_member_data")
             traceback.print_exc()
-            db.close()
             return (False, 0, total_members, failed_fetches, 0)
+        finally:
+            db.close()
 
     @tasks.loop(time=dtime(hour=0, minute=1, tzinfo=timezone.utc))
     async def daily_activity_snapshot(self):

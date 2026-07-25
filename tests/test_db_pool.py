@@ -8,7 +8,8 @@ Tests:
 4. connect() wraps the checkout in the db.connect bucket
 5. A checkout whose post-checkout setup fails is discarded, not leaked
 6. connect() retries getconn() on PoolError and succeeds once the pool frees up
-7. connect() gives up and re-raises PoolError after exhausting retries
+7. connect() logs a WARN each time it retries after a PoolError (exhaustion signal)
+8. connect() gives up and re-raises PoolError after exhausting retries
 """
 
 import os
@@ -125,6 +126,23 @@ def test_connect_retries_pool_error_then_succeeds():
     assert fake.getconn.call_count == 3
     mock_sleep.assert_any_call(0.2)
     mock_sleep.assert_any_call(0.4)
+
+
+def test_connect_logs_warning_when_pool_exhausted_and_retrying():
+    conn = FakeConn()
+    fake = MagicMock()
+    fake.getconn.side_effect = [_pg_pool.PoolError("exhausted"), _pg_pool.PoolError("exhausted"), conn]
+    with patch.object(database, "_get_pool", return_value=fake), \
+         patch.object(database.time, "sleep"), \
+         patch.object(database, "log") as mock_log:
+        db = database.DB()
+        db.connect()
+    assert db.connection is not None
+    warn_messages = [
+        call.args[1] for call in mock_log.call_args_list
+        if len(call.args) >= 2 and "pool exhausted" in str(call.args[1])
+    ]
+    assert len(warn_messages) == 2  # one WARN per retried checkout, not the final success
 
 
 def test_connect_gives_up_after_exhausting_pool_error_retries():

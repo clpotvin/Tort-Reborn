@@ -9,7 +9,7 @@ from psycopg2 import OperationalError
 from psycopg2 import pool as _pg_pool
 
 from Helpers import telemetry
-from Helpers.logger import log, ERROR
+from Helpers.logger import log, ERROR, WARN
 
 
 class _TimedCursor:
@@ -132,6 +132,7 @@ class DB:
                     except _pg_pool.PoolError:
                         if attempt >= len(retry_delays):
                             raise
+                        log(WARN, f"DB pool exhausted, retrying (attempt {attempt + 1})", context="database")
                         time.sleep(retry_delays[attempt])
                         attempt += 1
             try:
