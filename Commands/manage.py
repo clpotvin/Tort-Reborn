@@ -8,11 +8,10 @@ from discord import SlashCommandGroup, ApplicationContext
 from discord.ext import commands
 from discord.ui import Modal, InputText
 from PIL import Image, ImageDraw, ImageFont, ImageOps
-import requests
 
 from Helpers.classes import LinkAccount, PlayerStats, PlayerShells
 from Helpers.database import DB
-from Helpers.functions import addLine, split_sentence, expand_image, getPlayerUUID
+from Helpers.functions import addLine, split_sentence, expand_image, getPlayerUUID, timed_get
 from Helpers.logger import log, ERROR
 from Helpers.variables import HOME_GUILD_IDS, discord_ranks, discord_rank_roles
 
@@ -40,7 +39,7 @@ class ShellModalName(Modal):
         player = PlayerStats(self.children[0].value, 1, False)
         try:
             url = f"https://visage.surgeplay.com/bust/75/{player.UUID}"
-            skin = Image.open(BytesIO(requests.get(url).content))
+            skin = Image.open(BytesIO(timed_get(url).content))
         except:
             skin = Image.open('images/profile/x-steve.webp')
         img.paste(skin, (10, 10), skin)
@@ -231,7 +230,7 @@ class Manage(commands.Cog):
             try:
                 headers = {'User-Agent': os.getenv("visage_UA")}
                 url = f"https://visage.surgeplay.com/bust/75/{player.UUID}"
-                skin = Image.open(BytesIO(requests.get(url, headers=headers).content))
+                skin = Image.open(BytesIO(timed_get(url, headers=headers).content))
             except:
                 skin = Image.open('images/profile/X-Steve.webp')
 

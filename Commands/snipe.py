@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from Helpers.classes import Guild, Page, PlayerStats
 from Helpers.database import DB, get_current_guild_data
-from Helpers.functions import addLine, generate_badge, get_guild_color, vertical_gradient, round_corners
+from Helpers.functions import addLine, generate_badge, get_guild_color, vertical_gradient, round_corners, timed_get
 from Helpers.snipe_utils import ALL_TERRITORY_NAMES, display_hq, is_dry, normalize_hq_for_storage
 from Helpers.variables import ALL_GUILD_IDS, HQ_TEAM_ROLE_ID, TAQ_GUILD_ID, SNIPE_LOG_CHANNEL_ID, discord_ranks
 
@@ -401,7 +401,7 @@ def _load_athena_guild_colors_sync() -> dict[str, str]:
         return _ATHENA_GUILD_COLORS
 
     try:
-        response = requests.get(_ATHENA_GUILD_LIST_URL, timeout=15)
+        response = timed_get(_ATHENA_GUILD_LIST_URL, timeout=15)
         response.raise_for_status()
         payload = response.json()
         colors = {}

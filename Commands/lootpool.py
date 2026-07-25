@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from Helpers.variables import mythics, WYNNVENTORY_API_KEY
 from Helpers.rate_limiter import external_rate_limit
-from Helpers.functions import wrap_text, get_multiline_text_size
+from Helpers.functions import wrap_text, get_multiline_text_size, timed_get
 from Helpers.database import DB
 from Helpers.logger import log, ERROR
 import os
@@ -298,7 +298,7 @@ class LootPool(commands.Cog):
         return {"Authorization": f"Api-Key {WYNNVENTORY_API_KEY}"}
 
     def _fetch_lootpool_data(self) -> list:
-        resp = requests.get(
+        resp = timed_get(
             f"{self.WYNNVENTORY_BASE_URL}/api/lootpool/items",
             headers=self._wynnventory_headers,
             timeout=15,
@@ -308,7 +308,7 @@ class LootPool(commands.Cog):
 
     def _fetch_ward_map(self) -> dict[str, list[str]]:
         try:
-            resp = requests.get(
+            resp = timed_get(
                 f"{self.OFFICIAL_API_BASE_URL}/v3/map/loot-pools",
                 timeout=10,
             )
