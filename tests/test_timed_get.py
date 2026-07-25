@@ -67,3 +67,16 @@ def test_session_blocks_all_cookies():
     policy = functions._session.cookies.get_policy()
     assert policy.set_ok(None, None) is False
     assert policy.return_ok(None, None) is False
+
+
+def test_timed_get_applies_default_timeout():
+    """Timeout-less callers get a 15s default instead of hanging forever."""
+    with patch("Helpers.functions._session.get", return_value="r") as mock_get:
+        timed_get("https://api.mojang.com/x")
+    assert mock_get.call_args.kwargs["timeout"] == 15
+
+
+def test_timed_get_explicit_timeout_wins():
+    with patch("Helpers.functions._session.get", return_value="r") as mock_get:
+        timed_get("https://api.wynncraft.com/x", timeout=6)
+    assert mock_get.call_args.kwargs["timeout"] == 6

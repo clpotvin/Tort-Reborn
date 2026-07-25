@@ -48,11 +48,14 @@ _session.cookies.set_policy(_BlockAllCookies())
 
 
 def timed_get(url, **kwargs):
-    """GET with per-host timing, through the shared keep-alive session."""
+    """GET with per-host timing (default 15s timeout), through the shared keep-alive session."""
     try:
         host = urlparse(url).hostname or "unknown"
     except Exception:
         host = "unknown"
+    # Default timeout: a hung upstream must fail loudly, not pin a session
+    # socket (and its caller's thread) forever. Explicit timeouts always win.
+    kwargs.setdefault("timeout", 15)
     with telemetry.track(f"http.{host}"):
         return _session.get(url, **kwargs)
 
