@@ -1,6 +1,6 @@
 # Command latency investigation
 
-**Status:** Phase 0 is deployed and analysed — see [Findings](#findings--first-two-days-of-telemetry). Phase 1 item 1 (threading + de-cold) is **implemented and awaiting deploy measurement**; item 2 (task-loop staggering) not started; item 3 (fleet split) parked. After deploy: capture, run `scripts/analyze_telemetry.py`, diff against the Findings baseline.
+**Status:** Phase 0 is deployed and analysed — see [Findings](#findings--first-two-days-of-telemetry). Phase 1 (threading + de-cold) and Phase 1.5 (the follow-up sweep: default timeout, full `http.*` coverage, remaining loop-hygiene sites, per-phase snapshot checkouts, pool observability) are **implemented and awaiting deploy measurement**. Still open: task-loop staggering, the parked fleet split, and the [Still open](#still-open) items. After deploy: capture, run `scripts/analyze_telemetry.py`, diff against the Findings baseline.
 
 ## Symptom
 
@@ -100,9 +100,10 @@ Scope limits to keep in mind when reading the data:
 - Timing records are **command-scoped**. Background task loops call the same DB and HTTP layers but
   run outside any command, so their own calls emit no bucket record. Their impact shows up
   indirectly, through `loop_lag` and through `queue_ms` on commands that land mid-cycle.
-- A few `requests.get` calls inside individual command files (snipe, worlds, lootpool, manage,
-  raids, map, progress) are not routed through the timed wrapper, so their HTTP time appears in no
-  `http.*` bucket. The shared hot paths are covered; the picture is not exhaustive.
+- All outbound GETs — shared helpers and every command file — route through the timed wrapper, so
+  the `http.*` picture is complete. (The one non-`timed_get` HTTP call, `Helpers/sheets.py`'s POST,
+  is a deliberate exception: the wrapper is GET-only. `Commands/aspects.py` uses aiohttp, also by
+  design.)
 - A command cancelled mid-flight (shutdown, gateway disconnect) records `ok: true`, because
   py-cord swallows the cancellation before the timing hook runs. Documented, not fixed.
 
@@ -199,16 +200,36 @@ duplicate UUID lookup.)
 3. **Split the task fleet into its own service** — parked. Not justified while the loop is healthy;
    revisit only if traffic grows enough to congest it.
 
-#### Phase 1 follow-ups (deliberate deferrals)
+#### Phase 1.5 — follow-ups (implemented)
 
-- Default timeout in `timed_get` (`kwargs.setdefault("timeout", ...)`) — changes hang→exception
-  behaviour at three timeout-less call sites, so it is a decision, not a tweak.
-- Sweep the remaining bare `requests.get` sites (snipe, lootpool, map, progress, manage, and
-  raids' guild fetch) through `timed_get` so the `http.*` picture is complete.
-- Pool-retry sleeps run synchronously; the few direct-async `DB` call sites (e.g. `manage.py`'s
-  inline `PlayerStats`) can block the loop up to ~0.6 s under real pool contention — pre-existing
-  blocking pattern, bounded, worth threading in the next pass.
-- Per-phase checkouts in `daily_activity_snapshot`; a pool-exhaustion counter/log for visibility.
+- `timed_get` applies a **default 15 s timeout** (explicit timeouts win). A hung upstream now
+  fails loudly instead of pinning a session socket and its worker thread forever. Every swept
+  call site's exception handling was verified to treat the new `Timeout` like any other request
+  failure.
+- **Every `requests.get` under `Commands/` is swept** through `timed_get` — direct calls and the
+  `to_thread(requests.get, …)` callable form (the callable form evaded the call-pattern grep
+  twice; three sites in snipe/lootpool and one in worlds were caught on the second and third
+  passes).
+- **Loop hygiene:** `manage`'s shell modal and shells render path, and `new_member`, now defer
+  first and run their blocking work (HTTP → then DB checkout) in worker threads via module-level
+  sync helpers — the `/profile` pattern. The shell modal also reports helper failures instead of
+  stranding the deferred interaction at "thinking…" (modal errors bypass the command error
+  handler), and the snipe log posts without its image rather than erroring after the success
+  embed was already sent.
+- **`daily_activity_snapshot` takes per-phase checkouts** — no pool slot is held across a
+  per-member API fetch or a retry sleep; the write phase keeps its original single commit.
+- **Pool exhaustion is observable:** `DB.connect` logs a WARN (`"DB pool exhausted, retrying"`)
+  whenever the bounded retry fires — the direct signal that `DB_POOL_MAX` needs raising.
+
+#### Still open
+
+- Task-loop start-offset staggering (Phase 1 item 2) and the task-fleet split (item 3, parked).
+- `manage rank` runs sync DB on the loop, and `manage link` holds a checkout across a
+  `getPlayerUUID` HTTP call — the two remaining violations of the checkout-after-HTTP
+  discipline; thread them the same way next pass.
+- `BasicPlayerStats` raises `AttributeError` instead of setting `error=True` when its player
+  fetch returns falsy (`Helpers/classes.py`, `pdata.get` on `False`) — pre-existing, now
+  surfaced inside a worker thread by `new_member`.
 
 `queue_ms` recorded null for every command in the first window because `discord.Interaction`
 (py-cord 2.6) has no `created_at`; it is now derived from the interaction snowflake id, so the
