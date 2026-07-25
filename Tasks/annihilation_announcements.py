@@ -13,6 +13,7 @@ from Helpers.logger import ERROR, SUCCESS, WARN, log
 from Helpers.variables import (
     ANNIHILATION_ANNOUNCEMENT_CHANNEL_ID,
     ANNIHILATION_PING_ROLE_ID,
+    HOME_GUILD_IDS,
     IS_TEST_MODE,
 )
 
@@ -396,6 +397,7 @@ class AnnihilationAnnouncements(commands.Cog):
             name="annihilation-smoke-test",
             description="TEMP: Send both Prelude to Annihilation test announcements",
             default_member_permissions=discord.Permissions(administrator=True),
+            guild_ids=HOME_GUILD_IDS,
         )
         async def annihilation_smoke_test(self, ctx: discord.ApplicationContext):
             await ctx.defer(ephemeral=True)
