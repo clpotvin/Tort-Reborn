@@ -1,14 +1,18 @@
 import datetime
-from datetime import timedelta
 import json
 import os
+import sys
+import threading
 import time
+from datetime import timedelta
+from typing import ClassVar
 
 import psycopg2
-from psycopg2 import OperationalError
+import psycopg2.pool
+from psycopg2 import OperationalError, extensions
 
 from Helpers import telemetry
-from Helpers.logger import log, ERROR
+from Helpers.logger import ERROR, WARN, log
 
 
 class _TimedCursor:
@@ -63,48 +67,87 @@ class _TimedConnection:
 
 
 class DB:
-    def __init__(self):
+    _pool_lock: ClassVar = threading.Lock()
+    _pools: ClassVar[dict[tuple, psycopg2.pool.ThreadedConnectionPool]] = {}
+
+    def __init__(self, *, use_pool: bool = True, pool_min: int = 1, pool_max: int = 10):
         self.connection = None
         self.cursor = None
+        self._raw_connection = None
+        self._pool = None
+        self._use_pool = use_pool
+        self._pool_min = max(1, int(pool_min))
+        self._pool_max = max(self._pool_min, int(pool_max))
+
+    @staticmethod
+    def _connection_kwargs() -> tuple[str, dict]:
+        test_mode = os.getenv("TEST_MODE").lower()
+        if test_mode == "true":
+            prefix = "TEST_DB"
+        elif test_mode == "false":
+            prefix = "DB"
+        else:
+            log(ERROR, "Problem logging into db", context="database")
+            sys.exit(-1)
+
+        return test_mode, {
+            "user": os.getenv(f"{prefix}_LOGIN"),
+            "password": os.getenv(f"{prefix}_PASS"),
+            "host": os.getenv(f"{prefix}_HOST"),
+            "port": int(os.getenv(f"{prefix}_PORT")),
+            "database": os.getenv(f"{prefix}_DATABASE", "postgres"),
+            "sslmode": os.getenv(f"{prefix}_SSLMODE"),
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+            "keepalives_count": 5,
+        }
+
+    @classmethod
+    def _pool_for(
+        cls,
+        mode: str,
+        kwargs: dict,
+        *,
+        minconn: int,
+        maxconn: int,
+    ) -> psycopg2.pool.ThreadedConnectionPool:
+        key = (
+            mode,
+            minconn,
+            maxconn,
+            tuple(sorted(kwargs.items())),
+        )
+        with cls._pool_lock:
+            pool = cls._pools.get(key)
+            if pool is None:
+                pool = psycopg2.pool.ThreadedConnectionPool(
+                    minconn,
+                    maxconn,
+                    **kwargs,
+                )
+                cls._pools[key] = pool
+            return pool
 
     def connect(self):
         try:
-            if os.getenv("TEST_MODE").lower() == "true":
+            mode, kwargs = self._connection_kwargs()
+            if self._use_pool:
                 with telemetry.track("db.connect"):
-                    raw_connection = psycopg2.connect(
-                        user=os.getenv("TEST_DB_LOGIN"),
-                        password=os.getenv("TEST_DB_PASS"),
-                        host=os.getenv("TEST_DB_HOST"),
-                        port=int(os.getenv("TEST_DB_PORT")),
-                        database=os.getenv("TEST_DB_DATABASE", "postgres"),
-                        sslmode=os.getenv("TEST_DB_SSLMODE"),
-                        keepalives=1,
-                        keepalives_idle=30,
-                        keepalives_interval=10,
-                        keepalives_count=5
+                    self._pool = self._pool_for(
+                        mode,
+                        kwargs,
+                        minconn=self._pool_min,
+                        maxconn=self._pool_max,
                     )
-                self.connection = _TimedConnection(raw_connection)
-                self.cursor = _TimedCursor(raw_connection.cursor())
-            elif os.getenv("TEST_MODE").lower() == "false":
-                with telemetry.track("db.connect"):
-                    raw_connection = psycopg2.connect(
-                        user=os.getenv("DB_LOGIN"),
-                        password=os.getenv("DB_PASS"),
-                        host=os.getenv("DB_HOST"),
-                        port=int(os.getenv("DB_PORT")),
-                        database=os.getenv("DB_DATABASE", "postgres"),
-                        sslmode=os.getenv("DB_SSLMODE"),
-                        keepalives=1,
-                        keepalives_idle=30,
-                        keepalives_interval=10,
-                        keepalives_count=5
-                    )
-                self.connection = _TimedConnection(raw_connection)
-                self.cursor = _TimedCursor(raw_connection.cursor())
+                    raw_connection = self._pool.getconn()
             else:
-                log(ERROR, "Problem logging into db", context="database")
-                exit(-1)
-        except OperationalError as e:
+                with telemetry.track("db.connect"):
+                    raw_connection = psycopg2.connect(**kwargs)
+            self._raw_connection = raw_connection
+            self.connection = _TimedConnection(raw_connection)
+            self.cursor = _TimedCursor(raw_connection.cursor())
+        except (OperationalError, psycopg2.pool.PoolError) as e:
             log(ERROR, f"Connection failed: {e}", context="database")
             raise
 
@@ -116,11 +159,30 @@ class DB:
         self.close()
 
     def close(self):
-        """Close cursor and connection."""
+        """Close cursor and release or close connection."""
         if self.cursor:
             self.cursor.close()
-        if self.connection:
-            self.connection.close()
+        if self._raw_connection:
+            if self._pool:
+                close_connection = bool(self._raw_connection.closed)
+                if not close_connection:
+                    try:
+                        if self._raw_connection.status != extensions.STATUS_READY:
+                            self._raw_connection.rollback()
+                    except Exception as e:
+                        log(
+                            WARN,
+                            f"Discarding pooled DB connection after rollback failed: {e}",
+                            context="database",
+                        )
+                        close_connection = True
+                self._pool.putconn(self._raw_connection, close=close_connection)
+            else:
+                self._raw_connection.close()
+        self.cursor = None
+        self.connection = None
+        self._raw_connection = None
+        self._pool = None
 
 
 class BatchBaselineQueryError(RuntimeError):

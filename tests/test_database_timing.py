@@ -11,6 +11,7 @@ Tests:
 
 import os
 import sys
+from typing import ClassVar
 
 import pytest
 
@@ -18,7 +19,7 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from Helpers import telemetry
-from Helpers.database import _TimedConnection, _TimedCursor
+from Helpers.database import DB, _TimedConnection, _TimedCursor
 
 
 @pytest.fixture(autouse=True)
@@ -47,12 +48,34 @@ class FakeConnection:
     def __init__(self):
         self.committed = False
         self.closed = False
+        self.status = 1
 
     def commit(self):
         self.committed = True
 
+    def cursor(self):
+        return FakeCursor()
+
     def close(self):
         self.closed = True
+
+
+class FakePool:
+    created: ClassVar[list] = []
+
+    def __init__(self, minconn, maxconn, **kwargs):
+        self.minconn = minconn
+        self.maxconn = maxconn
+        self.kwargs = kwargs
+        self.connection = FakeConnection()
+        self.returned = []
+        FakePool.created.append(self)
+
+    def getconn(self):
+        return self.connection
+
+    def putconn(self, connection, close=False):
+        self.returned.append((connection, close))
 
 
 def test_execute_is_timed_into_db_query():
@@ -96,3 +119,61 @@ def test_failing_execute_records_and_reraises():
     with pytest.raises(RuntimeError, match="bad sql"):
         cursor.execute("SELECT 1")
     assert telemetry._current.get().buckets["db.query"]["n"] == 1
+
+
+@pytest.fixture
+def _db_env(monkeypatch):
+    monkeypatch.setenv("TEST_MODE", "true")
+    monkeypatch.setenv("TEST_DB_LOGIN", "user")
+    monkeypatch.setenv("TEST_DB_PASS", "pass")
+    monkeypatch.setenv("TEST_DB_HOST", "localhost")
+    monkeypatch.setenv("TEST_DB_PORT", "5432")
+    monkeypatch.setenv("TEST_DB_DATABASE", "postgres")
+    monkeypatch.setenv("TEST_DB_SSLMODE", "disable")
+    DB._pools.clear()
+    FakePool.created.clear()
+    yield
+    DB._pools.clear()
+    FakePool.created.clear()
+
+
+def test_db_can_opt_out_of_pooling(monkeypatch, _db_env):
+    created = []
+
+    def fake_connect(**kwargs):
+        connection = FakeConnection()
+        created.append((connection, kwargs))
+        return connection
+
+    monkeypatch.setattr("Helpers.database.psycopg2.connect", fake_connect)
+    monkeypatch.setattr("Helpers.database.psycopg2.pool.ThreadedConnectionPool", FakePool)
+
+    db = DB(use_pool=False)
+    db.connect()
+    db.close()
+
+    assert len(created) == 1
+    assert FakePool.created == []
+    assert created[0][0].closed is True
+
+
+def test_db_pooling_is_used_by_default(monkeypatch, _db_env):
+    monkeypatch.setattr(
+        "Helpers.database.psycopg2.connect",
+        lambda **kwargs: pytest.fail("fresh connect should not be used"),
+    )
+    monkeypatch.setattr("Helpers.database.psycopg2.pool.ThreadedConnectionPool", FakePool)
+
+    first = DB()
+    first.connect()
+    first.close()
+    second = DB()
+    second.connect()
+    second.close()
+
+    assert len(FakePool.created) == 1
+    pool = FakePool.created[0]
+    assert pool.minconn == 1
+    assert pool.maxconn == 10
+    assert len(pool.returned) == 2
+    assert all(close is False for _, close in pool.returned)

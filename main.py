@@ -279,6 +279,7 @@ extensions = [
     'Tasks.process_website_decisions',
     'Tasks.sync_war_builds',
     'Tasks.daily_musing',
+    'Tasks.annihilation_parties',
     'Tasks.annihilation_announcements',
     'Tasks.loop_lag',
 ]
