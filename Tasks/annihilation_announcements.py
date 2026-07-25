@@ -9,13 +9,12 @@ import discord
 from discord.ext import commands, tasks
 
 from Helpers.database import DB
-from Helpers.logger import log, ERROR, SUCCESS, WARN
+from Helpers.logger import ERROR, SUCCESS, WARN, log
 from Helpers.variables import (
     ANNIHILATION_ANNOUNCEMENT_CHANNEL_ID,
     ANNIHILATION_PING_ROLE_ID,
     IS_TEST_MODE,
 )
-
 
 WYNNCRAFT_WORLD_EVENTS_URL = "https://api.wynncraft.com/v3/map/world-events"
 PRELUDE_EVENT_NAME = "Prelude to Annihilation"
@@ -48,10 +47,6 @@ def _parse_wynncraft_datetime(value: str) -> datetime.datetime:
 
 def _discord_timestamp(dt: datetime.datetime) -> str:
     return f"<t:{int(dt.timestamp())}:R>"
-
-
-def _discord_clock_timestamp(dt: datetime.datetime) -> str:
-    return f"<t:{int(dt.timestamp())}:t>"
 
 
 def _default_state() -> dict:
@@ -145,15 +140,17 @@ def build_annihilation_embed(schedule_dt: datetime.datetime, alert_type: str) ->
     if alert_type == "one_hour":
         description = (
             "1 hour left before it starts!\n"
-            f"Event starting {_discord_timestamp(schedule_dt)}"
+            f"Event starting {_discord_timestamp(schedule_dt)}\n"
+            "Make sure to leave your party if you cant make it or check up / open new parties to prepare!"
         )
     else:
         description = (
             "Hateful echoes erupt from the Portal.\n"
             "The province of Wynn faces **Annihilation**.\n\n"
-            "Prepare to defend the province at the **Corruption Portal**!\n\n"
-            f"**Annihilation will begin {_discord_timestamp(schedule_dt)} "
-            f"({_discord_clock_timestamp(schedule_dt)})**"
+            f"Annihilation starts <t:{int(schedule_dt.timestamp())}:F> "
+            f"({_discord_timestamp(schedule_dt)}),\n"
+            "Sign-ups are open!\n\n"
+            "Prepare to defend the province at the **Corruption Portal**!"
         )
 
     embed = discord.Embed(
@@ -162,13 +159,6 @@ def build_annihilation_embed(schedule_dt: datetime.datetime, alert_type: str) ->
         colour=EMBED_COLOR,
     )
     embed.set_thumbnail(url=f"attachment://{ICON_FILENAME}")
-    if alert_type == "detected":
-        embed.set_footer(
-            text=(
-                "This may be a delayed ping due to issues with the Wynncraft API, "
-                "the provided time however is accurate."
-            )
-        )
     return embed
 
 
@@ -295,7 +285,31 @@ class AnnihilationAnnouncements(commands.Cog):
             "sent_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         }
         await self._save_state(state)
+        if alert_type == "detected":
+            await self._ensure_party_board(schedule_dt, message=message)
         return True
+
+    async def _ensure_party_board(
+        self,
+        schedule_dt: datetime.datetime,
+        message: discord.Message | None = None,
+    ) -> None:
+        party_cog = self.client.get_cog("AnnihilationParties")
+        if party_cog is None:
+            log(
+                WARN,
+                "AnnihilationParties cog is unavailable; party board was not created",
+                context="annihilation",
+            )
+            return
+        try:
+            await party_cog.ensure_board(schedule_dt, message=message)
+        except Exception as exc:
+            log(
+                ERROR,
+                f"Could not create Annihilation party board: {exc!r}",
+                context="annihilation",
+            )
 
     async def _poll_api(self, state: dict, now: datetime.datetime) -> bool:
         if (
@@ -342,6 +356,9 @@ class AnnihilationAnnouncements(commands.Cog):
                 if await self._maybe_send(state, schedule_dt, "detected"):
                     sent_count += 1
                     sent_detection = True
+
+            if not sent_detection and run_state.get("detected"):
+                await self._ensure_party_board(schedule_dt)
 
             if sent_detection:
                 continue
