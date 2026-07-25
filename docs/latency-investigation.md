@@ -1,6 +1,6 @@
 # Command latency investigation
 
-**Status:** Phase 0 is deployed and the first two days have been analysed — see [Findings](#findings--first-two-days-of-telemetry). The measured result promotes H2 (cold connections) over H1 and rescopes the fixes; [Phase 1](#phase-1--fixes-evidence-ranked) is evidence-ranked and not yet started.
+**Status:** Phase 0 is deployed and analysed — see [Findings](#findings--first-two-days-of-telemetry). Phase 1 item 1 (threading + de-cold) is **implemented and awaiting deploy measurement**; item 2 (task-loop staggering) not started; item 3 (fleet split) parked. After deploy: capture, run `scripts/analyze_telemetry.py`, diff against the Findings baseline.
 
 ## Symptom
 
@@ -163,21 +163,52 @@ The data redirects Phase 1: the event loop is not congested, so **splitting the 
 own service — the largest planned change — is not justified.** The win is getting command I/O off
 the loop and making it not-cold.
 
+#### Component benchmark (pre-deploy, real prod services)
+
+| Component | Current path | Proposed path | Gain |
+|---|---|---|---|
+| DB access | fresh connect+query 436 ms | pooled query 153 ms | 2.8× |
+| Wynncraft GET | fresh session 456 ms | shared session 141 ms | 3.2× |
+| Visage GET | fresh session 252 ms (max 1611) | shared session 71 ms | 3.5× |
+| Background read | S3 293 ms | memory hit ~0 ms | — |
+
+Pipeline: sequential-cold ≈ 2648 ms measured → ~700–900 ms expected warm. (Sequential-threaded:
+the avatar URL needs `player.UUID`, which only exists after `PlayerStats` returns, so the avatar
+fetch runs after it rather than in parallel; with keep-alive that costs ~70 ms and avoids a
+duplicate UUID lookup.)
+
 ### Phase 1 — fixes, evidence-ranked
 
-1. **Get command I/O off the loop and de-cold it.** Highest payoff, addresses both the slow command
-   and the loop stalls it causes:
-   - `to_thread` the blocking S3 / avatar-fetch / Pillow work in `profile` and the other card
-     commands.
-   - Attack the S3 cost directly — it is the fattest bucket by far. Backgrounds and avatars are
-     near-static, and the avatar's 3-day cache currently lives in S3, so the cache *read* itself
-     costs 0.7–1.6 s. Move that cache to local disk or an in-process LRU.
-   - Connection pool in `DB` (removes the per-command connect cost) and a warm/keepalive HTTP
-     session (helps visage / Wynncraft).
+1. **Get command I/O off the loop and de-cold it** — **implemented.** What shipped:
+   - Shared keep-alive `requests.Session` behind `timed_get` (stateless: block-all cookie policy,
+     so the three Wynncraft token identities share nothing but sockets).
+   - Connection pool behind `DB` (`ThreadedConnectionPool`, max `DB_POOL_MAX`, default 8; checkout
+     timed in the same `db.connect` bucket; rollback-on-return; broken connections discarded;
+     bounded retry on pool exhaustion, fast-fail on real connection errors). `PlayerStats` and the
+     daily snapshot task check out only after their external HTTP completes, so slots are never
+     held across slow fetches.
+   - Background memory cache with write-through invalidation in `save_background` — a background
+     change shows on the very next render; reads are ~0 ms.
+   - **S3 avatar cache deleted.** Its reads (0.97–1.6 s in prod) cost more than the fresh visage
+     fetch they were avoiding (~71 ms with keep-alive). Skins are now fetched fresh per render —
+     a skin change shows on the next render, bounded only by visage's own CDN.
+   - `/profile`'s card build (Pillow + avatar fetch) moved into a worker thread — renders no
+     longer stall the event loop for everyone else.
 2. **Stagger task-loop start offsets** so `update_member_data` and siblings do not all fire on the
-   same minute boundary — cheap mitigation for the ~300 ms task stalls.
+   same minute boundary — cheap mitigation for the ~300 ms task stalls. Not started.
 3. **Split the task fleet into its own service** — parked. Not justified while the loop is healthy;
    revisit only if traffic grows enough to congest it.
+
+#### Phase 1 follow-ups (deliberate deferrals)
+
+- Default timeout in `timed_get` (`kwargs.setdefault("timeout", ...)`) — changes hang→exception
+  behaviour at three timeout-less call sites, so it is a decision, not a tweak.
+- Sweep the remaining bare `requests.get` sites (snipe, lootpool, map, progress, manage, and
+  raids' guild fetch) through `timed_get` so the `http.*` picture is complete.
+- Pool-retry sleeps run synchronously; the few direct-async `DB` call sites (e.g. `manage.py`'s
+  inline `PlayerStats`) can block the loop up to ~0.6 s under real pool contention — pre-existing
+  blocking pattern, bounded, worth threading in the next pass.
+- Per-phase checkouts in `daily_activity_snapshot`; a pool-exhaustion counter/log for visibility.
 
 `queue_ms` recorded null for every command in the first window because `discord.Interaction`
 (py-cord 2.6) has no `created_at`; it is now derived from the interaction snowflake id, so the
@@ -185,8 +216,13 @@ queue-delay discriminator works from the next deploy onward.
 
 ## Picking this back up
 
-Phase 0 is deployed and the first read is done (see Findings). Re-run the analysis on a fresh
-capture with `scripts/analyze_telemetry.py` (it prints drift health, excursion correlation, and the
-per-command bucket breakdown from a `railway logs --json` dump), then start Phase 1 at item 1 —
-threading the card-command I/O and moving the S3 background/avatar cache off S3. Keep the `db.*` /
-`s3.*` / `http.*` bucket names stable through the fixes so before/after captures stay comparable.
+Phase 1 item 1 is implemented; the next action is deploy-and-measure, not code. Capture a window
+(`railway logs --service worker --since 48h --lines 5000 --json > after.json`), run
+`scripts/analyze_telemetry.py after.json`, and diff against the Findings baseline. Success bar:
+profile `total_ms` median under ~1 s warm, `db.connect` near-zero after the first sample (which
+includes one-time pool construction — use the median, not the max), and no command-coincident loop
+excursions from the render path. Note `http.visage.surgeplay.com` gains events it did not have in
+Phase 0 (raids' avatar fetch is newly routed through `timed_get`), so compare that bucket on
+latency-per-event, not count. Bucket names were kept stable throughout, so before/after captures
+are directly comparable. Then work the follow-ups list above, starting with the `timed_get`
+default-timeout decision.
