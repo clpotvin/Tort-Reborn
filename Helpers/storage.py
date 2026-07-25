@@ -1,7 +1,7 @@
 """
 Helpers/storage.py
-S3-compatible storage abstraction for profile backgrounds, avatar caching,
-and shell exchange icons.
+S3-compatible storage abstraction for profile backgrounds and shell
+exchange icons.
 Currently backed by Supabase Storage (S3-compatible API).
 """
 
@@ -17,8 +17,6 @@ from PIL import Image
 
 from Helpers.logger import log, WARN, ERROR
 from Helpers import telemetry
-
-AVATAR_TTL_SECONDS = 3 * 24 * 60 * 60  # 3 days
 
 
 class S3Storage:
@@ -146,18 +144,6 @@ def save_background(bg_id, image: Image.Image):
     """Upload a profile background to S3 and refresh the memory cache."""
     storage.put_image(f"profile_backgrounds/{bg_id}.png", image)
     _bg_cache[bg_id] = image.copy()
-
-
-# --- Avatar cache helpers ---
-
-def get_cached_avatar(uuid: str) -> bytes | None:
-    """Download a cached avatar if it's less than 3 days old."""
-    return storage.get_bytes_if_fresh(f"avatars/{uuid}.png", AVATAR_TTL_SECONDS)
-
-
-def save_cached_avatar(uuid: str, data: bytes):
-    """Upload an avatar to the cache."""
-    storage.put_bytes(f"avatars/{uuid}.png", data)
 
 
 # --- Shell exchange icon helpers ---

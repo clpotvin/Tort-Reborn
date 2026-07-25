@@ -15,7 +15,7 @@ from Helpers.functions import pretty_date, generate_rank_badge, generate_banner,
 from Helpers.logger import log, ERROR
 from Helpers.variables import discord_ranks, minecraft_colors, minecraft_banner_colors
 from Helpers.rate_limiter import external_rate_limit
-from Helpers.storage import get_background, get_cached_avatar, save_cached_avatar
+from Helpers.storage import get_background
 
 
 class Profile(commands.Cog):
@@ -91,19 +91,11 @@ class Profile(commands.Cog):
 
         # Player Avatar
         try:
-            cached = get_cached_avatar(player.UUID)
-            if cached:
-                skin = Image.open(BytesIO(cached))
-            else:
-                headers = {'User-Agent': os.getenv("visage_UA")}
-                url = f"https://visage.surgeplay.com/bust/500/{player.UUID}"
-                response = timed_get(url, headers=headers, timeout=6)
-                response.raise_for_status()
-                try:
-                    save_cached_avatar(player.UUID, response.content)
-                except Exception:
-                    pass
-                skin = Image.open(BytesIO(response.content))
+            headers = {'User-Agent': os.getenv("visage_UA")}
+            url = f"https://visage.surgeplay.com/bust/500/{player.UUID}"
+            response = timed_get(url, headers=headers, timeout=6)
+            response.raise_for_status()
+            skin = Image.open(BytesIO(response.content))
         except Exception as e:
             log(ERROR, f"{e}", context="profile")
             skin = Image.open('images/profile/x-steve500.png')
