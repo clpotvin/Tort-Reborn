@@ -8,7 +8,6 @@ from datetime import datetime, timedelta, timezone
 from io import BytesIO
 
 import discord
-import requests
 from discord.ext import commands, pages
 from discord.commands import SlashCommandGroup, slash_command
 from PIL import Image, ImageDraw, ImageFont
@@ -1286,7 +1285,7 @@ class SnipeTracker(commands.Cog):
                 f"**Result:** Success"
                 + (f"\n**Notes:** {notes}" if notes else "")
             )
-            resp     = await asyncio.to_thread(requests.get, image.url)
+            resp     = await asyncio.to_thread(timed_get, image.url)
             img_file = discord.File(BytesIO(resp.content), filename=image.filename)
             channel  = ctx.bot.get_channel(SNIPE_LOG_CHANNEL_ID)
             if channel:

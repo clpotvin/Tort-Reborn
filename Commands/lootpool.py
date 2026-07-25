@@ -1,7 +1,6 @@
 import asyncio
 
 import discord
-import requests
 from discord.ext import commands
 from discord.commands import SlashCommandGroup
 from datetime import datetime, timezone, timedelta
@@ -894,13 +893,13 @@ class LootPool(commands.Cog):
 
         raw_resp, gambit_resp = await asyncio.gather(
             asyncio.to_thread(
-                requests.get,
+                timed_get,
                 f"{self.WYNNVENTORY_BASE_URL}/api/raidpool/items",
                 headers=self._wynnventory_headers,
                 timeout=15,
             ),
             asyncio.to_thread(
-                requests.get,
+                timed_get,
                 f"{self.WYNNVENTORY_BASE_URL}/api/raidpool/gambits/current",
                 headers=self._wynnventory_headers,
                 timeout=15,
