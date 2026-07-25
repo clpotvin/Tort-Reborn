@@ -29,7 +29,6 @@ from Helpers.logger import ERROR, SUCCESS, WARN, log
 from Helpers.variables import (
     ANNIHILATION_ANNOUNCEMENT_CHANNEL_ID,
     HOME_GUILD_IDS,
-    IS_TEST_MODE,
 )
 
 BOARD_ICON_PATH = Path("images/annihilation/prelude_to_annihilation.png")
@@ -1107,45 +1106,44 @@ class AnnihilationParties(commands.Cog):
     async def _wait_until_ready(self):
         await self.client.wait_until_ready()
 
-    if IS_TEST_MODE:
-        @discord.slash_command(
-            name="annihilation-party-test",
-            description="TEST: Create fake anni partyboard",
-            default_member_permissions=discord.Permissions(administrator=True),
-            guild_ids=HOME_GUILD_IDS,
-        )
-        async def annihilation_party_test(
-            self,
-            ctx: discord.ApplicationContext,
-            starts_in_minutes: discord.Option(
-                int,
-                "Fake Annihilation start offset",
-                required=False,
-                default=60,
-                min_value=0,
-                max_value=10080,
-            ),
-        ):
-            await ctx.defer(ephemeral=True)
+    @discord.slash_command(
+        name="annihilation-party-test",
+        description="TEST: Create fake anni partyboard",
+        default_member_permissions=discord.Permissions(administrator=True),
+        guild_ids=HOME_GUILD_IDS,
+    )
+    async def annihilation_party_test(
+        self,
+        ctx: discord.ApplicationContext,
+        starts_in_minutes: discord.Option(
+            int,
+            "Fake Annihilation start offset",
+            required=False,
+            default=60,
+            min_value=0,
+            max_value=10080,
+        ),
+    ):
+        await ctx.defer(ephemeral=True)
 
-            schedule_at = datetime.datetime.now(
-                datetime.timezone.utc
-            ) + datetime.timedelta(minutes=starts_in_minutes)
-            schedule_at = schedule_at.replace(microsecond=0)
-            message = await self.ensure_board(schedule_at)
-            if message is None:
-                await ctx.followup.send(
-                    "Could not create a test Annihilation party board.",
-                    ephemeral=True,
-                )
-                return
-
+        schedule_at = datetime.datetime.now(
+            datetime.timezone.utc
+        ) + datetime.timedelta(minutes=starts_in_minutes)
+        schedule_at = schedule_at.replace(microsecond=0)
+        message = await self.ensure_board(schedule_at)
+        if message is None:
             await ctx.followup.send(
-                "Created test Annihilation party board: "
-                f"{message.jump_url}\n"
-                f"Fake start: <t:{int(schedule_at.timestamp())}:F>",
+                "Could not create a test Annihilation party board.",
                 ephemeral=True,
             )
+            return
+
+        await ctx.followup.send(
+            "Created test Annihilation party board: "
+            f"{message.jump_url}\n"
+            f"Fake start: <t:{int(schedule_at.timestamp())}:F>",
+            ephemeral=True,
+        )
 
 
 def setup(client):
