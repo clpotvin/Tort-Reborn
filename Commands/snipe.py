@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 from Helpers.classes import Guild, Page, PlayerStats
 from Helpers.database import DB, get_current_guild_data
 from Helpers.functions import addLine, generate_badge, get_guild_color, vertical_gradient, round_corners, timed_get
+from Helpers.logger import log, ERROR
 from Helpers.snipe_utils import ALL_TERRITORY_NAMES, display_hq, is_dry, normalize_hq_for_storage
 from Helpers.variables import ALL_GUILD_IDS, HQ_TEAM_ROLE_ID, TAQ_GUILD_ID, SNIPE_LOG_CHANNEL_ID, discord_ranks
 
@@ -1285,11 +1286,17 @@ class SnipeTracker(commands.Cog):
                 f"**Result:** Success"
                 + (f"\n**Notes:** {notes}" if notes else "")
             )
-            resp     = await asyncio.to_thread(timed_get, image.url)
-            img_file = discord.File(BytesIO(resp.content), filename=image.filename)
-            channel  = ctx.bot.get_channel(SNIPE_LOG_CHANNEL_ID)
+            channel = ctx.bot.get_channel(SNIPE_LOG_CHANNEL_ID)
             if channel:
-                await channel.send(content=log_text, file=img_file)
+                # The snipe is already recorded and the user already saw the
+                # success embed; a failed image fetch must not error the command.
+                try:
+                    resp = await asyncio.to_thread(timed_get, image.url)
+                    img_file = discord.File(BytesIO(resp.content), filename=image.filename)
+                    await channel.send(content=log_text, file=img_file)
+                except Exception as e:
+                    log(ERROR, f"Snipe log image fetch failed, posting without image: {e}", context="snipe")
+                    await channel.send(content=log_text)
 
     # ── /snipe stats ──────────────────────────────────────────────────────────
 

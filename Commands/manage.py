@@ -22,6 +22,8 @@ def _build_shell_modal_card(ign, operation, amount, reason, user_id):
     write the resulting link/balance rows. Blocking (HTTP + Pillow + DB) —
     always call via asyncio.to_thread so it never stalls the event loop."""
     player = PlayerStats(ign, 1, False)
+    if player.error:
+        raise ValueError(f"could not retrieve player data for '{ign}'")
 
     img = Image.new('RGBA', (375, 95), '#100010e2')
     draw = ImageDraw.Draw(img); draw.fontmode = '1'
@@ -180,15 +182,27 @@ class ShellModalName(Modal):
         )
 
     async def callback(self, interaction: discord.Interaction):
+        # Modal errors route to Modal.on_error (stderr), not the command error
+        # handler — an unhandled raise here would strand the deferred
+        # interaction at "thinking…" forever. Report failures ourselves.
         await interaction.response.defer()
-        file = await asyncio.to_thread(
-            _build_shell_modal_card,
-            self.children[0].value,
-            self.operation,
-            self.amount,
-            self.reason,
-            self.user.id,
-        )
+        try:
+            file = await asyncio.to_thread(
+                _build_shell_modal_card,
+                self.children[0].value,
+                self.operation,
+                self.amount,
+                self.reason,
+                self.user.id,
+            )
+        except Exception as e:
+            log(ERROR, f"Shell modal card failed for '{self.children[0].value}': {e}", context="manage")
+            await interaction.followup.send(
+                f"⚠️ Could not process shells for `{self.children[0].value}`. "
+                "Check the name and try again.",
+                ephemeral=True,
+            )
+            return
         await interaction.followup.send(file=file)
 
 
