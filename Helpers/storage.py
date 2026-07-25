@@ -107,16 +107,26 @@ storage = S3Storage()
 
 # --- Profile background helpers ---
 
+# In-process cache of profile backgrounds. The bot owns the only write path
+# (save_background), so write-through here gives zero-staleness reads at ~0ms
+# versus the ~300ms S3 round trip Phase 0 measured. Values are the pristine
+# fetched images; reads hand out copies because callers mutate them in place.
+_bg_cache: dict = {}
+
+
 def get_background(bg_id) -> Image.Image:
-    """Download a profile background from S3. Falls back to local default in test mode."""
+    """Profile background from memory, falling back to S3 (then default)."""
     from Helpers.variables import IS_TEST_MODE
+
+    cached = _bg_cache.get(bg_id)
+    if cached is not None:
+        return cached.copy()
     img = storage.get_image(f"profile_backgrounds/{bg_id}.png")
     if img:
-        return img
+        _bg_cache[bg_id] = img
+        return img.copy()
     if bg_id != 1:
-        img = storage.get_image("profile_backgrounds/1.png")
-        if img:
-            return img
+        return get_background(1)
     if IS_TEST_MODE:
         return Image.open("images/profile_pictures/default.png")
     raise FileNotFoundError(f"Background {bg_id} not found in S3")
@@ -133,8 +143,9 @@ def get_background_file(bg_id):
 
 
 def save_background(bg_id, image: Image.Image):
-    """Upload a profile background to S3."""
+    """Upload a profile background to S3 and refresh the memory cache."""
     storage.put_image(f"profile_backgrounds/{bg_id}.png", image)
+    _bg_cache[bg_id] = image.copy()
 
 
 # --- Avatar cache helpers ---
