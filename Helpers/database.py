@@ -5,7 +5,6 @@ import os
 import threading
 import time
 
-import psycopg2
 from psycopg2 import OperationalError
 from psycopg2 import pool as _pg_pool
 
@@ -125,9 +124,16 @@ class DB:
         try:
             with telemetry.track("db.connect"):
                 raw_connection = _get_pool().getconn()
-            self.connection = _TimedConnection(raw_connection)
-            self.cursor = _TimedCursor(raw_connection.cursor())
-        except OperationalError as e:
+            try:
+                self.connection = _TimedConnection(raw_connection)
+                self.cursor = _TimedCursor(raw_connection.cursor())
+            except Exception:
+                try:
+                    _get_pool().putconn(raw_connection, close=True)
+                except Exception:
+                    pass
+                raise
+        except (OperationalError, _pg_pool.PoolError) as e:
             log(ERROR, f"Connection failed: {e}", context="database")
             raise
 

@@ -6,6 +6,7 @@ Tests:
 2. A broken (closed) connection is discarded with putconn(close=True)
 3. Two sequential DB() uses reuse one underlying connection
 4. connect() wraps the checkout in the db.connect bucket
+5. A checkout whose post-checkout setup fails is discarded, not leaked
 """
 
 import os
@@ -92,3 +93,18 @@ def test_checkout_is_timed_into_db_connect():
         db = database.DB()
         db.connect()
     assert telemetry._current.get().buckets["db.connect"]["n"] == 1
+
+
+class FakeConnBrokenCursor(FakeConn):
+    def cursor(self):
+        raise RuntimeError("cursor setup failed")
+
+
+def test_checkout_discarded_when_post_checkout_setup_fails():
+    conn = FakeConnBrokenCursor()
+    fake = _fake_pool(conn)
+    with patch.object(database, "_get_pool", return_value=fake):
+        db = database.DB()
+        with pytest.raises(RuntimeError):
+            db.connect()
+    fake.putconn.assert_called_once_with(conn, close=True)
