@@ -223,13 +223,15 @@ duplicate UUID lookup.)
 
 #### Still open
 
-- Task-loop start-offset staggering (Phase 1 item 2) and the task-fleet split (item 3, parked).
-- `manage rank` runs sync DB on the loop, and `manage link` holds a checkout across a
-  `getPlayerUUID` HTTP call — the two remaining violations of the checkout-after-HTTP
-  discipline; thread them the same way next pass.
-- `BasicPlayerStats` raises `AttributeError` instead of setting `error=True` when its player
-  fetch returns falsy (`Helpers/classes.py`, `pdata.get` on `False`) — pre-existing, now
-  surfaced inside a worker thread by `new_member`.
+- Task-loop start-offset staggering (Phase 1 item 2) — decide after the post-deploy capture
+  shows how much task-loop stall remains.
+- The task-fleet split (item 3) — parked; revisit only if traffic grows enough to congest the
+  loop.
+
+(`manage rank`/`link` loop hygiene and the `BasicPlayerStats` error path — previously listed
+here — are fixed: rank batches its permission reads into one brief checkout and persists via a
+second, link resolves the UUID before connecting and reports an unresolvable ign instead of
+crashing, and `BasicPlayerStats` sets `error=True` when the player-data fetch fails.)
 
 `queue_ms` recorded null for every command in the first window because `discord.Interaction`
 (py-cord 2.6) has no `created_at`; it is now derived from the interaction snowflake id, so the

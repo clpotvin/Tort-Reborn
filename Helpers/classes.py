@@ -407,6 +407,11 @@ class BasicPlayerStats:
 
         # player data
         pdata = getPlayerDatav3(self.UUID)
+        if not pdata:
+            # getPlayerDatav3 returns False on failure; without this guard the
+            # attribute reads below raise AttributeError instead of error=True.
+            self.error = True
+            return
         self.rank = pdata.get('rank', 'Player')
         if self.rank == 'Player':
             support_rank = pdata.get('supportRank')

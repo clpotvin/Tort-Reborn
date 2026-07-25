@@ -75,6 +75,77 @@ def _build_shell_modal_card(ign, operation, amount, reason, user_id):
     return discord.File(buf, filename=f"shell_{int(time.time())}.png")
 
 
+def _rank_lookup(invoker_id, target_id):
+    """Fetch the invoker's rank, the target's rank, and the target's ign rows
+    in one short checkout. Blocking DB read — call via asyncio.to_thread."""
+    db = DB(); db.connect()
+    try:
+        db.cursor.execute(
+            "SELECT rank FROM discord_links WHERE discord_id = %s", (invoker_id,)
+        )
+        inv = db.cursor.fetchone()
+        db.cursor.execute(
+            "SELECT rank FROM discord_links WHERE discord_id = %s", (target_id,)
+        )
+        tgt = db.cursor.fetchone()
+        db.cursor.execute(
+            "SELECT ign FROM discord_links WHERE discord_id = %s", (target_id,)
+        )
+        rows = db.cursor.fetchall()
+        return inv, tgt, rows
+    finally:
+        db.close()
+
+
+def _rank_update(target_id, rank):
+    """Persist a rank change. Blocking DB write — call via asyncio.to_thread."""
+    db = DB(); db.connect()
+    try:
+        db.cursor.execute(
+            "UPDATE discord_links SET rank = %s WHERE discord_id = %s",
+            (rank, target_id)
+        )
+        db.connection.commit()
+    finally:
+        db.close()
+
+
+def _link_user(user_id, ign, base_nick):
+    """Resolve the ign's UUID (HTTP first — no checkout held across it), then
+    upsert the discord link. Blocking — call via asyncio.to_thread.
+
+    Returns 'updated' or 'linked', or None when the ign cannot be resolved."""
+    player_data = getPlayerUUID(ign)
+    if not player_data:
+        return None
+    uuid = player_data[1]
+
+    db = DB(); db.connect()
+    try:
+        db.cursor.execute(
+            "SELECT * FROM discord_links WHERE discord_id = %s", (user_id,)
+        )
+        if db.cursor.fetchone():
+            db.cursor.execute(
+                "UPDATE discord_links SET ign = %s, uuid = %s WHERE discord_id = %s",
+                (ign, uuid, user_id)
+            )
+            db.cursor.execute(
+                "INSERT INTO shells (\"user\") VALUES (%s) ON CONFLICT DO NOTHING",
+                (str(user_id),)
+            )
+            db.connection.commit()
+            return 'updated'
+        db.cursor.execute(
+            "INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES (%s,%s,%s,False,%s)",
+            (user_id, ign, uuid, base_nick)
+        )
+        db.connection.commit()
+        return 'linked'
+    finally:
+        db.close()
+
+
 def _shells_lookup(user_id):
     """Return the discord_links rows for a user (used to decide render vs modal).
     Blocking DB read — call via asyncio.to_thread."""
@@ -224,96 +295,72 @@ class Manage(commands.Cog):
         user: discord.Member,
         rank: discord.Option(str, choices=list(discord_ranks.keys()))
     ):
-        db = DB(); db.connect()
-        try:
-            # Fetch invoker and target ranks
-            db.cursor.execute(
-                "SELECT rank FROM discord_links WHERE discord_id = %s",
-                (ctx.user.id,)
-            )
-            inv = db.cursor.fetchone()
-            if not inv:
-                await ctx.respond(':no_entry: You must link your account before assigning ranks.', ephemeral=True)
-                return
-            initiator_rank = inv[0]
-            initiator_index = list(discord_ranks).index(initiator_rank)
+        # One short checkout for all three reads; permission math is pure and
+        # runs here. No pool slot is held across the role-edit awaits below.
+        inv, tgt, rows = await asyncio.to_thread(_rank_lookup, ctx.user.id, user.id)
 
-            # Prevent self-assignment
-            if user.id == ctx.user.id:
-                await ctx.respond(':no_entry: You cannot change your own rank.', ephemeral=True)
-                return
+        if not inv:
+            await ctx.respond(':no_entry: You must link your account before assigning ranks.', ephemeral=True)
+            return
+        initiator_rank = inv[0]
+        initiator_index = list(discord_ranks).index(initiator_rank)
 
-            db.cursor.execute(
-                "SELECT rank FROM discord_links WHERE discord_id = %s",
-                (user.id,)
-            )
-            tgt = db.cursor.fetchone()
-            if not tgt:
-                # Let the existing modal handle linking
-                rows = True
-            else:
-                current_rank = tgt[0]
-                target_index = list(discord_ranks).index(current_rank)
-                if target_index >= initiator_index:
-                    await ctx.respond(':no_entry: You can only change ranks for members below your own.', ephemeral=True)
-                    return
+        # Prevent self-assignment
+        if user.id == ctx.user.id:
+            await ctx.respond(':no_entry: You cannot change your own rank.', ephemeral=True)
+            return
 
-            # Validate that the chosen new rank is below the initiator's rank
-            new_rank_index = list(discord_ranks).index(rank)
-            if new_rank_index >= initiator_index:
-                await ctx.respond(':no_entry: You cannot assign a rank equal to or above your own.', ephemeral=True)
+        if tgt:
+            current_rank = tgt[0]
+            target_index = list(discord_ranks).index(current_rank)
+            if target_index >= initiator_index:
+                await ctx.respond(':no_entry: You can only change ranks for members below your own.', ephemeral=True)
                 return
 
-            # Proceed with role updates
-            db.cursor.execute(
-                "SELECT ign FROM discord_links WHERE discord_id = %s", (user.id,)
+        # Validate that the chosen new rank is below the initiator's rank
+        new_rank_index = list(discord_ranks).index(rank)
+        if new_rank_index >= initiator_index:
+            await ctx.respond(':no_entry: You cannot assign a rank equal to or above your own.', ephemeral=True)
+            return
+
+        added = 'Added Roles:'
+        removed = 'Removed Roles:'
+        all_roles = ctx.guild.roles
+
+        if rows:
+            await ctx.defer(ephemeral=True)
+            # Apply new rank roles
+            for role_name in discord_ranks[rank]['roles']:
+                role_obj = discord.utils.get(all_roles, name=role_name)
+                if role_obj and role_obj not in user.roles:
+                    await user.add_roles(role_obj)
+                    added += f"\n - {role_name}"
+            # Remove old rank roles
+            for role_name in [r for r in discord_rank_roles if r not in discord_ranks[rank]['roles']]:
+                role_obj = discord.utils.get(all_roles, name=role_name)
+                if role_obj and role_obj in user.roles:
+                    await user.remove_roles(role_obj)
+                    removed += f"\n - {role_name}"
+            # Persist the rank change (its own brief checkout)
+            await asyncio.to_thread(_rank_update, user.id, rank)
+            # Update nickname
+            try:
+                current = user.nick or user.name
+                parts = current.split(' ', 1)
+                base = parts[1] if len(parts) > 1 else parts[0]
+                await user.edit(nick=f"{rank} {base}")
+            except:
+                pass
+            await ctx.followup.send(f"{added}\n\n{removed}", ephemeral=True)
+        else:
+            modal = LinkAccount(
+                title="Link User to Minecraft IGN",
+                user=user,
+                rank=rank,
+                added=added,
+                removed=removed
             )
-            rows = db.cursor.fetchall()
-
-            added = 'Added Roles:'
-            removed = 'Removed Roles:'
-            all_roles = ctx.guild.roles
-
-            if rows:
-                await ctx.defer(ephemeral=True)
-                # Apply new rank roles
-                for role_name in discord_ranks[rank]['roles']:
-                    role_obj = discord.utils.get(all_roles, name=role_name)
-                    if role_obj and role_obj not in user.roles:
-                        await user.add_roles(role_obj)
-                        added += f"\n - {role_name}"
-                # Remove old rank roles
-                for role_name in [r for r in discord_rank_roles if r not in discord_ranks[rank]['roles']]:
-                    role_obj = discord.utils.get(all_roles, name=role_name)
-                    if role_obj and role_obj in user.roles:
-                        await user.remove_roles(role_obj)
-                        removed += f"\n - {role_name}"
-                # Update DB
-                db.cursor.execute(
-                    "UPDATE discord_links SET rank = %s WHERE discord_id = %s",
-                    (rank, user.id)
-                )
-                db.connection.commit()
-                # Update nickname
-                try:
-                    current = user.nick or user.name
-                    parts = current.split(' ', 1)
-                    base = parts[1] if len(parts) > 1 else parts[0]
-                    await user.edit(nick=f"{rank} {base}")
-                except:
-                    pass
-                await ctx.followup.send(f"{added}\n\n{removed}", ephemeral=True)
-            else:
-                modal = LinkAccount(
-                    title="Link User to Minecraft IGN",
-                    user=user,
-                    rank=rank,
-                    added=added,
-                    removed=removed
-                )
-                await ctx.interaction.response.send_modal(modal)
-        finally:
-            db.close()
+            await ctx.interaction.response.send_modal(modal)
 
     @manage_group.command(name='shells', description='HR: Add or remove shells from a user')
     async def shells(
@@ -352,21 +399,17 @@ class Manage(commands.Cog):
         ign: str
     ):
         await ctx.defer(ephemeral=True)
-        db = DB(); db.connect()
-        uuid = getPlayerUUID(ign)[1]
-        db.cursor.execute(
-            "SELECT * FROM discord_links WHERE discord_id = %s", (user.id,)
-        )
-        if db.cursor.fetchone():
-            db.cursor.execute(
-                "UPDATE discord_links SET ign = %s, uuid = %s WHERE discord_id = %s",
-                (ign, uuid, user.id)
+        base = (user.nick.split(' ')[0] if user.nick else '')
+        result = await asyncio.to_thread(_link_user, user.id, ign, base)
+
+        if result is None:
+            # Previously getPlayerUUID(ign)[1] crashed with TypeError on a
+            # failed lookup; fail with a clear message instead.
+            await ctx.followup.send(
+                f':no_entry: Could not resolve **{ign}** — check the spelling and try again.',
+                ephemeral=True
             )
-            db.cursor.execute(
-                "INSERT INTO shells (\"user\") VALUES (%s) ON CONFLICT DO NOTHING",
-                (str(user.id),)
-            )
-            db.connection.commit()
+        elif result == 'updated':
             try:
                 base = user.nick.split(' ')[0]
                 await user.edit(nick=f"{base} {ign}")
@@ -377,17 +420,10 @@ class Manage(commands.Cog):
                 ephemeral=True
             )
         else:
-            base = (user.nick.split(' ')[0] if user.nick else '')
-            db.cursor.execute(
-                "INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES (%s,%s,%s,False,%s)",
-                (user.id, ign, uuid, base)
-            )
-            db.connection.commit()
             await ctx.followup.send(
                 f'Linked **{user.name}** to **{ign}**',
                 ephemeral=True
             )
-        db.close()
 
     @commands.Cog.listener()
     async def on_ready(self):
