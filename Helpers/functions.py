@@ -23,18 +23,21 @@ def _cached_font(path, size):
     return ImageFont.truetype(path, size)
 
 
-def timed_get(url, **kwargs):
-    """requests.get with per-host timing.
+# Shared session: keep-alive across all outbound GETs. Phase 0 measured fresh
+# TLS per call at 250-460ms/request; reuse cuts that to ~70-140ms. Session
+# request execution is thread-safe; pool sized for concurrent commands + tasks.
+_session = requests.Session()
+_session.mount("https://", requests.adapters.HTTPAdapter(pool_connections=16, pool_maxsize=16))
 
-    Deliberately does NOT reuse a Session. Phase 0 must not change behaviour, and
-    session reuse is a Phase 1 fix whose benefit is measured against these numbers.
-    """
+
+def timed_get(url, **kwargs):
+    """GET with per-host timing, through the shared keep-alive session."""
     try:
         host = urlparse(url).hostname or "unknown"
     except Exception:
         host = "unknown"
     with telemetry.track(f"http.{host}"):
-        return requests.get(url, **kwargs)
+        return _session.get(url, **kwargs)
 
 
 def isInCurrDay(data, uuid):

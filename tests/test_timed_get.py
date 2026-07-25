@@ -29,7 +29,7 @@ def _reset_context():
 
 def test_timed_get_buckets_by_host():
     telemetry.begin("test", None, None, None)
-    with patch("Helpers.functions.requests.get", return_value="response") as mock_get:
+    with patch("Helpers.functions._session.get", return_value="response") as mock_get:
         result = timed_get("https://api.wynncraft.com/v3/player/x", timeout=10)
     assert result == "response"
     mock_get.assert_called_once_with("https://api.wynncraft.com/v3/player/x", timeout=10)
@@ -38,6 +38,20 @@ def test_timed_get_buckets_by_host():
 
 def test_timed_get_without_host_uses_unknown():
     telemetry.begin("test", None, None, None)
-    with patch("Helpers.functions.requests.get", return_value="response"):
+    with patch("Helpers.functions._session.get", return_value="response"):
         timed_get("not-a-url")
     assert telemetry._current.get().buckets["http.unknown"]["n"] == 1
+
+
+def test_timed_get_uses_shared_session():
+    """All calls must go through the module-level session (keep-alive), never
+    bare requests.get — that is the entire point of the session."""
+    from Helpers import functions
+
+    assert isinstance(functions._session, __import__("requests").Session)
+    with patch("Helpers.functions._session.get", return_value="r") as mock_get, \
+         patch("Helpers.functions.requests.get") as mock_bare:
+        out = timed_get("https://api.wynncraft.com/v3/x")
+    assert out == "r"
+    mock_get.assert_called_once()
+    mock_bare.assert_not_called()
