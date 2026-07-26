@@ -71,9 +71,15 @@ async def on_ready():
         client.add_view(ApplicationButtonView())
         client.add_view(ApplicationVoteView())
         client.add_view(ThreadVoteView())
-        await client.sync_commands()
-        client.synced = True
-        log(SUCCESS, "Slash commands synced.")
+        try:
+            await client.sync_commands()
+            client.synced = True
+            log(SUCCESS, "Slash commands synced.")
+        except Exception as e:
+            # A sync failure (e.g. 403 when the bot lacks access to one guild)
+            # must not kill the rest of on_ready — presence, the logger flush
+            # loop, and the startup notification all live below this point.
+            log(ERROR, f"Slash command sync failed; continuing startup: {e}")
 
     logger.start()
 
