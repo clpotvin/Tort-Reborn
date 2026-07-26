@@ -318,7 +318,13 @@ class TerritoryTracker(commands.Cog):
             if not new_data:
                 return
 
-            await asyncio.to_thread(saveTerritoryData, new_data)
+            # Write-on-change: the full snapshot is ~350KB and rewriting it
+            # every tick dominates Railway egress. Skipping identical writes
+            # loses nothing (the stored bytes would be the same), and because
+            # old_data is re-read from the DB each tick, a missing or diverged
+            # row fails the comparison and gets rewritten on the next pass.
+            if new_data != old_data:
+                await asyncio.to_thread(saveTerritoryData, new_data)
 
             # tally post-update counts
             new_counts = Counter()
