@@ -389,6 +389,72 @@ CREATE INDEX IF NOT EXISTS idx_cache_expires_at ON cache_entries(expires_at);
 CREATE INDEX IF NOT EXISTS idx_cache_created_at ON cache_entries(created_at);
 
 -- =============================================================================
+-- Annihilation Party System
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS annihilation_party_events (
+  id                BIGSERIAL   PRIMARY KEY,
+  schedule_at       TIMESTAMPTZ NOT NULL UNIQUE,
+  closes_at         TIMESTAMPTZ NOT NULL,
+  guild_id          BIGINT      NOT NULL,
+  channel_id        BIGINT      NOT NULL,
+  message_id        BIGINT      UNIQUE,
+  thread_id         BIGINT,
+  status            VARCHAR(16) NOT NULL DEFAULT 'active'
+                    CHECK (status IN ('active', 'closed')),
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  closed_at         TIMESTAMPTZ,
+  discord_closed_at TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_annihilation_party_events_due
+  ON annihilation_party_events(closes_at)
+  WHERE status = 'active';
+
+CREATE INDEX IF NOT EXISTS idx_annihilation_party_events_finalize
+  ON annihilation_party_events(closed_at)
+  WHERE status = 'closed' AND discord_closed_at IS NULL;
+
+CREATE TABLE IF NOT EXISTS annihilation_parties (
+  event_id     BIGINT      NOT NULL
+               REFERENCES annihilation_party_events(id) ON DELETE CASCADE,
+  party_number SMALLINT    NOT NULL CHECK (party_number BETWEEN 1 AND 5),
+  world        VARCHAR(8),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (event_id, party_number)
+);
+
+CREATE TABLE IF NOT EXISTS annihilation_party_members (
+  id                BIGSERIAL   PRIMARY KEY,
+  event_id          BIGINT      NOT NULL
+                    REFERENCES annihilation_party_events(id) ON DELETE CASCADE,
+  discord_id        BIGINT      NOT NULL,
+  ign               VARCHAR(16) NOT NULL,
+  uuid              UUID,
+  party_number      SMALLINT    NOT NULL CHECK (party_number BETWEEN 1 AND 5),
+  slot_number       SMALLINT    NOT NULL CHECK (slot_number BETWEEN 1 AND 10),
+  build             VARCHAR(50) NOT NULL,
+  combat_role       VARCHAR(10)
+                    CHECK (combat_role IN ('healer', 'guardian')),
+  bringing_scrolls BOOLEAN      NOT NULL DEFAULT FALSE,
+  notes             VARCHAR(50),
+  party_joined_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (event_id, discord_id),
+  UNIQUE (event_id, party_number, slot_number),
+  FOREIGN KEY (event_id, party_number)
+    REFERENCES annihilation_parties(event_id, party_number) ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_annihilation_party_members_ign
+  ON annihilation_party_members(event_id, LOWER(ign));
+
+CREATE INDEX IF NOT EXISTS idx_annihilation_party_members_party
+  ON annihilation_party_members(event_id, party_number, party_joined_at, id);
+
+-- =============================================================================
 -- Liquid Emerald Balance Tracking
 -- =============================================================================
 

@@ -1,33 +1,38 @@
 """
-Test suite for the DB connection pool (Helpers/database.py).
+Test suite for the DB connection pool hardening (Helpers/database.py).
 
-Tests:
-1. close() returns the connection to the pool after rollback, not conn.close()
+The pool structure (keyed pools, use_pool opt-out, status-aware release) is
+covered by tests/test_database_timing.py. This file covers the hardening
+grafted onto it:
+
+1. close() rolls back only when a transaction is open, and returns to the pool
 2. A broken (closed) connection is discarded with putconn(close=True)
-3. Two sequential DB() uses reuse one underlying connection
-4. connect() wraps the checkout in the db.connect bucket
-5. A checkout whose post-checkout setup fails is discarded, not leaked
-6. connect() retries getconn() on PoolError and succeeds once the pool frees up
-7. connect() logs a WARN each time it retries after a PoolError (exhaustion signal)
-8. connect() gives up and re-raises PoolError after exhausting retries
+3. Sequential DB() uses check out and return through the same pool
+4. connect() times the checkout in the db.connect bucket
+5. A post-checkout setup failure discards the connection instead of leaking it
+6. PoolError checkout retries (bounded), logs a WARN per retry, then succeeds
+7. Sustained exhaustion raises PoolError after the retries are spent
 """
 
 import os
 import sys
 from unittest.mock import MagicMock, patch
 
+import psycopg2.pool
 import pytest
-from psycopg2 import pool as _pg_pool
+from psycopg2 import extensions
 
 # Add project root to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from Helpers import database, telemetry
+from Helpers.database import DB
 
 
 class FakeConn:
-    def __init__(self):
+    def __init__(self, status=extensions.STATUS_READY):
         self.closed = 0
+        self.status = status
         self.rolled_back = False
 
     def cursor(self):
@@ -38,119 +43,120 @@ class FakeConn:
 
 
 @pytest.fixture(autouse=True)
-def _fresh_pool_and_context():
+def _fresh(monkeypatch):
     token = telemetry._current.set(None)
-    database._reset_pool_for_tests()
+    DB._pools.clear()
+    # connect() resolves env config before touching the pool; stub it so these
+    # tests need no environment and open no sockets.
+    monkeypatch.setattr(DB, "_connection_kwargs", staticmethod(lambda: ("true", {})))
     yield
-    database._reset_pool_for_tests()
+    DB._pools.clear()
     telemetry._current.reset(token)
 
 
-def _fake_pool(conn):
+def _with_fake_pool(conn):
     fake = MagicMock()
     fake.getconn.return_value = conn
-    return fake
+    return patch.object(DB, "_pool_for", MagicMock(return_value=fake)), fake
 
 
-def test_close_rolls_back_and_returns_to_pool():
-    conn = FakeConn()
-    fake = _fake_pool(conn)
-    with patch.object(database, "_get_pool", return_value=fake):
-        db = database.DB()
+def test_close_rolls_back_open_transaction_and_returns():
+    conn = FakeConn(status=extensions.STATUS_BEGIN)
+    patcher, fake = _with_fake_pool(conn)
+    with patcher:
+        db = DB()
         db.connect()
         db.close()
     assert conn.rolled_back is True
-    fake.putconn.assert_called_once()
-    args, kwargs = fake.putconn.call_args
-    assert args[0] is conn
-    assert not kwargs.get("close", False)
+    fake.putconn.assert_called_once_with(conn, close=False)
+
+
+def test_close_skips_rollback_when_idle():
+    conn = FakeConn(status=extensions.STATUS_READY)
+    patcher, fake = _with_fake_pool(conn)
+    with patcher:
+        db = DB()
+        db.connect()
+        db.close()
+    assert conn.rolled_back is False
+    fake.putconn.assert_called_once_with(conn, close=False)
 
 
 def test_broken_connection_is_discarded():
     conn = FakeConn()
-    conn.closed = 1  # psycopg2 marks broken connections with nonzero .closed
-    fake = _fake_pool(conn)
-    with patch.object(database, "_get_pool", return_value=fake):
-        db = database.DB()
+    conn.closed = 1
+    patcher, fake = _with_fake_pool(conn)
+    with patcher:
+        db = DB()
         db.connect()
         db.close()
     fake.putconn.assert_called_once_with(conn, close=True)
 
 
-def test_sequential_uses_share_one_connection():
+def test_sequential_uses_check_out_and_return():
     conn = FakeConn()
-    fake = _fake_pool(conn)
-    with patch.object(database, "_get_pool", return_value=fake):
+    patcher, fake = _with_fake_pool(conn)
+    with patcher:
         for _ in range(2):
-            db = database.DB()
+            db = DB()
             db.connect()
             db.close()
     assert fake.getconn.call_count == 2
-    assert fake.putconn.call_count == 2  # same pool, checkout/return both times
+    assert fake.putconn.call_count == 2
 
 
 def test_checkout_is_timed_into_db_connect():
     conn = FakeConn()
-    fake = _fake_pool(conn)
+    patcher, fake = _with_fake_pool(conn)
     telemetry.begin("test", None, None, None)
-    with patch.object(database, "_get_pool", return_value=fake):
-        db = database.DB()
+    with patcher:
+        db = DB()
         db.connect()
     assert telemetry._current.get().buckets["db.connect"]["n"] == 1
 
 
-class FakeConnBrokenCursor(FakeConn):
-    def cursor(self):
-        raise RuntimeError("cursor setup failed")
-
-
 def test_checkout_discarded_when_post_checkout_setup_fails():
-    conn = FakeConnBrokenCursor()
-    fake = _fake_pool(conn)
-    with patch.object(database, "_get_pool", return_value=fake):
-        db = database.DB()
-        with pytest.raises(RuntimeError):
+    class BrokenCursorConn(FakeConn):
+        def cursor(self):
+            raise RuntimeError("cursor blew up")
+
+    conn = BrokenCursorConn()
+    patcher, fake = _with_fake_pool(conn)
+    with patcher:
+        db = DB()
+        with pytest.raises(RuntimeError, match="cursor blew up"):
             db.connect()
     fake.putconn.assert_called_once_with(conn, close=True)
+    assert db.connection is None and db.cursor is None
 
 
-def test_connect_retries_pool_error_then_succeeds():
+def test_pool_exhaustion_retries_then_succeeds():
     conn = FakeConn()
     fake = MagicMock()
-    fake.getconn.side_effect = [_pg_pool.PoolError("exhausted"), _pg_pool.PoolError("exhausted"), conn]
-    with patch.object(database, "_get_pool", return_value=fake), \
+    fake.getconn.side_effect = [
+        psycopg2.pool.PoolError("exhausted"),
+        psycopg2.pool.PoolError("exhausted"),
+        conn,
+    ]
+    with patch.object(DB, "_pool_for", MagicMock(return_value=fake)), \
+         patch.object(database, "log") as mock_log, \
          patch.object(database.time, "sleep") as mock_sleep:
-        db = database.DB()
+        db = DB()
         db.connect()
-    assert db.connection is not None
     assert fake.getconn.call_count == 3
     mock_sleep.assert_any_call(0.2)
     mock_sleep.assert_any_call(0.4)
+    warns = [c for c in mock_log.call_args_list if "pool exhausted" in str(c)]
+    assert len(warns) == 2
 
 
-def test_connect_logs_warning_when_pool_exhausted_and_retrying():
-    conn = FakeConn()
+def test_pool_exhaustion_raises_after_retries_spent():
     fake = MagicMock()
-    fake.getconn.side_effect = [_pg_pool.PoolError("exhausted"), _pg_pool.PoolError("exhausted"), conn]
-    with patch.object(database, "_get_pool", return_value=fake), \
-         patch.object(database.time, "sleep"), \
-         patch.object(database, "log") as mock_log:
-        db = database.DB()
-        db.connect()
-    assert db.connection is not None
-    warn_messages = [
-        call.args[1] for call in mock_log.call_args_list
-        if len(call.args) >= 2 and "pool exhausted" in str(call.args[1])
-    ]
-    assert len(warn_messages) == 2  # one WARN per retried checkout, not the final success
-
-
-def test_connect_gives_up_after_exhausting_pool_error_retries():
-    fake = MagicMock()
-    fake.getconn.side_effect = _pg_pool.PoolError("exhausted")
-    with patch.object(database, "_get_pool", return_value=fake), \
+    fake.getconn.side_effect = psycopg2.pool.PoolError("exhausted")
+    with patch.object(DB, "_pool_for", MagicMock(return_value=fake)), \
+         patch.object(database, "log"), \
          patch.object(database.time, "sleep"):
-        db = database.DB()
-        with pytest.raises(_pg_pool.PoolError):
+        db = DB()
+        with pytest.raises(psycopg2.pool.PoolError):
             db.connect()
     assert fake.getconn.call_count == 3

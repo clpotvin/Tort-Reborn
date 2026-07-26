@@ -1,15 +1,18 @@
 import datetime
-from datetime import timedelta
 import json
 import os
+import sys
 import threading
 import time
+from datetime import timedelta
+from typing import ClassVar
 
-from psycopg2 import OperationalError
-from psycopg2 import pool as _pg_pool
+import psycopg2
+import psycopg2.pool
+from psycopg2 import OperationalError, extensions
 
 from Helpers import telemetry
-from Helpers.logger import log, ERROR, WARN
+from Helpers.logger import ERROR, WARN, log
 
 
 class _TimedCursor:
@@ -63,90 +66,124 @@ class _TimedConnection:
         setattr(self.__dict__["_connection"], name, value)
 
 
-# Process-wide connection pool. One pool per process, created lazily on first
-# checkout; DB.connect()/DB.close() become checkout/return so all existing
-# helpers and call sites get pooling without change. Phase 0 measured a fresh
-# connect at 120-674ms per command; a warm checkout is sub-millisecond.
-_pool = None
-_pool_lock = threading.Lock()
-
-
-def _connection_kwargs():
-    if os.getenv("TEST_MODE").lower() == "true":
-        prefix, default_db = "TEST_DB", "postgres"
-    elif os.getenv("TEST_MODE").lower() == "false":
-        prefix, default_db = "DB", "postgres"
-    else:
-        log(ERROR, "Problem logging into db", context="database")
-        exit(-1)
-    return dict(
-        user=os.getenv(f"{prefix}_LOGIN"),
-        password=os.getenv(f"{prefix}_PASS"),
-        host=os.getenv(f"{prefix}_HOST"),
-        port=int(os.getenv(f"{prefix}_PORT")),
-        database=os.getenv(f"{prefix}_DATABASE", default_db),
-        sslmode=os.getenv(f"{prefix}_SSLMODE"),
-        keepalives=1,
-        keepalives_idle=30,
-        keepalives_interval=10,
-        keepalives_count=5,
-    )
-
-
-def _get_pool():
-    global _pool
-    if _pool is None:
-        with _pool_lock:
-            if _pool is None:
-                _pool = _pg_pool.ThreadedConnectionPool(
-                    1, int(os.getenv("DB_POOL_MAX", "8")), **_connection_kwargs()
-                )
-    return _pool
-
-
-def _reset_pool_for_tests():
-    """Drop the pool singleton. Test hook only."""
-    global _pool
-    if _pool is not None:
-        try:
-            _pool.closeall()
-        except Exception:
-            pass
-    _pool = None
-
-
 class DB:
-    def __init__(self):
+    _pool_lock: ClassVar = threading.Lock()
+    _pools: ClassVar[dict[tuple, psycopg2.pool.ThreadedConnectionPool]] = {}
+
+    # Bounded retry on pool exhaustion: getconn() is non-blocking, so a burst
+    # would otherwise turn into instant user-facing failures. Two short waits
+    # ride out transient contention; real exhaustion still fails, loudly.
+    _POOL_RETRY_DELAYS: ClassVar[tuple] = (0.2, 0.4)
+
+    def __init__(self, *, use_pool: bool = True, pool_min: int = 1, pool_max: int | None = None):
         self.connection = None
         self.cursor = None
+        self._raw_connection = None
+        self._pool = None
+        self._use_pool = use_pool
+        self._pool_min = max(1, int(pool_min))
+        if pool_max is None:
+            pool_max = int(os.getenv("DB_POOL_MAX", "10"))
+        self._pool_max = max(self._pool_min, int(pool_max))
+
+    @staticmethod
+    def _connection_kwargs() -> tuple[str, dict]:
+        test_mode = os.getenv("TEST_MODE").lower()
+        if test_mode == "true":
+            prefix = "TEST_DB"
+        elif test_mode == "false":
+            prefix = "DB"
+        else:
+            log(ERROR, "Problem logging into db", context="database")
+            sys.exit(-1)
+
+        return test_mode, {
+            "user": os.getenv(f"{prefix}_LOGIN"),
+            "password": os.getenv(f"{prefix}_PASS"),
+            "host": os.getenv(f"{prefix}_HOST"),
+            "port": int(os.getenv(f"{prefix}_PORT")),
+            "database": os.getenv(f"{prefix}_DATABASE", "postgres"),
+            "sslmode": os.getenv(f"{prefix}_SSLMODE"),
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+            "keepalives_count": 5,
+        }
+
+    @classmethod
+    def _pool_for(
+        cls,
+        mode: str,
+        kwargs: dict,
+        *,
+        minconn: int,
+        maxconn: int,
+    ) -> psycopg2.pool.ThreadedConnectionPool:
+        key = (
+            mode,
+            minconn,
+            maxconn,
+            tuple(sorted(kwargs.items())),
+        )
+        with cls._pool_lock:
+            pool = cls._pools.get(key)
+            if pool is None:
+                pool = psycopg2.pool.ThreadedConnectionPool(
+                    minconn,
+                    maxconn,
+                    **kwargs,
+                )
+                cls._pools[key] = pool
+            return pool
 
     def connect(self):
         try:
-            with telemetry.track("db.connect"):
-                retry_delays = (0.2, 0.4)
-                attempt = 0
-                while True:
-                    try:
-                        raw_connection = _get_pool().getconn()
-                        break
-                    except _pg_pool.PoolError:
-                        if attempt >= len(retry_delays):
-                            raise
-                        log(WARN, f"DB pool exhausted, retrying (attempt {attempt + 1})", context="database")
-                        time.sleep(retry_delays[attempt])
-                        attempt += 1
-            try:
-                self.connection = _TimedConnection(raw_connection)
-                self.cursor = _TimedCursor(raw_connection.cursor())
-            except Exception:
-                try:
-                    _get_pool().putconn(raw_connection, close=True)
-                except Exception:
-                    pass
-                raise
-        except (OperationalError, _pg_pool.PoolError) as e:
+            mode, kwargs = self._connection_kwargs()
+            if self._use_pool:
+                with telemetry.track("db.connect"):
+                    self._pool = self._pool_for(
+                        mode,
+                        kwargs,
+                        minconn=self._pool_min,
+                        maxconn=self._pool_max,
+                    )
+                    raw_connection = self._checkout_with_retry()
+            else:
+                with telemetry.track("db.connect"):
+                    raw_connection = psycopg2.connect(**kwargs)
+        except (OperationalError, psycopg2.pool.PoolError) as e:
             log(ERROR, f"Connection failed: {e}", context="database")
             raise
+        try:
+            self._raw_connection = raw_connection
+            self.connection = _TimedConnection(raw_connection)
+            self.cursor = _TimedCursor(raw_connection.cursor())
+        except Exception:
+            # A failure here would otherwise leak the checked-out connection
+            # from the pool's tracking for the life of the process.
+            try:
+                if self._use_pool and self._pool is not None:
+                    self._pool.putconn(raw_connection, close=True)
+                else:
+                    raw_connection.close()
+            except Exception:
+                pass
+            self._raw_connection = None
+            self.connection = None
+            self.cursor = None
+            raise
+
+    def _checkout_with_retry(self):
+        attempt = 0
+        while True:
+            try:
+                return self._pool.getconn()
+            except psycopg2.pool.PoolError:
+                if attempt >= len(self._POOL_RETRY_DELAYS):
+                    raise
+                log(WARN, f"DB pool exhausted, retrying (attempt {attempt + 1})", context="database")
+                time.sleep(self._POOL_RETRY_DELAYS[attempt])
+                attempt += 1
 
     def __enter__(self):
         self.connect()
@@ -156,27 +193,41 @@ class DB:
         self.close()
 
     def close(self):
-        """Return the connection to the pool (rolled back), discarding broken ones."""
+        """Close cursor and release or close connection."""
         if self.cursor:
-            try:
-                self.cursor.close()
-            except Exception:
-                pass
-        if self.connection:
-            raw = self.connection.__dict__["_connection"]
-            try:
-                if raw.closed:
-                    _get_pool().putconn(raw, close=True)
-                else:
-                    raw.rollback()
-                    _get_pool().putconn(raw)
-            except Exception:
+            self.cursor.close()
+        if self._raw_connection:
+            if self._pool:
+                close_connection = bool(self._raw_connection.closed)
+                if not close_connection:
+                    try:
+                        if self._raw_connection.status != extensions.STATUS_READY:
+                            self._raw_connection.rollback()
+                    except Exception as e:
+                        log(
+                            WARN,
+                            f"Discarding pooled DB connection after rollback failed: {e}",
+                            context="database",
+                        )
+                        close_connection = True
+                self._pool.putconn(self._raw_connection, close=close_connection)
+            else:
+                self._raw_connection.close()
+        self.cursor = None
+        self.connection = None
+        self._raw_connection = None
+        self._pool = None
+
+    @classmethod
+    def _reset_pools_for_tests(cls):
+        """Close and drop every pool. Test hook only."""
+        with cls._pool_lock:
+            for pool in cls._pools.values():
                 try:
-                    _get_pool().putconn(raw, close=True)
+                    pool.closeall()
                 except Exception:
                     pass
-        self.connection = None
-        self.cursor = None
+            cls._pools.clear()
 
 
 class BatchBaselineQueryError(RuntimeError):

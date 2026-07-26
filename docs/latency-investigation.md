@@ -183,7 +183,8 @@ duplicate UUID lookup.)
 1. **Get command I/O off the loop and de-cold it** — **implemented.** What shipped:
    - Shared keep-alive `requests.Session` behind `timed_get` (stateless: block-all cookie policy,
      so the three Wynncraft token identities share nothing but sockets).
-   - Connection pool behind `DB` (`ThreadedConnectionPool`, max `DB_POOL_MAX`, default 8; checkout
+   - Connection pool behind `DB` (`ThreadedConnectionPool`, keyed per config with a
+     `use_pool=False` opt-out; max `DB_POOL_MAX`, default 10; checkout
      timed in the same `db.connect` bucket; rollback-on-return; broken connections discarded;
      bounded retry on pool exhaustion, fast-fail on real connection errors). `PlayerStats` and the
      daily snapshot task check out only after their external HTTP completes, so slots are never
