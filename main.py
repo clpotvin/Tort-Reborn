@@ -71,9 +71,15 @@ async def on_ready():
         client.add_view(ApplicationButtonView())
         client.add_view(ApplicationVoteView())
         client.add_view(ThreadVoteView())
-        await client.sync_commands()
-        client.synced = True
-        log(SUCCESS, "Slash commands synced.")
+        try:
+            await client.sync_commands()
+            client.synced = True
+            log(SUCCESS, "Slash commands synced.")
+        except Exception as e:
+            # A sync failure (e.g. 403 when the bot lacks access to one guild)
+            # must not kill the rest of on_ready — presence, the logger flush
+            # loop, and the startup notification all live below this point.
+            log(ERROR, f"Slash command sync failed; continuing startup: {e}")
 
     logger.start()
 
@@ -128,12 +134,14 @@ async def _telemetry_before(ctx: discord.ApplicationContext):
 
     queue_ms is the gap between Discord creating the interaction and the bot
     starting to run it — it separates "the bot was busy" from "the work was slow".
+
+    discord.Interaction (py-cord 2.6) has no `created_at`, so derive the creation
+    time from the interaction's snowflake id, which every interaction carries.
     """
     queue_ms = None
     try:
-        created = ctx.interaction.created_at
-        now = datetime.datetime.now(datetime.timezone.utc)
-        queue_ms = round((now - created).total_seconds() * 1000.0, 2)
+        created = discord.utils.snowflake_time(ctx.interaction.id)
+        queue_ms = telemetry.queue_ms_from(created)
     except Exception:
         pass
 

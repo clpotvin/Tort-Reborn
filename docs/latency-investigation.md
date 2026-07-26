@@ -1,6 +1,6 @@
 # Command latency investigation
 
-**Status:** Phase 0 instrumentation is implemented (measurement only, behaviourally neutral). It has not yet been analysed — deploy, capture a data window, then work through [Reading the telemetry](#reading-the-telemetry). Phase 1 (the fixes) has not been started.
+**Status:** Phase 0 is deployed and analysed — see [Findings](#findings--first-two-days-of-telemetry). Phase 1 (threading + de-cold) and Phase 1.5 (the follow-up sweep: default timeout, full `http.*` coverage, remaining loop-hygiene sites, per-phase snapshot checkouts, pool observability) are **implemented and awaiting deploy measurement**. Still open: task-loop staggering, the parked fleet split, and the [Still open](#still-open) items. After deploy: capture, run `scripts/analyze_telemetry.py`, diff against the Findings baseline.
 
 ## Symptom
 
@@ -39,14 +39,18 @@ The "something is asleep" model does not survive the evidence:
 
 ## Hypotheses, ranked
 
-**H1 — Event-loop contention with the background task fleet.** *(best fit)*
+*This was the ranking before any measurement. The [Findings](#findings--first-two-days-of-telemetry)
+section has the measured result, which reordered these: H2 is the dominant cost and H1 is
+secondary.*
+
+**H1 — Event-loop contention with the background task fleet.** *(pre-measurement: best guess)*
 The task loops in `Tasks/` run on 1/2/3/5/10-minute cycles and several perform blocking work
 directly on the event loop. A command arriving mid-cycle queues behind that work; one arriving in
 a gap returns immediately. The apparent sleep/wake periodicity is the task schedule.
 `Tasks/update_member_data.py` is the prime suspect — it runs every three minutes and iterates the
 full guild roster.
 
-**H2 — Cold connection paths after idle.** *(contributing)*
+**H2 — Cold connection paths after idle.** *(pre-measurement: contributing; measured: dominant)*
 Every database helper opens a fresh TLS connection to Neon. Every outbound API call builds a new
 `requests` session, so nothing reuses a socket. botocore's connection pool idles out. Under
 sustained traffic some of this amortises; after a quiet spell everything re-handshakes at once. A
@@ -96,9 +100,10 @@ Scope limits to keep in mind when reading the data:
 - Timing records are **command-scoped**. Background task loops call the same DB and HTTP layers but
   run outside any command, so their own calls emit no bucket record. Their impact shows up
   indirectly, through `loop_lag` and through `queue_ms` on commands that land mid-cycle.
-- A few `requests.get` calls inside individual command files (snipe, worlds, lootpool, manage,
-  raids, map, progress) are not routed through the timed wrapper, so their HTTP time appears in no
-  `http.*` bucket. The shared hot paths are covered; the picture is not exhaustive.
+- All outbound GETs — shared helpers and every command file — route through the timed wrapper, so
+  the `http.*` picture is complete. (The one non-`timed_get` HTTP call, `Helpers/sheets.py`'s POST,
+  is a deliberate exception: the wrapper is GET-only. `Commands/aspects.py` uses aiohttp, also by
+  design.)
 - A command cancelled mid-flight (shutdown, gateway disconnect) records `ok: true`, because
   py-cord swallows the cancellation before the timing hook runs. Documented, not fixed.
 
@@ -134,20 +139,113 @@ Two consequences:
   forward logs to an external sink (Railway suggests Vector / Fluent Bit / OTEL). For a one-off
   investigation, teeing to a file is enough; a forwarder is overkill.
 
-### Phase 1 — fixes, highest payoff first
+### Findings — first two days of telemetry
 
-1. Connection pool in `DB`. Single file, removes N handshakes per command.
-2. Move remaining blocking work off the loop: module-level `requests.Session`, and `to_thread` for
-   the Pillow render and the S3 calls.
-3. Stagger task-loop start offsets so they do not all fire on the same minute boundary.
-4. Split the task fleet into its own service or process so background work cannot contend with
-   interaction handling. This is the real fix for H1 and the largest change — only worth doing if
-   Phase 0 confirms H1.
+Measured over roughly the first day and a half after deployment (~1,800 one-minute drift windows,
+~70 drift excursions, 15 commands). Low command traffic, which is itself part of the story.
+
+- **The event loop is healthy at baseline.** p95 drift is ~2 ms (median across all windows), p90
+  ~2.5 ms. A congested loop is ruled out. Brief single-tick bumps occur (about a quarter of minutes
+  touch >100 ms once) but nothing sustained.
+- **Every command is slow — 2 to 6.5 seconds — and the cost is cold external I/O.** Supabase S3
+  reads dominate: `s3.get` ranged 0.7–4.0 s. Then outbound HTTP (visage avatar, Wynncraft) and
+  fresh DB connects (0.1–0.7 s each, no pool).
+- **H2 (cold connections) is confirmed on real traffic.** Two `profile` calls a minute apart showed
+  `s3.get` drop from ~3.95 s to ~0.73 s — a ~5× cold penalty. With traffic this sparse, paths are
+  almost always cold, so nearly every command is a first-after-idle. That is the reported symptom.
+- **Commands block the loop themselves.** The largest drift excursions (up to ~5.1 s) coincide with
+  commands, because the card-render path runs S3, HTTP and Pillow inline on the event loop. A slow
+  command stalls the loop for everyone during it.
+- **H1 (task contention) is real but secondary.** About half the excursions are
+  `update_member_data`'s recurring ~300 ms stalls; the rest are other task loops. None of this is
+  the main driver of command latency.
+
+The data redirects Phase 1: the event loop is not congested, so **splitting the task fleet into its
+own service — the largest planned change — is not justified.** The win is getting command I/O off
+the loop and making it not-cold.
+
+#### Component benchmark (pre-deploy, real prod services)
+
+| Component | Current path | Proposed path | Gain |
+|---|---|---|---|
+| DB access | fresh connect+query 436 ms | pooled query 153 ms | 2.8× |
+| Wynncraft GET | fresh session 456 ms | shared session 141 ms | 3.2× |
+| Visage GET | fresh session 252 ms (max 1611) | shared session 71 ms | 3.5× |
+| Background read | S3 293 ms | memory hit ~0 ms | — |
+
+Pipeline: sequential-cold ≈ 2648 ms measured → ~700–900 ms expected warm. (Sequential-threaded:
+the avatar URL needs `player.UUID`, which only exists after `PlayerStats` returns, so the avatar
+fetch runs after it rather than in parallel; with keep-alive that costs ~70 ms and avoids a
+duplicate UUID lookup.)
+
+### Phase 1 — fixes, evidence-ranked
+
+1. **Get command I/O off the loop and de-cold it** — **implemented.** What shipped:
+   - Shared keep-alive `requests.Session` behind `timed_get` (stateless: block-all cookie policy,
+     so the three Wynncraft token identities share nothing but sockets).
+   - Connection pool behind `DB` (`ThreadedConnectionPool`, max `DB_POOL_MAX`, default 8; checkout
+     timed in the same `db.connect` bucket; rollback-on-return; broken connections discarded;
+     bounded retry on pool exhaustion, fast-fail on real connection errors). `PlayerStats` and the
+     daily snapshot task check out only after their external HTTP completes, so slots are never
+     held across slow fetches.
+   - Background memory cache with write-through invalidation in `save_background` — a background
+     change shows on the very next render; reads are ~0 ms.
+   - **S3 avatar cache deleted.** Its reads (0.97–1.6 s in prod) cost more than the fresh visage
+     fetch they were avoiding (~71 ms with keep-alive). Skins are now fetched fresh per render —
+     a skin change shows on the next render, bounded only by visage's own CDN.
+   - `/profile`'s card build (Pillow + avatar fetch) moved into a worker thread — renders no
+     longer stall the event loop for everyone else.
+2. **Stagger task-loop start offsets** so `update_member_data` and siblings do not all fire on the
+   same minute boundary — cheap mitigation for the ~300 ms task stalls. Not started.
+3. **Split the task fleet into its own service** — parked. Not justified while the loop is healthy;
+   revisit only if traffic grows enough to congest it.
+
+#### Phase 1.5 — follow-ups (implemented)
+
+- `timed_get` applies a **default 15 s timeout** (explicit timeouts win). A hung upstream now
+  fails loudly instead of pinning a session socket and its worker thread forever. Every swept
+  call site's exception handling was verified to treat the new `Timeout` like any other request
+  failure.
+- **Every `requests.get` under `Commands/` is swept** through `timed_get` — direct calls and the
+  `to_thread(requests.get, …)` callable form (the callable form evaded the call-pattern grep
+  twice; three sites in snipe/lootpool and one in worlds were caught on the second and third
+  passes).
+- **Loop hygiene:** `manage`'s shell modal and shells render path, and `new_member`, now defer
+  first and run their blocking work (HTTP → then DB checkout) in worker threads via module-level
+  sync helpers — the `/profile` pattern. The shell modal also reports helper failures instead of
+  stranding the deferred interaction at "thinking…" (modal errors bypass the command error
+  handler), and the snipe log posts without its image rather than erroring after the success
+  embed was already sent.
+- **`daily_activity_snapshot` takes per-phase checkouts** — no pool slot is held across a
+  per-member API fetch or a retry sleep; the write phase keeps its original single commit.
+- **Pool exhaustion is observable:** `DB.connect` logs a WARN (`"DB pool exhausted, retrying"`)
+  whenever the bounded retry fires — the direct signal that `DB_POOL_MAX` needs raising.
+
+#### Still open
+
+- Task-loop start-offset staggering (Phase 1 item 2) — decide after the post-deploy capture
+  shows how much task-loop stall remains.
+- The task-fleet split (item 3) — parked; revisit only if traffic grows enough to congest the
+  loop.
+
+(`manage rank`/`link` loop hygiene and the `BasicPlayerStats` error path — previously listed
+here — are fixed: rank batches its permission reads into one brief checkout and persists via a
+second, link resolves the UUID before connecting and reports an unresolvable ign instead of
+crashing, and `BasicPlayerStats` sets `error=True` when the player-data fetch fails.)
+
+`queue_ms` recorded null for every command in the first window because `discord.Interaction`
+(py-cord 2.6) has no `created_at`; it is now derived from the interaction snowflake id, so the
+queue-delay discriminator works from the next deploy onward.
 
 ## Picking this back up
 
-Phase 0 is built and deployed-ready; the next action is to run it and read the output, not to write
-more code. Deploy, let it run through several quiet-then-active cycles, capture the window before it
-ages out, then work through [Reading the telemetry](#reading-the-telemetry). The single
-highest-information signal is the event-loop lag monitor: it either confirms or kills H1, and that
-decides whether Phase 1's task-fleet split is needed at all.
+Phase 1 item 1 is implemented; the next action is deploy-and-measure, not code. Capture a window
+(`railway logs --service worker --since 48h --lines 5000 --json > after.json`), run
+`scripts/analyze_telemetry.py after.json`, and diff against the Findings baseline. Success bar:
+profile `total_ms` median under ~1 s warm, `db.connect` near-zero after the first sample (which
+includes one-time pool construction — use the median, not the max), and no command-coincident loop
+excursions from the render path. Note `http.visage.surgeplay.com` gains events it did not have in
+Phase 0 (raids' avatar fetch is newly routed through `timed_get`), so compare that bucket on
+latency-per-event, not count. Bucket names were kept stable throughout, so before/after captures
+are directly comparable. Then work the follow-ups list above, starting with the `timed_get`
+default-timeout decision.

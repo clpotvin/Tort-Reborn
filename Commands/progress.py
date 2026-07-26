@@ -4,14 +4,13 @@ import time
 from io import BytesIO
 
 import discord
-import requests
 from PIL import Image, ImageFont, ImageDraw
 from discord.ext import commands
 from discord.commands import slash_command
 from discord.ui import Select, View
 
 from Helpers.classes import PlayerStats
-from Helpers.functions import getPlayerData, fix_progressbar, getPlayerUUID, generate_rank_badge, create_progress_bar
+from Helpers.functions import getPlayerData, fix_progressbar, getPlayerUUID, generate_rank_badge, create_progress_bar, timed_get
 from Helpers.variables import class_map
 from Helpers.rate_limiter import external_rate_limit
 from Helpers.logger import log, ERROR
@@ -79,7 +78,7 @@ class Progress(commands.Cog):
             try:
                 headers = {'User-Agent': os.getenv("visage_UA")}
                 url = f"https://visage.surgeplay.com/bust/500/{playerdata.UUID}"
-                response = requests.get(url, headers=headers, timeout=6)
+                response = timed_get(url, headers=headers, timeout=6)
                 skin = Image.open(BytesIO(response.content))
             except Exception as e:
                 log(ERROR, f"{e}", context="progress")

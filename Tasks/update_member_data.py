@@ -58,6 +58,23 @@ CONTRIBUTION_THRESHOLD = 2_500_000_000
 RATE_LIMIT = 100  # max calls per minute
 RAID_DETECTION_ENABLED = False
 
+EMBED_FIELD_CAP = 25  # Discord rejects embeds with more fields (error 50035)
+
+
+def _build_rank_change_embeds(role_changes, now):
+    """Chunk rank changes into embeds of at most EMBED_FIELD_CAP fields.
+
+    A promotion wave or cold-start diff can exceed 25 changes; a single
+    oversized embed 400s on send and kills the loop (observed in dev with a
+    30-change diff)."""
+    embeds = []
+    for start in range(0, len(role_changes), EMBED_FIELD_CAP):
+        er = discord.Embed(title='Guild Rank Changes', timestamp=now, color=0x0000FF)
+        for _, name, old, new in role_changes[start:start + EMBED_FIELD_CAP]:
+            er.add_field(name=discord.utils.escape_markdown(name), value=f"{old} → {new}", inline=False)
+        embeds.append(er)
+    return embeds
+
 RAID_EMOJIS = {
     "Nest of the Grootslangs": NOTG_EMOJI,
     "The Canyon Colossus": TCC_EMOJI,
@@ -672,13 +689,11 @@ class UpdateMemberData(commands.Cog):
         if role_changes and not (self.cold_start and not self.member_list_exists):
             ch = self.client.get_channel(LOG_CHANNEL)
             guild_log_ch = self.client.get_channel(GUILD_LOG)
-            er = discord.Embed(title='Guild Rank Changes', timestamp=now, color=0x0000FF)
-            for _,name,old,new in role_changes:
-                er.add_field(name=discord.utils.escape_markdown(name),value=f"{old} → {new}",inline=False)
-            if ch:
-                await ch.send(embed=er)
-            if guild_log_ch:
-                await guild_log_ch.send(embed=er)
+            for er in _build_rank_change_embeds(role_changes, now):
+                if ch:
+                    await ch.send(embed=er)
+                if guild_log_ch:
+                    await guild_log_ch.send(embed=er)
 
         # 5: Update presence
         await self.client.change_presence(activity=discord.CustomActivity(name=f"{guild.online} members online"))
@@ -1063,8 +1078,6 @@ class UpdateMemberData(commands.Cog):
 
         log(INFO, f"Running snapshot for date: {target_date}", context="update_member_data")
 
-        db = DB()
-        db.connect()
         guild = Guild("The Aquarium", "WYNN_LOOP_TOKEN")
         snap = {'time': int(time.time()), 'members': []}
 
@@ -1092,27 +1105,36 @@ class UpdateMemberData(commands.Cog):
                     failed_members.append(m)
                     continue
 
-                # shells
-                db.cursor.execute(
-                    "SELECT COALESCE(s.shells, 0) "
-                    "FROM discord_links dl "
-                    "LEFT JOIN shells s ON dl.discord_id = s.user "
-                    "WHERE dl.uuid = %s",
-                    (uuid,)
-                )
-                row = db.cursor.fetchone()
-                sh = row[0] if row else 0
+                # Short-lived checkout scoped to this member's reads only. It is
+                # opened after the external API fetch above and closed before the
+                # next iteration's fetch (and before any retry sleep), so no pool
+                # slot is held across an API call or a retry sleep.
+                db = DB()
+                db.connect()
+                try:
+                    # shells
+                    db.cursor.execute(
+                        "SELECT COALESCE(s.shells, 0) "
+                        "FROM discord_links dl "
+                        "LEFT JOIN shells s ON dl.discord_id = s.user "
+                        "WHERE dl.uuid = %s",
+                        (uuid,)
+                    )
+                    row = db.cursor.fetchone()
+                    sh = row[0] if row else 0
 
-                # raids
-                db.cursor.execute(
-                    "SELECT COALESCE(ur.uncollected_raids, 0) + COALESCE(ur.collected_raids, 0) "
-                    "FROM discord_links dl "
-                    "LEFT JOIN uncollected_raids ur ON dl.uuid = ur.uuid "
-                    "WHERE dl.uuid = %s",
-                    (uuid,)
-                )
-                row = db.cursor.fetchone()
-                rd = row[0] if row else 0
+                    # raids
+                    db.cursor.execute(
+                        "SELECT COALESCE(ur.uncollected_raids, 0) + COALESCE(ur.collected_raids, 0) "
+                        "FROM discord_links dl "
+                        "LEFT JOIN uncollected_raids ur ON dl.uuid = ur.uuid "
+                        "WHERE dl.uuid = %s",
+                        (uuid,)
+                    )
+                    row = db.cursor.fetchone()
+                    rd = row[0] if row else 0
+                finally:
+                    db.close()
 
                 snap['members'].append({
                     'name': username,
@@ -1141,7 +1163,12 @@ class UpdateMemberData(commands.Cog):
 
         failed_fetches = len(failed_members) if failed_members else 0
 
-        # 3: write to player_activity database table (uses UPSERT for deduplication)
+        # 3: write to player_activity database table (uses UPSERT for deduplication).
+        # Own checkout for the whole write transaction: per-member carry-forward
+        # reads + UPSERTs + a single commit. No API fetches or sleeps happen here,
+        # so the slot is held only for DB work.
+        db = DB()
+        db.connect()
         try:
             db_rows_written = 0
             for member in snap['members']:
@@ -1187,13 +1214,13 @@ class UpdateMemberData(commands.Cog):
             db.connection.commit()
             private_profiles = sum(1 for m in snap['members'] if m.get('playtime') is None)
             log(INFO, f"Snapshot written to DB ({db_rows_written} rows, {failed_fetches} failed API, {private_profiles} private profiles)", context="update_member_data")
-            db.close()
             return (True, db_rows_written, total_members, failed_fetches, private_profiles)
         except Exception as e:
             log(ERROR, f"Failed to write to DB: {e}", context="update_member_data")
             traceback.print_exc()
-            db.close()
             return (False, 0, total_members, failed_fetches, 0)
+        finally:
+            db.close()
 
     @tasks.loop(time=dtime(hour=0, minute=1, tzinfo=timezone.utc))
     async def daily_activity_snapshot(self):
@@ -1302,11 +1329,18 @@ class UpdateMemberData(commands.Cog):
 
     @update_member_data.error
     async def on_update_member_data_error(self, error):
-        log(ERROR, "update_member_data loop raised an exception", context="update_member_data")
-        traceback.print_exc()
-        # restart the loop after a short pause
+        log(ERROR, f"update_member_data loop raised: {error!r}", context="update_member_data")
+        traceback.print_exception(type(error), error, error.__traceback__)
+        # This handler is awaited INSIDE the dying loop's own task, so
+        # is_running() is still True here and an inline restart is always
+        # skipped (observed in dev: the loop stayed dead for 75 minutes).
+        # Detach the restart so its check runs after the loop task finishes.
+        asyncio.create_task(self._restart_update_member_data())
+
+    async def _restart_update_member_data(self):
         await asyncio.sleep(5)
         if not self.update_member_data.is_running():
+            log(WARN, "Restarting update_member_data loop after crash", context="update_member_data")
             self.update_member_data.start()
 
 

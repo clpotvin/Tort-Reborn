@@ -15,7 +15,249 @@ from Helpers.functions import pretty_date, generate_rank_badge, generate_banner,
 from Helpers.logger import log, ERROR
 from Helpers.variables import discord_ranks, minecraft_colors, minecraft_banner_colors
 from Helpers.rate_limiter import external_rate_limit
-from Helpers.storage import get_background, get_cached_avatar, save_cached_avatar
+from Helpers.storage import get_background
+
+
+def _build_profile_card(player, days, author_id):
+    """Build the full profile card. Blocking (Pillow + avatar fetch) — always
+    call via asyncio.to_thread so a render never stalls the event loop."""
+    # Check for Christmas (Dec 24-26) and New Year's (Dec 31, Jan 1)
+    today = datetime.now()
+    is_christmas = today.month == 12 and today.day in (24, 25)
+    is_new_years = (today.month == 12 and today.day == 31) or (today.month == 1 and today.day == 1)
+
+    # Base Image + Edge Gradient
+    if is_christmas:
+        card = vertical_gradient(main_color='#c41e3a')  # Christmas red edge
+    elif is_new_years:
+        card = vertical_gradient(main_color='#e11d48')  # New Year's red edge
+    else:
+        card = vertical_gradient(main_color=player.tag_color)
+    card = round_corners(card)
+    draw = ImageDraw.Draw(card)
+
+    # Card Color/Pattern
+    if is_christmas:
+        card_color = vertical_gradient(width=850, height=1130, main_color='#c41e3a', secondary_color='#165b33')  # Red to green
+    elif is_new_years:
+        card_color = vertical_gradient(width=850, height=1130, main_color='#e11d48', secondary_color='#1d4ed8')  # Red to blue
+    elif player.background == 2 and player.gradient == ['#293786', '#1d275e']:    # Set gradient for TAq Sea Turtle BG
+        card_color = vertical_gradient(width=850, height=1130, main_color='#4585db', secondary_color='#2f2b73')
+    else:
+        card_color = vertical_gradient(width=850, height=1130, main_color=player.gradient[0], secondary_color=player.gradient[1])
+
+    card.paste(card_color, (25, 25), card_color)
+
+    # Background Outline
+    if is_christmas:
+        bg_outline = vertical_gradient(width=818, height=545, main_color='#165b33', reverse=True)  # Green outline
+    elif is_new_years:
+        bg_outline = vertical_gradient(width=818, height=545, main_color='#1d4ed8', reverse=True)  # Blue outline
+    else:
+        bg_outline = vertical_gradient(width=818, height=545, main_color=player.tag_color, reverse=True)
+    bg_outline = round_corners(bg_outline)
+    card.paste(bg_outline, (41, 100), bg_outline)
+
+    # Background
+    if is_christmas:
+        background = get_background("christmas_background")
+    elif is_new_years:
+        background = get_background("new_years_background")
+    else:
+        background = get_background(player.background)
+    background = round_corners(background, radius=20)
+    card.paste(background, (50, 110), background)
+
+    # Player Name
+    name_font = ImageFont.truetype('images/profile/game.ttf', 50)
+    addLine(text=player.username, draw=draw, font=name_font, x=50, y=40, drop_x=7, drop_y=7)
+
+    # Player Avatar
+    try:
+        headers = {'User-Agent': os.getenv("visage_UA")}
+        url = f"https://visage.surgeplay.com/bust/500/{player.UUID}"
+        response = timed_get(url, headers=headers, timeout=6)
+        response.raise_for_status()
+        skin = Image.open(BytesIO(response.content))
+    except Exception as e:
+        log(ERROR, f"{e}", context="profile")
+        skin = Image.open('images/profile/x-steve500.png')
+    skin.thumbnail((480, 480))
+    card.paste(skin, (200, 156), skin)
+
+    # Wynn Rank Badge
+    rank = generate_rank_badge(player.tag_display, player.tag_color)
+    rank_w, rank_h = rank.size
+    card.paste(rank, (450 - int(rank_w / 2), 96), rank)
+
+    # Guild Related
+    if player.guild:
+        # Get Guild Color
+        try:
+            guild_banner = player.guild_data['banner'] if player.guild_data else getData(player.guild)['banner']
+            if guild_banner['base'] in ['BLACK', 'GRAY', 'BROWN']:
+                for layer in guild_banner['layers']:
+                    if layer['colour'] not in ['BLACK', 'GRAY', 'BROWN']:
+                        guild_colour = layer['colour']
+                        break
+                    else:
+                        guild_colour = "WHITE"
+            else:
+                guild_colour = guild_banner['base']
+        except:
+            guild_colour = "WHITE"
+
+        rank_row_y = 663
+
+        # Guild Name Badge
+        guild_badge = generate_badge(text=player.guild, base_color='#{:02x}{:02x}{:02x}'.format(*minecraft_banner_colors[guild_colour]), scale=3)
+        guild_badge.crop(guild_badge.getbbox())
+        card.paste(guild_badge, (108, 615), guild_badge)
+
+        # Guild Rank Badge Generation
+        if player.taq and player.linked:
+            try:
+                guild_rank_badge = generate_badge(text=player.rank.upper(), base_color=discord_ranks[player.rank]['color'], scale=3)
+            except:
+                guild_rank_badge = generate_badge(text=player.guild_rank.upper(), base_color='#a0aeb0', scale=3)
+        else:
+            guild_rank_badge = generate_badge(text=player.guild_rank.upper(), base_color='#a0aeb0', scale=3)
+        guild_rank_badge.crop(guild_rank_badge.getbbox())
+
+        # Membership Time Badge Generation
+        member_for_badge = generate_badge(text=f'{player.in_guild_for.days} D', base_color='#363636', scale=3)
+        member_for_badge.crop(member_for_badge.getbbox())
+
+        # Insert Membership & Rank Badges
+        grb_w = guild_rank_badge.width
+        card.paste(member_for_badge, (90 + grb_w, rank_row_y), member_for_badge)
+        card.paste(guild_rank_badge, (108, rank_row_y), guild_rank_badge)
+
+        # Guild Banner
+        banner = generate_banner(player.guild, 15, "2", guild_data=player.guild_data)
+        banner.thumbnail((157, 157))
+        card.paste(banner, (41, 558))
+
+    # Build out data to place in boxes
+    card_entries = {}
+    try:
+        if player.online:
+            card_entries['World'] = player.server
+        else:
+            # Last Seen - check if private
+            if player.last_joined_is_private:
+                card_entries['Last Seen'] = '&cPrivate'
+            else:
+                card_entries['Last Seen'] = pretty_date(player.last_joined)
+
+        # Total Level - check if private
+        if player.total_level_is_private:
+            card_entries['Total Level'] = '&cPrivate'
+        else:
+            card_entries['Total Level'] = f'{player.total_level}'
+
+        # Playtime - check if private
+        if player.playtime_is_private:
+            card_entries['Playtime'] = '&cPrivate'
+        else:
+            card_entries['Playtime'] = f'{int(player.playtime)} hrs'
+
+        if player.taq and player.in_guild_for.days >= 1:
+            # Timed playtime - check if private
+            if player.real_pt_is_private:
+                card_entries[f'Playtime / {player.stats_days} D'] = '&cPrivate'
+            else:
+                card_entries[f'Playtime / {player.stats_days} D'] = f'{int(player.real_pt)} hrs'
+
+        # Wars - check if private
+        if player.wars_is_private:
+            card_entries['Wars'] = '&cPrivate'
+        else:
+            card_entries['Wars'] = str(player.wars)
+
+        if player.taq and player.in_guild_for.days >= 1:
+            # Timed wars - check if private
+            if player.real_wars_is_private:
+                card_entries[f'Wars / {player.stats_days} D'] = '&cPrivate'
+            else:
+                card_entries[f'Wars / {player.stats_days} D'] = str(player.real_wars)
+
+        if player.guild:
+            # Guild XP - check if private
+            if player.guild_contributed_is_private:
+                card_entries['Guild XP'] = '&cPrivate'
+            else:
+                card_entries['Guild XP'] = format_number(player.guild_contributed)
+
+        if player.taq and player.in_guild_for.days >= 1:
+            # Timed Guild XP - check if private
+            if player.real_xp_is_private:
+                card_entries[f'Guild XP / {player.stats_days} D'] = '&cPrivate'
+            else:
+                card_entries[f'Guild XP / {player.stats_days} D'] = format_number(player.real_xp)
+
+        if player.taq:
+            card_entries['Guild Raids'] = str(player.guild_raids)
+            if player.in_guild_for.days >= 1:
+                # Timed raids - check if private
+                if player.real_raids_is_private:
+                    card_entries[f'Guild Raids / {player.stats_days} D'] = '&cPrivate'
+                else:
+                    card_entries[f'Guild Raids / {player.stats_days} D'] = str(player.real_raids)
+
+        # if len(card_entries) < 10:
+        #     card_entries['Killed Mobs'] = str(player.mobs)
+        if len(card_entries) < 10:
+            # Chests - check if private
+            if player.chests_is_private:
+                card_entries['Chests Looted'] = '&cPrivate'
+            else:
+                card_entries['Chests Looted'] = str(player.chests)
+
+        if len(card_entries) < 10:
+            # Quests - check if private
+            if player.quests_is_private:
+                card_entries['Quests'] = '&cPrivate'
+            else:
+                card_entries['Quests'] = str(player.quests)
+    except Exception as e:
+        log(ERROR, f"{e}", context="profile")
+
+    entry_keys = list(card_entries.keys())
+
+    title_font = ImageFont.truetype('images/profile/5x5.ttf', 40)
+    data_font = ImageFont.truetype('images/profile/game.ttf', 35)
+    box = Image.new('RGBA', (390, 75), (0, 0, 0, 0))
+    box_draw = ImageDraw.Draw(box)
+    box_draw.rounded_rectangle(((0, 0), (390, 75)), fill=(0, 0, 0, 30), radius=10)
+
+    for entry in range(len(card_entries)):
+        card.paste(box, (50 + ((entry % 2) * 410), 730 + (int(entry / 2) * 85)), box)
+        draw.text((60 + ((entry % 2) * 410), 720 + (int(entry / 2) * 85)), text=entry_keys[entry], font=title_font, fill='#fad51e')
+        # Use addLine to support color codes like &c for red "Private" text
+        addLine(text=card_entries[entry_keys[entry]], draw=draw, font=data_font, x=430 + ((entry % 2) * 410), y=765 + (int(entry / 2) * 85), anchor="ra")
+
+    if player.linked:
+        # Shells
+        data_font = ImageFont.truetype('images/profile/game.ttf', 50)
+        shells_img = Image.open('images/profile/shells.png')
+        shells_img.thumbnail((50, 50))
+        addLine(text=str(player.balance), draw=draw, font=data_font, x=781, y=46, drop_x=7, drop_y=7, anchor="rt")
+        card.paste(shells_img, (800, 40), shells_img)
+
+        if player.guild and player.taq:
+            if str(author_id) == str(player.discord) and player.in_guild_for.days >= 365 and 3 not in player.backgrounds_owned:
+                player.unlock_background('1 Year Anniversary')
+            if str(author_id) == str(player.discord) and player.rank.upper() in ['NARWHAL', 'HYDRA'] and 2 not in player.backgrounds_owned:
+                player.unlock_background('TAq Sea Turtle')
+
+    with BytesIO() as file:
+        card.save(file, format="PNG")
+        file.seek(0)
+        t = int(time.time())
+        profile_card = discord.File(file, filename=f"profile{t}.png")
+
+    return profile_card
 
 
 class Profile(commands.Cog):
@@ -38,250 +280,7 @@ class Profile(commands.Cog):
             await ctx.followup.send(embed=embed, ephemeral=True)
             return
 
-        # Check for Christmas (Dec 24-26) and New Year's (Dec 31, Jan 1)
-        today = datetime.now()
-        is_christmas = today.month == 12 and today.day in (24, 25)
-        is_new_years = (today.month == 12 and today.day == 31) or (today.month == 1 and today.day == 1)
-
-        # Base Image + Edge Gradient
-        if is_christmas:
-            card = vertical_gradient(main_color='#c41e3a')  # Christmas red edge
-        elif is_new_years:
-            card = vertical_gradient(main_color='#e11d48')  # New Year's red edge
-        else:
-            card = vertical_gradient(main_color=player.tag_color)
-        card = round_corners(card)
-        draw = ImageDraw.Draw(card)
-
-        # Card Color/Pattern
-        if is_christmas:
-            card_color = vertical_gradient(width=850, height=1130, main_color='#c41e3a', secondary_color='#165b33')  # Red to green
-        elif is_new_years:
-            card_color = vertical_gradient(width=850, height=1130, main_color='#e11d48', secondary_color='#1d4ed8')  # Red to blue
-        elif player.background == 2 and player.gradient == ['#293786', '#1d275e']:    # Set gradient for TAq Sea Turtle BG
-            card_color = vertical_gradient(width=850, height=1130, main_color='#4585db', secondary_color='#2f2b73')
-        else:
-            card_color = vertical_gradient(width=850, height=1130, main_color=player.gradient[0], secondary_color=player.gradient[1])
-
-        card.paste(card_color, (25, 25), card_color)
-
-        # Background Outline
-        if is_christmas:
-            bg_outline = vertical_gradient(width=818, height=545, main_color='#165b33', reverse=True)  # Green outline
-        elif is_new_years:
-            bg_outline = vertical_gradient(width=818, height=545, main_color='#1d4ed8', reverse=True)  # Blue outline
-        else:
-            bg_outline = vertical_gradient(width=818, height=545, main_color=player.tag_color, reverse=True)
-        bg_outline = round_corners(bg_outline)
-        card.paste(bg_outline, (41, 100), bg_outline)
-
-        # Background
-        if is_christmas:
-            background = get_background("christmas_background")
-        elif is_new_years:
-            background = get_background("new_years_background")
-        else:
-            background = get_background(player.background)
-        background = round_corners(background, radius=20)
-        card.paste(background, (50, 110), background)
-
-        # Player Name
-        name_font = ImageFont.truetype('images/profile/game.ttf', 50)
-        addLine(text=player.username, draw=draw, font=name_font, x=50, y=40, drop_x=7, drop_y=7)
-
-        # Player Avatar
-        try:
-            cached = get_cached_avatar(player.UUID)
-            if cached:
-                skin = Image.open(BytesIO(cached))
-            else:
-                headers = {'User-Agent': os.getenv("visage_UA")}
-                url = f"https://visage.surgeplay.com/bust/500/{player.UUID}"
-                response = timed_get(url, headers=headers, timeout=6)
-                response.raise_for_status()
-                try:
-                    save_cached_avatar(player.UUID, response.content)
-                except Exception:
-                    pass
-                skin = Image.open(BytesIO(response.content))
-        except Exception as e:
-            log(ERROR, f"{e}", context="profile")
-            skin = Image.open('images/profile/x-steve500.png')
-        skin.thumbnail((480, 480))
-        card.paste(skin, (200, 156), skin)
-
-        # Wynn Rank Badge
-        rank = generate_rank_badge(player.tag_display, player.tag_color)
-        rank_w, rank_h = rank.size
-        card.paste(rank, (450 - int(rank_w / 2), 96), rank)
-
-        # Guild Related
-        if player.guild:
-            # Get Guild Color
-            try:
-                guild_banner = player.guild_data['banner'] if player.guild_data else getData(player.guild)['banner']
-                if guild_banner['base'] in ['BLACK', 'GRAY', 'BROWN']:
-                    for layer in guild_banner['layers']:
-                        if layer['colour'] not in ['BLACK', 'GRAY', 'BROWN']:
-                            guild_colour = layer['colour']
-                            break
-                        else:
-                            guild_colour = "WHITE"
-                else:
-                    guild_colour = guild_banner['base']
-            except:
-                guild_colour = "WHITE"
-
-            rank_row_y = 663
-
-            # Guild Name Badge
-            guild_badge = generate_badge(text=player.guild, base_color='#{:02x}{:02x}{:02x}'.format(*minecraft_banner_colors[guild_colour]), scale=3)
-            guild_badge.crop(guild_badge.getbbox())
-            card.paste(guild_badge, (108, 615), guild_badge)
-
-            # Guild Rank Badge Generation
-            if player.taq and player.linked:
-                try:
-                    guild_rank_badge = generate_badge(text=player.rank.upper(), base_color=discord_ranks[player.rank]['color'], scale=3)
-                except:
-                    guild_rank_badge = generate_badge(text=player.guild_rank.upper(), base_color='#a0aeb0', scale=3)
-            else:
-                guild_rank_badge = generate_badge(text=player.guild_rank.upper(), base_color='#a0aeb0', scale=3)
-            guild_rank_badge.crop(guild_rank_badge.getbbox())
-
-            # Membership Time Badge Generation
-            member_for_badge = generate_badge(text=f'{player.in_guild_for.days} D', base_color='#363636', scale=3)
-            member_for_badge.crop(member_for_badge.getbbox())
-
-            # Insert Membership & Rank Badges
-            grb_w = guild_rank_badge.width
-            card.paste(member_for_badge, (90 + grb_w, rank_row_y), member_for_badge)
-            card.paste(guild_rank_badge, (108, rank_row_y), guild_rank_badge)
-
-            # Guild Banner
-            banner = generate_banner(player.guild, 15, "2", guild_data=player.guild_data)
-            banner.thumbnail((157, 157))
-            card.paste(banner, (41, 558))
-
-        # Build out data to place in boxes
-        card_entries = {}
-        try:
-            if player.online:
-                card_entries['World'] = player.server
-            else:
-                # Last Seen - check if private
-                if player.last_joined_is_private:
-                    card_entries['Last Seen'] = '&cPrivate'
-                else:
-                    card_entries['Last Seen'] = pretty_date(player.last_joined)
-
-            # Total Level - check if private
-            if player.total_level_is_private:
-                card_entries['Total Level'] = '&cPrivate'
-            else:
-                card_entries['Total Level'] = f'{player.total_level}'
-
-            # Playtime - check if private
-            if player.playtime_is_private:
-                card_entries['Playtime'] = '&cPrivate'
-            else:
-                card_entries['Playtime'] = f'{int(player.playtime)} hrs'
-
-            if player.taq and player.in_guild_for.days >= 1:
-                # Timed playtime - check if private
-                if player.real_pt_is_private:
-                    card_entries[f'Playtime / {player.stats_days} D'] = '&cPrivate'
-                else:
-                    card_entries[f'Playtime / {player.stats_days} D'] = f'{int(player.real_pt)} hrs'
-
-            # Wars - check if private
-            if player.wars_is_private:
-                card_entries['Wars'] = '&cPrivate'
-            else:
-                card_entries['Wars'] = str(player.wars)
-
-            if player.taq and player.in_guild_for.days >= 1:
-                # Timed wars - check if private
-                if player.real_wars_is_private:
-                    card_entries[f'Wars / {player.stats_days} D'] = '&cPrivate'
-                else:
-                    card_entries[f'Wars / {player.stats_days} D'] = str(player.real_wars)
-
-            if player.guild:
-                # Guild XP - check if private
-                if player.guild_contributed_is_private:
-                    card_entries['Guild XP'] = '&cPrivate'
-                else:
-                    card_entries['Guild XP'] = format_number(player.guild_contributed)
-
-            if player.taq and player.in_guild_for.days >= 1:
-                # Timed Guild XP - check if private
-                if player.real_xp_is_private:
-                    card_entries[f'Guild XP / {player.stats_days} D'] = '&cPrivate'
-                else:
-                    card_entries[f'Guild XP / {player.stats_days} D'] = format_number(player.real_xp)
-
-            if player.taq:
-                card_entries['Guild Raids'] = str(player.guild_raids)
-                if player.in_guild_for.days >= 1:
-                    # Timed raids - check if private
-                    if player.real_raids_is_private:
-                        card_entries[f'Guild Raids / {player.stats_days} D'] = '&cPrivate'
-                    else:
-                        card_entries[f'Guild Raids / {player.stats_days} D'] = str(player.real_raids)
-
-            # if len(card_entries) < 10:
-            #     card_entries['Killed Mobs'] = str(player.mobs)
-            if len(card_entries) < 10:
-                # Chests - check if private
-                if player.chests_is_private:
-                    card_entries['Chests Looted'] = '&cPrivate'
-                else:
-                    card_entries['Chests Looted'] = str(player.chests)
-
-            if len(card_entries) < 10:
-                # Quests - check if private
-                if player.quests_is_private:
-                    card_entries['Quests'] = '&cPrivate'
-                else:
-                    card_entries['Quests'] = str(player.quests)
-        except Exception as e:
-            log(ERROR, f"{e}", context="profile")
-
-        entry_keys = list(card_entries.keys())
-
-        title_font = ImageFont.truetype('images/profile/5x5.ttf', 40)
-        data_font = ImageFont.truetype('images/profile/game.ttf', 35)
-        box = Image.new('RGBA', (390, 75), (0, 0, 0, 0))
-        box_draw = ImageDraw.Draw(box)
-        box_draw.rounded_rectangle(((0, 0), (390, 75)), fill=(0, 0, 0, 30), radius=10)
-
-        for entry in range(len(card_entries)):
-            card.paste(box, (50 + ((entry % 2) * 410), 730 + (int(entry / 2) * 85)), box)
-            draw.text((60 + ((entry % 2) * 410), 720 + (int(entry / 2) * 85)), text=entry_keys[entry], font=title_font, fill='#fad51e')
-            # Use addLine to support color codes like &c for red "Private" text
-            addLine(text=card_entries[entry_keys[entry]], draw=draw, font=data_font, x=430 + ((entry % 2) * 410), y=765 + (int(entry / 2) * 85), anchor="ra")
-
-        if player.linked:
-            # Shells
-            data_font = ImageFont.truetype('images/profile/game.ttf', 50)
-            shells_img = Image.open('images/profile/shells.png')
-            shells_img.thumbnail((50, 50))
-            addLine(text=str(player.balance), draw=draw, font=data_font, x=781, y=46, drop_x=7, drop_y=7, anchor="rt")
-            card.paste(shells_img, (800, 40), shells_img)
-
-            if player.guild and player.taq:
-                if str(ctx.author.id) == str(player.discord) and player.in_guild_for.days >= 365 and 3 not in player.backgrounds_owned:
-                    player.unlock_background('1 Year Anniversary')
-                if str(ctx.author.id) == str(player.discord) and player.rank.upper() in ['NARWHAL', 'HYDRA'] and 2 not in player.backgrounds_owned:
-                    player.unlock_background('TAq Sea Turtle')
-
-        with BytesIO() as file:
-            card.save(file, format="PNG")
-            file.seek(0)
-            t = int(time.time())
-            profile_card = discord.File(file, filename=f"profile{t}.png")
-
+        profile_card = await asyncio.to_thread(_build_profile_card, player, days, ctx.author.id)
         await ctx.followup.send(file=profile_card)
 
     @commands.Cog.listener()

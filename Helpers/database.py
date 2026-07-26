@@ -2,13 +2,14 @@ import datetime
 from datetime import timedelta
 import json
 import os
+import threading
 import time
 
-import psycopg2
 from psycopg2 import OperationalError
+from psycopg2 import pool as _pg_pool
 
 from Helpers import telemetry
-from Helpers.logger import log, ERROR
+from Helpers.logger import log, ERROR, WARN
 
 
 class _TimedCursor:
@@ -62,6 +63,58 @@ class _TimedConnection:
         setattr(self.__dict__["_connection"], name, value)
 
 
+# Process-wide connection pool. One pool per process, created lazily on first
+# checkout; DB.connect()/DB.close() become checkout/return so all existing
+# helpers and call sites get pooling without change. Phase 0 measured a fresh
+# connect at 120-674ms per command; a warm checkout is sub-millisecond.
+_pool = None
+_pool_lock = threading.Lock()
+
+
+def _connection_kwargs():
+    if os.getenv("TEST_MODE").lower() == "true":
+        prefix, default_db = "TEST_DB", "postgres"
+    elif os.getenv("TEST_MODE").lower() == "false":
+        prefix, default_db = "DB", "postgres"
+    else:
+        log(ERROR, "Problem logging into db", context="database")
+        exit(-1)
+    return dict(
+        user=os.getenv(f"{prefix}_LOGIN"),
+        password=os.getenv(f"{prefix}_PASS"),
+        host=os.getenv(f"{prefix}_HOST"),
+        port=int(os.getenv(f"{prefix}_PORT")),
+        database=os.getenv(f"{prefix}_DATABASE", default_db),
+        sslmode=os.getenv(f"{prefix}_SSLMODE"),
+        keepalives=1,
+        keepalives_idle=30,
+        keepalives_interval=10,
+        keepalives_count=5,
+    )
+
+
+def _get_pool():
+    global _pool
+    if _pool is None:
+        with _pool_lock:
+            if _pool is None:
+                _pool = _pg_pool.ThreadedConnectionPool(
+                    1, int(os.getenv("DB_POOL_MAX", "8")), **_connection_kwargs()
+                )
+    return _pool
+
+
+def _reset_pool_for_tests():
+    """Drop the pool singleton. Test hook only."""
+    global _pool
+    if _pool is not None:
+        try:
+            _pool.closeall()
+        except Exception:
+            pass
+    _pool = None
+
+
 class DB:
     def __init__(self):
         self.connection = None
@@ -69,42 +122,29 @@ class DB:
 
     def connect(self):
         try:
-            if os.getenv("TEST_MODE").lower() == "true":
-                with telemetry.track("db.connect"):
-                    raw_connection = psycopg2.connect(
-                        user=os.getenv("TEST_DB_LOGIN"),
-                        password=os.getenv("TEST_DB_PASS"),
-                        host=os.getenv("TEST_DB_HOST"),
-                        port=int(os.getenv("TEST_DB_PORT")),
-                        database=os.getenv("TEST_DB_DATABASE", "postgres"),
-                        sslmode=os.getenv("TEST_DB_SSLMODE"),
-                        keepalives=1,
-                        keepalives_idle=30,
-                        keepalives_interval=10,
-                        keepalives_count=5
-                    )
+            with telemetry.track("db.connect"):
+                retry_delays = (0.2, 0.4)
+                attempt = 0
+                while True:
+                    try:
+                        raw_connection = _get_pool().getconn()
+                        break
+                    except _pg_pool.PoolError:
+                        if attempt >= len(retry_delays):
+                            raise
+                        log(WARN, f"DB pool exhausted, retrying (attempt {attempt + 1})", context="database")
+                        time.sleep(retry_delays[attempt])
+                        attempt += 1
+            try:
                 self.connection = _TimedConnection(raw_connection)
                 self.cursor = _TimedCursor(raw_connection.cursor())
-            elif os.getenv("TEST_MODE").lower() == "false":
-                with telemetry.track("db.connect"):
-                    raw_connection = psycopg2.connect(
-                        user=os.getenv("DB_LOGIN"),
-                        password=os.getenv("DB_PASS"),
-                        host=os.getenv("DB_HOST"),
-                        port=int(os.getenv("DB_PORT")),
-                        database=os.getenv("DB_DATABASE", "postgres"),
-                        sslmode=os.getenv("DB_SSLMODE"),
-                        keepalives=1,
-                        keepalives_idle=30,
-                        keepalives_interval=10,
-                        keepalives_count=5
-                    )
-                self.connection = _TimedConnection(raw_connection)
-                self.cursor = _TimedCursor(raw_connection.cursor())
-            else:
-                log(ERROR, "Problem logging into db", context="database")
-                exit(-1)
-        except OperationalError as e:
+            except Exception:
+                try:
+                    _get_pool().putconn(raw_connection, close=True)
+                except Exception:
+                    pass
+                raise
+        except (OperationalError, _pg_pool.PoolError) as e:
             log(ERROR, f"Connection failed: {e}", context="database")
             raise
 
@@ -116,11 +156,27 @@ class DB:
         self.close()
 
     def close(self):
-        """Close cursor and connection."""
+        """Return the connection to the pool (rolled back), discarding broken ones."""
         if self.cursor:
-            self.cursor.close()
+            try:
+                self.cursor.close()
+            except Exception:
+                pass
         if self.connection:
-            self.connection.close()
+            raw = self.connection.__dict__["_connection"]
+            try:
+                if raw.closed:
+                    _get_pool().putconn(raw, close=True)
+                else:
+                    raw.rollback()
+                    _get_pool().putconn(raw)
+            except Exception:
+                try:
+                    _get_pool().putconn(raw, close=True)
+                except Exception:
+                    pass
+        self.connection = None
+        self.cursor = None
 
 
 class BatchBaselineQueryError(RuntimeError):
