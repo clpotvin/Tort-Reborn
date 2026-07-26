@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 from discord.commands import slash_command
@@ -9,6 +11,22 @@ from Helpers.functions import getPlayerUUID, determine_starting_rank
 from Helpers.variables import HOME_GUILD_IDS, discord_ranks
 
 
+def _fetch_new_member_data(user_id, ign):
+    """Fetch the player's stats and existing link rows for registration.
+    Blocking (HTTP + DB read) — always call via asyncio.to_thread. The DB is
+    checked out only after the BasicPlayerStats HTTP has completed."""
+    pdata = BasicPlayerStats(ign)
+
+    db = DB(); db.connect()
+    try:
+        db.cursor.execute('SELECT * FROM discord_links WHERE discord_id = %s', (user_id,))
+        rows = db.cursor.fetchall()
+    finally:
+        db.close()
+
+    return rows, pdata
+
+
 class NewMember(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -17,12 +35,8 @@ class NewMember(commands.Cog):
     @default_permissions(manage_roles=True)
     async def new_member(self, message, user: discord.Member, ign):
         if message.interaction.user.guild_permissions.manage_roles:
-            db = DB()
-            db.connect()
-            db.cursor.execute('SELECT * FROM discord_links WHERE discord_id = %s', (user.id,))
-            rows = db.cursor.fetchall()
             await message.defer(ephemeral=True)
-            pdata = BasicPlayerStats(ign)
+            rows, pdata = await asyncio.to_thread(_fetch_new_member_data, user.id, ign)
             if pdata.error:
                 embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
                                       description=f'Could not retrieve information of `{ign}`.\nPlease check your spelling or try again later.',
@@ -77,17 +91,20 @@ class NewMember(commands.Cog):
             if roles_to_remove:
                 await user.remove_roles(*roles_to_remove, reason=f"New member registration (ran by {message.author.name})", atomic=True)
 
-            if len(rows) != 0:
-                db.cursor.execute(
-                    'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s, linked = TRUE WHERE discord_id = %s',
-                    (starting_rank, ign, pdata.wars, pdata.UUID, user.id))
+            db = DB()
+            db.connect()
+            try:
+                if len(rows) != 0:
+                    db.cursor.execute(
+                        'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s, linked = TRUE WHERE discord_id = %s',
+                        (starting_rank, ign, pdata.wars, pdata.UUID, user.id))
+                else:
+                    db.cursor.execute(
+                        'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES (%s, %s, %s, True, %s, %s)',
+                        (user.id, pdata.username, pdata.UUID, starting_rank, pdata.wars))
                 db.connection.commit()
-            else:
-                db.cursor.execute(
-                    'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES (%s, %s, %s, True, %s, %s)',
-                    (user.id, pdata.username, pdata.UUID, starting_rank, pdata.wars))
-                db.connection.commit()
-            db.close()
+            finally:
+                db.close()
             await user.edit(nick=f"{starting_rank} {ign}")
             embed = discord.Embed(title=':white_check_mark: New member registered', description=f'<@{user.id}> was linked to `{pdata.username}`', color=0x3ed63e)
             await message.respond(embed=embed)

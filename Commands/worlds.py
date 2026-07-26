@@ -5,11 +5,11 @@ from discord.ext import commands
 from discord.commands import slash_command
 from discord.ext import pages
 import json
-import requests
 import time
 import datetime
 import math
 
+from Helpers.functions import timed_get
 from Helpers.rate_limiter import external_rate_limit
 from Helpers.pagination import add_paginator_buttons
 
@@ -31,7 +31,7 @@ class Worlds(commands.Cog):
         await message.defer()
         url = 'https://athena.wynntils.com/cache/get/serverList'
 
-        data = await asyncio.to_thread(requests.get, url, timeout=10)
+        data = await asyncio.to_thread(timed_get, url, timeout=10)
         data.raise_for_status()
         worlds = data.json()
         

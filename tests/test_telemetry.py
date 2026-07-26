@@ -182,3 +182,33 @@ def test_cancellation_is_not_visible_to_after_hook():
 
     asyncio.run(main())
     assert seen["exc"] is None
+
+
+def test_queue_ms_from_computes_positive_delay():
+    import datetime
+    now = datetime.datetime(2026, 1, 1, 12, 0, 0, tzinfo=datetime.timezone.utc)
+    created = now - datetime.timedelta(milliseconds=1500)
+    assert telemetry.queue_ms_from(created, now=now) == pytest.approx(1500.0, abs=0.5)
+
+
+def test_queue_ms_from_returns_none_on_bad_input():
+    assert telemetry.queue_ms_from(None) is None
+    assert telemetry.queue_ms_from("not-a-datetime") is None
+
+
+def test_snowflake_derivation_matches_created_time():
+    """The hook derives queue delay from the interaction snowflake id (since
+    discord.Interaction has no created_at). Build an id for a known instant and
+    confirm the derived delay is correct — this is the path the fix relies on."""
+    import datetime
+    import discord
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    created = now - datetime.timedelta(milliseconds=1200)
+    # Discord snowflake: ((ms_since_discord_epoch) << 22)
+    discord_epoch_ms = 1420070400000
+    ms = int(created.timestamp() * 1000) - discord_epoch_ms
+    fake_id = ms << 22
+
+    derived = discord.utils.snowflake_time(fake_id)
+    assert telemetry.queue_ms_from(derived, now=now) == pytest.approx(1200.0, abs=2.0)

@@ -70,13 +70,20 @@ class DB:
     _pool_lock: ClassVar = threading.Lock()
     _pools: ClassVar[dict[tuple, psycopg2.pool.ThreadedConnectionPool]] = {}
 
-    def __init__(self, *, use_pool: bool = True, pool_min: int = 1, pool_max: int = 10):
+    # Bounded retry on pool exhaustion: getconn() is non-blocking, so a burst
+    # would otherwise turn into instant user-facing failures. Two short waits
+    # ride out transient contention; real exhaustion still fails, loudly.
+    _POOL_RETRY_DELAYS: ClassVar[tuple] = (0.2, 0.4)
+
+    def __init__(self, *, use_pool: bool = True, pool_min: int = 1, pool_max: int | None = None):
         self.connection = None
         self.cursor = None
         self._raw_connection = None
         self._pool = None
         self._use_pool = use_pool
         self._pool_min = max(1, int(pool_min))
+        if pool_max is None:
+            pool_max = int(os.getenv("DB_POOL_MAX", "10"))
         self._pool_max = max(self._pool_min, int(pool_max))
 
     @staticmethod
@@ -140,16 +147,43 @@ class DB:
                         minconn=self._pool_min,
                         maxconn=self._pool_max,
                     )
-                    raw_connection = self._pool.getconn()
+                    raw_connection = self._checkout_with_retry()
             else:
                 with telemetry.track("db.connect"):
                     raw_connection = psycopg2.connect(**kwargs)
-            self._raw_connection = raw_connection
-            self.connection = _TimedConnection(raw_connection)
-            self.cursor = _TimedCursor(raw_connection.cursor())
         except (OperationalError, psycopg2.pool.PoolError) as e:
             log(ERROR, f"Connection failed: {e}", context="database")
             raise
+        try:
+            self._raw_connection = raw_connection
+            self.connection = _TimedConnection(raw_connection)
+            self.cursor = _TimedCursor(raw_connection.cursor())
+        except Exception:
+            # A failure here would otherwise leak the checked-out connection
+            # from the pool's tracking for the life of the process.
+            try:
+                if self._use_pool and self._pool is not None:
+                    self._pool.putconn(raw_connection, close=True)
+                else:
+                    raw_connection.close()
+            except Exception:
+                pass
+            self._raw_connection = None
+            self.connection = None
+            self.cursor = None
+            raise
+
+    def _checkout_with_retry(self):
+        attempt = 0
+        while True:
+            try:
+                return self._pool.getconn()
+            except psycopg2.pool.PoolError:
+                if attempt >= len(self._POOL_RETRY_DELAYS):
+                    raise
+                log(WARN, f"DB pool exhausted, retrying (attempt {attempt + 1})", context="database")
+                time.sleep(self._POOL_RETRY_DELAYS[attempt])
+                attempt += 1
 
     def __enter__(self):
         self.connect()
@@ -183,6 +217,17 @@ class DB:
         self.connection = None
         self._raw_connection = None
         self._pool = None
+
+    @classmethod
+    def _reset_pools_for_tests(cls):
+        """Close and drop every pool. Test hook only."""
+        with cls._pool_lock:
+            for pool in cls._pools.values():
+                try:
+                    pool.closeall()
+                except Exception:
+                    pass
+            cls._pools.clear()
 
 
 class BatchBaselineQueryError(RuntimeError):

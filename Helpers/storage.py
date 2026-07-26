@@ -1,13 +1,12 @@
 """
 Helpers/storage.py
-S3-compatible storage abstraction for profile backgrounds, avatar caching,
-and shell exchange icons.
+S3-compatible storage abstraction for profile backgrounds and shell
+exchange icons.
 Currently backed by Supabase Storage (S3-compatible API).
 """
 
 import io
 import os
-from datetime import datetime, timezone
 
 import certifi
 import boto3
@@ -17,8 +16,6 @@ from PIL import Image
 
 from Helpers.logger import log, WARN, ERROR
 from Helpers import telemetry
-
-AVATAR_TTL_SECONDS = 3 * 24 * 60 * 60  # 3 days
 
 
 class S3Storage:
@@ -68,22 +65,18 @@ class S3Storage:
             return Image.open(io.BytesIO(data)).convert("RGBA")
         return None
 
-    def get_bytes_if_fresh(self, key: str, max_age_seconds: int) -> bytes | None:
-        """Return object bytes only if younger than max_age_seconds."""
+    def list_keys(self, prefix: str) -> list[str]:
+        """List object keys under a prefix. Returns [] when unconfigured or on error."""
         if not self._is_configured:
-            return None
+            return []
         try:
-            with telemetry.track("s3.get"):
-                resp = self.client.get_object(Bucket=self._bucket, Key=key)
-                age = (datetime.now(timezone.utc) - resp["LastModified"]).total_seconds()
-                if age > max_age_seconds:
-                    resp["Body"].close()
-                    return None
-                data = resp["Body"].read()
-                resp["Body"].close()
-                return data
+            keys = []
+            paginator = self.client.get_paginator("list_objects_v2")
+            for page in paginator.paginate(Bucket=self._bucket, Prefix=prefix):
+                keys.extend(o["Key"] for o in page.get("Contents", []))
+            return keys
         except Exception:
-            return None
+            return []
 
     def put_bytes(self, key: str, data: bytes, content_type: str = "image/png"):
         with telemetry.track("s3.put"):
@@ -107,16 +100,31 @@ storage = S3Storage()
 
 # --- Profile background helpers ---
 
+# In-process cache of profile backgrounds. The bot owns the only write path
+# (save_background), so write-through here gives zero-staleness reads at ~0ms
+# versus the ~300ms S3 round trip Phase 0 measured. Values are the pristine
+# fetched images; reads hand out copies because callers mutate them in place.
+_bg_cache: dict = {}
+
+
 def get_background(bg_id) -> Image.Image:
-    """Download a profile background from S3. Falls back to local default in test mode."""
+    """Profile background from memory, falling back to S3 (then default)."""
     from Helpers.variables import IS_TEST_MODE
+
+    cached = _bg_cache.get(bg_id)
+    if cached is not None:
+        return cached.copy()
     img = storage.get_image(f"profile_backgrounds/{bg_id}.png")
     if img:
-        return img
+        _bg_cache[bg_id] = img
+        return img.copy()
     if bg_id != 1:
-        img = storage.get_image("profile_backgrounds/1.png")
-        if img:
-            return img
+        try:
+            return get_background(1)
+        except FileNotFoundError:
+            raise FileNotFoundError(
+                f"Background {bg_id} not found in S3 (fallback background 1 also missing)"
+            ) from None
     if IS_TEST_MODE:
         return Image.open("images/profile_pictures/default.png")
     raise FileNotFoundError(f"Background {bg_id} not found in S3")
@@ -133,20 +141,30 @@ def get_background_file(bg_id):
 
 
 def save_background(bg_id, image: Image.Image):
-    """Upload a profile background to S3."""
+    """Upload a profile background to S3 and refresh the memory cache."""
     storage.put_image(f"profile_backgrounds/{bg_id}.png", image)
+    _bg_cache[bg_id] = image.copy()
 
 
-# --- Avatar cache helpers ---
+def warm_background_cache() -> int:
+    """Pre-fill the background memory cache from S3. Returns how many loaded.
 
-def get_cached_avatar(uuid: str) -> bytes | None:
-    """Download a cached avatar if it's less than 3 days old."""
-    return storage.get_bytes_if_fresh(f"avatars/{uuid}.png", AVATAR_TTL_SECONDS)
-
-
-def save_cached_avatar(uuid: str, data: bytes):
-    """Upload an avatar to the cache."""
-    storage.put_bytes(f"avatars/{uuid}.png", data)
+    Run once at startup (in a thread) so the first profile render after a
+    deploy does not pay the cold S3 read (~1.4s measured). Cache keys must
+    match what callers pass to get_background: int for numeric ids
+    (player.background), the raw string for named seasonal keys.
+    """
+    warmed = 0
+    for key in storage.list_keys("profile_backgrounds/"):
+        stem = key.rsplit("/", 1)[-1].removesuffix(".png")
+        bg_id = int(stem) if stem.isdigit() else stem
+        if bg_id in _bg_cache:
+            continue
+        img = storage.get_image(key)
+        if img:
+            _bg_cache[bg_id] = img
+            warmed += 1
+    return warmed
 
 
 # --- Shell exchange icon helpers ---

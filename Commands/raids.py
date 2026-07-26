@@ -19,11 +19,12 @@ from Helpers.functions import (
     generate_banner,
     getData,
     generate_badge,
+    timed_get,
 )
 from Helpers.classes import PlayerStats
 from Helpers.variables import discord_ranks, minecraft_banner_colors
 from Helpers.rate_limiter import external_rate_limit
-from Helpers.storage import get_background, get_cached_avatar, save_cached_avatar
+from Helpers.storage import get_background
 
 # ---------------------------------------------------------------------------
 # Raids Command
@@ -157,7 +158,7 @@ class Raids(commands.Cog):
         safe_name = quote(name)
         url = f"https://api.wynncraft.com/v3/player/{safe_name}"
         try:
-            res = requests.get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
+            res = timed_get(url, timeout=10, headers={"Authorization": f"Bearer {os.getenv('WYNN_TOKEN')}"})
         except requests.RequestException:
             return None
         if res.status_code != 200:
@@ -299,19 +300,11 @@ class Raids(commands.Cog):
             if not uuid:
                 raise ValueError("Missing player UUID")
 
-            cached = get_cached_avatar(uuid)
-            if cached:
-                skin = Image.open(BytesIO(cached)).convert('RGBA')
-            else:
-                headers = {'User-Agent': os.getenv("visage_UA", "")}
-                av_url = f"https://visage.surgeplay.com/bust/500/{uuid}"
-                resp = requests.get(av_url, headers=headers, timeout=6)
-                resp.raise_for_status()
-                try:
-                    save_cached_avatar(uuid, resp.content)
-                except Exception:
-                    pass
-                skin = Image.open(BytesIO(resp.content)).convert('RGBA')
+            headers = {'User-Agent': os.getenv("visage_UA", "")}
+            av_url = f"https://visage.surgeplay.com/bust/500/{uuid}"
+            resp = timed_get(av_url, headers=headers, timeout=6)
+            resp.raise_for_status()
+            skin = Image.open(BytesIO(resp.content)).convert('RGBA')
         except Exception:
             skin = Image.open('images/profile/x-steve500.png').convert('RGBA')
         skin.thumbnail((480, 480))

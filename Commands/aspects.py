@@ -21,7 +21,6 @@ from Helpers.functions import getNameFromUUID
 from Helpers.variables import EXEC_GUILD_IDS, IS_TEST_MODE
 from Helpers.logger import log, WARN, ERROR
 from Helpers import aspect_db
-from Helpers.storage import get_cached_avatar, save_cached_avatar
 MAX_COLUMNS = 4
 ROWS_PER_COLUMN = 10
 CELL_WIDTH = 205
@@ -62,10 +61,6 @@ class AspectDistribution(commands.Cog):
         return buf.read()
 
     async def get_avatar(self, uuid: str) -> bytes:
-        cached = get_cached_avatar(uuid)
-        if cached:
-            return cached
-
         url = f"https://vzge.me/face/64/{uuid}"
         headers = {'User-Agent': os.getenv("visage_UA", "")}
         try:
@@ -88,7 +83,6 @@ class AspectDistribution(commands.Cog):
                         log(WARN, f"Invalid image data received for UUID {uuid}", context="aspects")
                         return None
 
-            save_cached_avatar(uuid, data)
             return data
         except Exception as e:
             log(WARN, f"Failed to fetch avatar for UUID {uuid}: {e}", context="aspects")

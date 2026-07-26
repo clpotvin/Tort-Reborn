@@ -2,12 +2,12 @@ import discord
 from discord.ext import commands
 from discord.commands import slash_command, Option
 from Helpers.rate_limiter import external_rate_limit
+from Helpers.functions import timed_get
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime, timezone
 from io import BytesIO
 import asyncio
 import json
-import requests
 from typing import Tuple, Optional
 
 
@@ -29,14 +29,14 @@ def mapCreator(guild_prefix: Optional[str] = None):
 
     # Build a map of guild prefix to color
     try:
-        guilds_data = requests.get("https://athena.wynntils.com/cache/get/guildList", timeout=10).json()
+        guilds_data = timed_get("https://athena.wynntils.com/cache/get/guildList", timeout=10).json()
         color_map = {g["prefix"]: g.get("color", "#FFFFFF") for g in guilds_data if g.get("prefix")}
     except Exception:
         color_map = {}
 
     # Fetch territory data
     try:
-        territory_data = requests.get("https://api.wynncraft.com/v3/guild/list/territory", timeout=10).json()
+        territory_data = timed_get("https://api.wynncraft.com/v3/guild/list/territory", timeout=10).json()
     except Exception:
         territory_data = {}
 
