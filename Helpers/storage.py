@@ -65,6 +65,19 @@ class S3Storage:
             return Image.open(io.BytesIO(data)).convert("RGBA")
         return None
 
+    def list_keys(self, prefix: str) -> list[str]:
+        """List object keys under a prefix. Returns [] when unconfigured or on error."""
+        if not self._is_configured:
+            return []
+        try:
+            keys = []
+            paginator = self.client.get_paginator("list_objects_v2")
+            for page in paginator.paginate(Bucket=self._bucket, Prefix=prefix):
+                keys.extend(o["Key"] for o in page.get("Contents", []))
+            return keys
+        except Exception:
+            return []
+
     def put_bytes(self, key: str, data: bytes, content_type: str = "image/png"):
         with telemetry.track("s3.put"):
             self.client.put_object(
@@ -131,6 +144,27 @@ def save_background(bg_id, image: Image.Image):
     """Upload a profile background to S3 and refresh the memory cache."""
     storage.put_image(f"profile_backgrounds/{bg_id}.png", image)
     _bg_cache[bg_id] = image.copy()
+
+
+def warm_background_cache() -> int:
+    """Pre-fill the background memory cache from S3. Returns how many loaded.
+
+    Run once at startup (in a thread) so the first profile render after a
+    deploy does not pay the cold S3 read (~1.4s measured). Cache keys must
+    match what callers pass to get_background: int for numeric ids
+    (player.background), the raw string for named seasonal keys.
+    """
+    warmed = 0
+    for key in storage.list_keys("profile_backgrounds/"):
+        stem = key.rsplit("/", 1)[-1].removesuffix(".png")
+        bg_id = int(stem) if stem.isdigit() else stem
+        if bg_id in _bg_cache:
+            continue
+        img = storage.get_image(key)
+        if img:
+            _bg_cache[bg_id] = img
+            warmed += 1
+    return warmed
 
 
 # --- Shell exchange icon helpers ---

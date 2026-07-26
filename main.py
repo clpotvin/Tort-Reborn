@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import sys
 import time
@@ -12,6 +13,7 @@ from discord import Embed
 
 from Helpers.classes import Guild
 from Helpers.database import get_last_online, set_last_online
+from Helpers.storage import warm_background_cache
 from Helpers.variables import IS_TEST_MODE, ERROR_CHANNEL_ID, PUBLIC_COMMANDS, ERROR_PING_USER_ID
 from Helpers.logger import log, SYSTEM, SUCCESS, ERROR, INFO
 from Helpers import logger
@@ -82,6 +84,22 @@ async def on_ready():
             log(ERROR, f"Slash command sync failed; continuing startup: {e}")
 
     logger.start()
+
+    if not getattr(client, 'bg_cache_warmed', False):
+        client.bg_cache_warmed = True
+
+        async def _warm_backgrounds():
+            # Pre-fill the background memory cache so the first profile render
+            # after a deploy skips the cold S3 read (~1.4s measured). Runs in a
+            # worker thread, fire-and-forget: startup never waits on it.
+            try:
+                t = time.time()
+                warmed = await asyncio.to_thread(warm_background_cache)
+                log(SUCCESS, f"Warmed {warmed} profile backgrounds in {time.time() - t:.1f}s")
+            except Exception as e:
+                log(ERROR, f"Background cache warm failed (renders fall back to S3): {e}")
+
+        asyncio.create_task(_warm_backgrounds())
 
     guild = Guild('The Aquarium')
     await client.change_presence(

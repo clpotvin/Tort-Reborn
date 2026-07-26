@@ -67,3 +67,35 @@ def test_double_missing_background_names_original_id():
          patch.object(variables, "IS_TEST_MODE", False):
         with pytest.raises(FileNotFoundError, match="Background 7"):
             storage.get_background(7)
+
+
+def test_warm_background_cache_fills_both_key_domains():
+    """Numeric filenames cache under int keys (player.background is an int);
+    named seasonal files cache under their string key."""
+    keys = ["profile_backgrounds/1.png", "profile_backgrounds/12.png",
+            "profile_backgrounds/christmas_background.png"]
+    with patch.object(storage.storage, "list_keys", return_value=keys), \
+         patch.object(storage.storage, "get_image", side_effect=lambda k: _img("red")) as got:
+        warmed = storage.warm_background_cache()
+    assert warmed == 3
+    assert set(storage._bg_cache) == {1, 12, "christmas_background"}
+    assert got.call_count == 3
+    # warmed entries serve from memory
+    with patch.object(storage.storage, "get_image") as s3:
+        storage.get_background(12)
+    s3.assert_not_called()
+
+
+def test_warm_background_cache_skips_already_cached():
+    storage._bg_cache[1] = _img("red")
+    with patch.object(storage.storage, "list_keys",
+                      return_value=["profile_backgrounds/1.png", "profile_backgrounds/2.png"]), \
+         patch.object(storage.storage, "get_image", return_value=_img("blue")) as got:
+        warmed = storage.warm_background_cache()
+    assert warmed == 1
+    assert got.call_count == 1
+
+
+def test_warm_background_cache_survives_empty_listing():
+    with patch.object(storage.storage, "list_keys", return_value=[]):
+        assert storage.warm_background_cache() == 0
