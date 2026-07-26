@@ -10,6 +10,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 import json
 
+from Helpers import telemetry
 from Helpers.classes import PlayerStats
 from Helpers.functions import pretty_date, generate_rank_badge, generate_banner, getData, format_number, addLine, vertical_gradient, round_corners, generate_badge, timed_get
 from Helpers.logger import log, ERROR
@@ -281,7 +282,10 @@ class Profile(commands.Cog):
             return
 
         profile_card = await asyncio.to_thread(_build_profile_card, player, days, ctx.author.id)
-        await ctx.followup.send(file=profile_card)
+        # Timed separately: live records showed ~1s of stable unattributed time
+        # on both cold and warm renders — the card PNG upload to Discord.
+        with telemetry.track("discord.send"):
+            await ctx.followup.send(file=profile_card)
 
     @commands.Cog.listener()
     async def on_ready(self):
