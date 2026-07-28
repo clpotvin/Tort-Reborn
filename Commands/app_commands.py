@@ -7,7 +7,12 @@ from discord import SlashCommandGroup, ApplicationContext
 from discord.ext import commands
 
 from Helpers.classes import BasicPlayerStats
-from Helpers.app_transcript import post_transcript, stamp_transcribed, TranscriptError
+from Helpers.app_transcript import (
+    post_transcript,
+    stamp_transcribed,
+    delete_transcribed_channel,
+    TranscriptError,
+)
 from Helpers.database import DB
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import generate_applicant_info, getPlayerUUID, getPlayerDatav3
@@ -541,7 +546,19 @@ class WebAppCommands(commands.Cog):
 
         archive_chan = discord.utils.get(guild.text_channels, name=APP_ARCHIVE_CHANNEL_NAME)
         dest = archive_chan.mention if archive_chan else f"#{APP_ARCHIVE_CHANNEL_NAME}"
-        await ctx.followup.send(f"Transcript saved to {dest}.", ephemeral=True)
+        # Confirm before deleting — this command is often run inside the channel being removed.
+        await ctx.followup.send(f"Transcript saved to {dest}. Deleting this channel…", ephemeral=True)
+
+        try:
+            await delete_transcribed_channel(self.client, app["id"], app["channel_id"])
+        except Exception as e:
+            try:
+                await ctx.followup.send(
+                    f"⚠️ Transcript is saved, but the channel couldn't be deleted: {e}",
+                    ephemeral=True,
+                )
+            except Exception:
+                pass
 
     # --- DB helpers ---
 

@@ -12,6 +12,7 @@ from Helpers.app_transcript import (
     classify_transcript_candidate,
     post_transcript,
     stamp_transcribed,
+    delete_transcribed_channel,
     TranscriptError,
 )
 from Helpers.variables import APP_MANAGER_ROLE_MENTION, TAQ_GUILD_ID, CLOSED_CATEGORY_NAME, is_home_guild
@@ -297,15 +298,20 @@ class CheckApps(commands.Cog):
 
     @tasks.loop(minutes=5)
     async def auto_transcribe_apps(self):
-        """Auto-transcribe closed guild/community apps to the archive channel,
-        strictly in app_number order, 3 days after they were closed. Drains every
-        currently-eligible ticket in this tick (sequential sends preserve order);
-        stops at the first ticket that is not yet ready.
-        Guild restriction: operates exclusively on TAQ_GUILD_ID (home guild)."""
+        """Auto-transcribe closed guild/community apps to the archive channel, then
+        delete the transcribed channels. Guild restriction: operates exclusively on
+        TAQ_GUILD_ID (home guild)."""
         guild = self.client.get_guild(TAQ_GUILD_ID)
         if not guild:
             return
 
+        await self._drain_transcripts()
+        await self._delete_transcribed_channels()
+
+    async def _drain_transcripts(self):
+        """Transcribe every currently-eligible ticket this tick, strictly in
+        app_number order (sequential sends preserve order); stop at the first ticket
+        that is not yet ready."""
         for _ in range(self.AUTO_TRANSCRIBE_MAX_PER_TICK):
             head = await asyncio.to_thread(self._fetch_transcript_head)
             decision = classify_transcript_candidate(head, datetime.now(timezone.utc))
@@ -343,7 +349,7 @@ class CheckApps(commands.Cog):
                 await post_transcript(self.client, channel, app)
             except TranscriptError as e:
                 if e.retryable:
-                    # Transient/config problem (e.g. archive channel missing). Stop the tick
+                    # Transient/config problem (e.g. archive channel missing). Stop the drain
                     # without advancing so we retry this same ticket next tick — never skip ahead.
                     log(ERROR, f"Transcript for app {head['id']} (#{head['app_number']}) failed, "
                                f"will retry: {e}", context="check_apps")
@@ -356,9 +362,46 @@ class CheckApps(commands.Cog):
             await asyncio.to_thread(stamp_transcribed, head["id"])
             log(INFO, f"Auto-transcribed app {head['id']} (#{head['app_number']}).", context="check_apps")
         else:
-            log(INFO, f"auto_transcribe_apps hit the per-tick cap "
+            log(INFO, f"_drain_transcripts hit the per-tick cap "
                       f"({self.AUTO_TRANSCRIBE_MAX_PER_TICK}); remaining tickets continue next tick.",
                 context="check_apps")
+
+    async def _delete_transcribed_channels(self):
+        """Delete channels of already-transcribed guild/community tickets and mark
+        them (channel_deleted_at), so transcribed applications don't linger in Closed
+        Applications. Covers both the historical backlog and tickets just transcribed
+        this tick. Idempotent — an already-gone channel is simply marked."""
+        rows = await asyncio.to_thread(self._fetch_channels_to_delete)
+        for app_id, app_number, channel_id in rows:
+            try:
+                await delete_transcribed_channel(self.client, app_id, channel_id)
+                log(INFO, f"Deleted transcribed channel for app {app_id} (#{app_number}).",
+                    context="check_apps")
+            except Exception as e:
+                # Transient failure (e.g. missing perms) — leave channel_deleted_at NULL so
+                # this ticket is retried on a later tick.
+                log(ERROR, f"Could not delete channel for app {app_id} (#{app_number}): {e}",
+                    context="check_apps")
+
+    @staticmethod
+    def _fetch_channels_to_delete():
+        """Transcribed guild/community tickets whose channel hasn't been deleted yet."""
+        db = DB()
+        db.connect()
+        try:
+            db.cursor.execute(
+                """SELECT id, app_number, channel_id FROM applications
+                    WHERE application_type IN ('guild', 'community')
+                      AND transcribed_at IS NOT NULL
+                      AND channel_deleted_at IS NULL
+                      AND channel_id IS NOT NULL
+                    ORDER BY app_number ASC
+                    LIMIT %s""",
+                (CheckApps.AUTO_TRANSCRIBE_MAX_PER_TICK,)
+            )
+            return db.cursor.fetchall()
+        finally:
+            db.close()
 
     @auto_transcribe_apps.before_loop
     async def before_auto_transcribe_apps(self):
