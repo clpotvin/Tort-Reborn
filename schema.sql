@@ -530,7 +530,8 @@ CREATE TABLE IF NOT EXISTS applications (
   app_number        INT,
   message_ids       BIGINT[]     DEFAULT NULL,
   closed_at         TIMESTAMPTZ,
-  transcribed_at    TIMESTAMPTZ
+  transcribed_at    TIMESTAMPTZ,
+  channel_deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS application_votes (

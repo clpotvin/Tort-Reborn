@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 from io import BytesIO
 
@@ -140,3 +141,36 @@ def stamp_transcribed(app_id):
         db.connection.commit()
     finally:
         db.close()
+
+
+def stamp_channel_deleted(app_id):
+    """Mark a transcribed application's channel as deleted so cleanup won't retry it."""
+    db = DB()
+    db.connect()
+    try:
+        db.cursor.execute(
+            "UPDATE applications SET channel_deleted_at = NOW() WHERE id = %s",
+            (app_id,),
+        )
+        db.connection.commit()
+    finally:
+        db.close()
+
+
+async def delete_transcribed_channel(client, app_id, channel_id):
+    """Delete a transcribed ticket's channel, then stamp channel_deleted_at.
+
+    Idempotent: a channel that is already gone (NotFound) is treated as deleted and
+    still stamped. Transient errors (e.g. Forbidden) propagate so the caller can log
+    and retry on a later pass — channel_deleted_at is only stamped once the channel
+    is confirmed gone.
+    """
+    channel = client.get_channel(channel_id) if channel_id else None
+    if channel is None and channel_id:
+        try:
+            channel = await client.fetch_channel(channel_id)
+        except discord.NotFound:
+            channel = None  # already gone -> treat as deleted
+    if channel is not None:
+        await channel.delete(reason="Application transcribed and archived")
+    await asyncio.to_thread(stamp_channel_deleted, app_id)
