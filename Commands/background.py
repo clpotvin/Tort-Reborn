@@ -152,11 +152,14 @@ class Background(commands.Cog):
             owned_backgrounds.insert(0, 0)
 
             if bg_id in owned_backgrounds:
-                # Use upsert so first-time users' backgrounds are saved
+                # Use upsert so first-time users' backgrounds are saved. `owned`
+                # is NOT NULL with no default, so it must be supplied on insert;
+                # ON CONFLICT only touches `background`, leaving an existing
+                # user's owned list untouched.
                 db.cursor.execute(
-                    'INSERT INTO profile_customization (\"user\", background) VALUES (%s, %s) '
+                    'INSERT INTO profile_customization (\"user\", background, owned) VALUES (%s, %s, %s) '
                     'ON CONFLICT (\"user\") DO UPDATE SET background = EXCLUDED.background',
-                    (str(message.author.id), bg_id)
+                    (str(message.author.id), bg_id, json.dumps(owned_backgrounds))
                 )
                 db.connection.commit()
                 embed = discord.Embed(title=':white_check_mark: Background set!',
