@@ -1,4 +1,6 @@
 import asyncio
+import json
+from datetime import datetime, timezone
 
 import discord
 from discord.ext import tasks, commands
@@ -6,6 +8,12 @@ from discord.ext import tasks, commands
 from Helpers.logger import log, INFO, ERROR
 from Helpers.database import DB
 from Helpers.functions import getPlayerDatav3, getPlayerUUID
+from Helpers.app_transcript import (
+    classify_transcript_candidate,
+    post_transcript,
+    stamp_transcribed,
+    TranscriptError,
+)
 from Helpers.variables import APP_MANAGER_ROLE_MENTION, TAQ_GUILD_ID, CLOSED_CATEGORY_NAME, is_home_guild
 
 
@@ -237,12 +245,133 @@ class CheckApps(commands.Cog):
     async def before_auto_close_web_apps(self):
         await self.client.wait_until_ready()
 
+    # --- Auto-transcribe for closed applications ---
+
+    @staticmethod
+    def _fetch_transcript_head():
+        """Return the lowest-numbered un-transcribed guild/community ticket, or None.
+
+        This single row is the head of line: a lower un-transcribed ticket always
+        gates higher ones (strict order)."""
+        db = DB()
+        db.connect()
+        try:
+            db.cursor.execute(
+                """SELECT id, app_number, application_type, discord_id, discord_username,
+                          status, answers, poll_status, channel_id,
+                          COALESCE(closed_at, reviewed_at) AS effective_closed_at
+                     FROM applications
+                    WHERE application_type IN ('guild', 'community')
+                      AND app_number IS NOT NULL
+                      AND transcribed_at IS NULL
+                    ORDER BY app_number ASC
+                    LIMIT 1"""
+            )
+            row = db.cursor.fetchone()
+        finally:
+            db.close()
+
+        if not row:
+            return None
+
+        (app_id, app_number, application_type, discord_id, discord_username,
+         status, answers, poll_status, channel_id, effective_closed_at) = row
+        if isinstance(answers, str):
+            answers = json.loads(answers)
+        return {
+            "id": app_id,
+            "app_number": app_number,
+            "application_type": application_type,
+            "discord_id": discord_id,
+            "discord_username": discord_username,
+            "status": status,
+            "answers": answers or {},
+            "poll_status": poll_status,
+            "channel_id": channel_id,
+            "effective_closed_at": effective_closed_at,
+        }
+
+    # Safety bound: max tickets to transcribe in a single tick. The backlog is at
+    # most a few dozen; this only guards against a logic bug looping forever.
+    AUTO_TRANSCRIBE_MAX_PER_TICK = 100
+
+    @tasks.loop(minutes=5)
+    async def auto_transcribe_apps(self):
+        """Auto-transcribe closed guild/community apps to the archive channel,
+        strictly in app_number order, 3 days after they were closed. Drains every
+        currently-eligible ticket in this tick (sequential sends preserve order);
+        stops at the first ticket that is not yet ready.
+        Guild restriction: operates exclusively on TAQ_GUILD_ID (home guild)."""
+        guild = self.client.get_guild(TAQ_GUILD_ID)
+        if not guild:
+            return
+
+        for _ in range(self.AUTO_TRANSCRIBE_MAX_PER_TICK):
+            head = await asyncio.to_thread(self._fetch_transcript_head)
+            decision = classify_transcript_candidate(head, datetime.now(timezone.utc))
+
+            if decision in ("none", "wait"):
+                return  # nothing left, or the next ticket in order isn't ready — stop.
+
+            if decision == "skip":
+                await asyncio.to_thread(stamp_transcribed, head["id"])
+                log(INFO, f"Skipped app {head['id']} (#{head['app_number']}): no channel to transcribe.",
+                    context="check_apps")
+                continue
+
+            # decision == "transcribe": resolve the channel; a deleted channel becomes a skip.
+            channel = self.client.get_channel(head["channel_id"])
+            if channel is None:
+                try:
+                    channel = await self.client.fetch_channel(head["channel_id"])
+                except Exception:
+                    await asyncio.to_thread(stamp_transcribed, head["id"])
+                    log(INFO, f"Skipped app {head['id']} (#{head['app_number']}): channel "
+                              f"{head['channel_id']} unresolvable.", context="check_apps")
+                    continue
+
+            app = {
+                "id": head["id"],
+                "application_type": head["application_type"],
+                "discord_id": head["discord_id"],
+                "discord_username": head["discord_username"] or str(head["id"]),
+                "status": head["status"],
+                "answers": head["answers"],
+            }
+
+            try:
+                await post_transcript(self.client, channel, app)
+            except TranscriptError as e:
+                if e.retryable:
+                    # Transient/config problem (e.g. archive channel missing). Stop the tick
+                    # without advancing so we retry this same ticket next tick — never skip ahead.
+                    log(ERROR, f"Transcript for app {head['id']} (#{head['app_number']}) failed, "
+                               f"will retry: {e}", context="check_apps")
+                    return
+                log(INFO, f"App {head['id']} (#{head['app_number']}): {e} Marking transcribed.",
+                    context="check_apps")
+                await asyncio.to_thread(stamp_transcribed, head["id"])
+                continue
+
+            await asyncio.to_thread(stamp_transcribed, head["id"])
+            log(INFO, f"Auto-transcribed app {head['id']} (#{head['app_number']}).", context="check_apps")
+        else:
+            log(INFO, f"auto_transcribe_apps hit the per-tick cap "
+                      f"({self.AUTO_TRANSCRIBE_MAX_PER_TICK}); remaining tickets continue next tick.",
+                context="check_apps")
+
+    @auto_transcribe_apps.before_loop
+    async def before_auto_transcribe_apps(self):
+        await self.client.wait_until_ready()
+
     @commands.Cog.listener()
     async def on_ready(self):
         if not self.check_guild_leave.is_running():
             self.check_guild_leave.start()
         if not self.auto_close_web_apps.is_running():
             self.auto_close_web_apps.start()
+        if not self.auto_transcribe_apps.is_running():
+            self.auto_transcribe_apps.start()
 
 
 def setup(client):

@@ -40,6 +40,17 @@ class OnGuildChannelUpdate(commands.Cog):
         if not row:
             return
 
+        # Record when the ticket was first closed (drives auto-transcribe timing).
+        db = DB(); db.connect()
+        try:
+            db.cursor.execute(
+                "UPDATE applications SET closed_at = NOW() WHERE channel_id = %s AND closed_at IS NULL",
+                (after.id,),
+            )
+            db.connection.commit()
+        finally:
+            db.close()
+
         app_type, status, app_id, answers, app_number = row
         if isinstance(answers, str):
             answers = json.loads(answers)

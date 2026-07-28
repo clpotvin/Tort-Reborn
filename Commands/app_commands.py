@@ -1,13 +1,13 @@
 import asyncio
 import json
 from datetime import datetime, timezone
-from io import BytesIO
 
 import discord
 from discord import SlashCommandGroup, ApplicationContext
 from discord.ext import commands
 
 from Helpers.classes import BasicPlayerStats
+from Helpers.app_transcript import post_transcript, stamp_transcribed, TranscriptError
 from Helpers.database import DB
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import generate_applicant_info, getPlayerUUID, getPlayerDatav3
@@ -531,84 +531,17 @@ class WebAppCommands(commands.Cog):
         channel, app = result
         guild = self.client.get_guild(channel.guild.id) or channel.guild
 
-        # Find the archive channel by name
+        try:
+            await post_transcript(self.client, channel, app)
+        except TranscriptError as e:
+            await ctx.followup.send(str(e), ephemeral=True)
+            return
+
+        await asyncio.to_thread(stamp_transcribed, app["id"])
+
         archive_chan = discord.utils.get(guild.text_channels, name=APP_ARCHIVE_CHANNEL_NAME)
-        if not archive_chan:
-            await ctx.followup.send(
-                f"Archive channel `#{APP_ARCHIVE_CHANNEL_NAME}` not found.",
-                ephemeral=True,
-            )
-            return
-
-        # Fetch all messages
-        messages = []
-        async for msg in channel.history(limit=500, oldest_first=True):
-            messages.append(msg)
-
-        if not messages:
-            await ctx.followup.send("No messages found in this channel.", ephemeral=True)
-            return
-
-        # Build transcript
-        ign = (app["answers"].get("ign") or "").strip()
-        type_label = "Guild Member" if app["application_type"] == "guild" else "Community Member"
-        created_at = messages[0].created_at.strftime("%Y-%m-%d %H:%M:%S UTC")
-
-        transcript_lines = [
-            f"=== Application Transcript ===",
-            f"Channel: #{channel.name}",
-            f"Type: {type_label}",
-            f"Applicant: {app['discord_username']} ({app['discord_id']})",
-            f"IGN: {ign or 'N/A'}",
-            f"Status: {app['status']}",
-            f"Created: {created_at}",
-            f"Messages: {len(messages)}",
-            f"{'=' * 40}",
-            "",
-        ]
-
-        for msg in messages:
-            timestamp = msg.created_at.strftime("%Y-%m-%d %H:%M:%S")
-            author = msg.author.display_name
-            bot_tag = " [BOT]" if msg.author.bot else ""
-            transcript_lines.append(f"[{timestamp}] {author}{bot_tag}")
-
-            if msg.content:
-                transcript_lines.append(msg.content)
-
-            for embed in msg.embeds:
-                if embed.title:
-                    transcript_lines.append(f"  [Embed: {embed.title}]")
-                if embed.description:
-                    transcript_lines.append(f"  {embed.description}")
-                for field in embed.fields:
-                    transcript_lines.append(f"  {field.name}: {field.value}")
-
-            for att in msg.attachments:
-                transcript_lines.append(f"  [Attachment: {att.filename} — {att.url}]")
-
-            transcript_lines.append("")
-
-        transcript_text = "\n".join(transcript_lines)
-
-        # Build summary embed
-        embed = discord.Embed(
-            title=f"Transcript: #{channel.name}",
-            color=0x2F3136,
-        )
-        embed.add_field(name="Type", value=type_label, inline=True)
-        embed.add_field(name="Status", value=app["status"].title(), inline=True)
-        embed.add_field(name="Applicant", value=f"<@{app['discord_id']}>", inline=True)
-        if ign:
-            embed.add_field(name="IGN", value=ign, inline=True)
-        embed.add_field(name="Messages", value=str(len(messages)), inline=True)
-
-        # Send as file attachment
-        buf = BytesIO(transcript_text.encode("utf-8"))
-        file = discord.File(buf, filename=f"transcript-{channel.name}.txt")
-
-        await archive_chan.send(embed=embed, file=file)
-        await ctx.followup.send(f"Transcript saved to {archive_chan.mention}.", ephemeral=True)
+        dest = archive_chan.mention if archive_chan else f"#{APP_ARCHIVE_CHANNEL_NAME}"
+        await ctx.followup.send(f"Transcript saved to {dest}.", ephemeral=True)
 
     # --- DB helpers ---
 

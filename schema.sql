@@ -528,7 +528,9 @@ CREATE TABLE IF NOT EXISTS applications (
   bot_processed     BOOLEAN      DEFAULT FALSE,
   invite_image      TEXT,
   app_number        INT,
-  message_ids       BIGINT[]     DEFAULT NULL
+  message_ids       BIGINT[]     DEFAULT NULL,
+  closed_at         TIMESTAMPTZ,
+  transcribed_at    TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS application_votes (
