@@ -13,7 +13,12 @@ from discord import default_permissions
 from dateutil import parser as dateutil_parser
 
 from Helpers.logger import log, INFO, WARN, ERROR
-from Helpers.database import DB, get_current_guild_data
+from Helpers.database import (
+    DB,
+    get_current_guild_data_with_db,
+    get_members_with_baseline_history_with_db,
+    get_player_activity_baselines_for_members_with_db,
+)
 from Helpers.variables import HOME_GUILD_IDS, TAQ_GUILD_ID, ANNOUNCEMENT_CHANNEL_ID, FAQ_CHANNEL_ID, VANITY_ROLE_IDS
 
 START_DATE_UTC = date(2025, 8, 31)  # first run date (YYYY, M, D)
@@ -38,85 +43,67 @@ def _get_current_value(cur_by_uuid: Dict[str, Dict[str, Any]], uuid: str, key: s
         return 0
 
 
-def _get_baseline_from_db(db: DB, uuid: str, key: str, window_days: int, joined_date=None) -> Optional[int]:
-    """
-    Get baseline value from player_activity database table using index-based lookup.
-    Returns None if player has no record for the target date (new member),
-    or if the target date falls before the member's current join date.
-    """
-    try:
-        # Get the window_days-th most recent snapshot date (0-indexed)
-        db.cursor.execute("""
-            SELECT DISTINCT snapshot_date FROM player_activity
-            ORDER BY snapshot_date DESC
-            OFFSET %s LIMIT 1
-        """, (window_days,))
-        date_row = db.cursor.fetchone()
-        if not date_row:
-            return None  # Not enough snapshots in database
-        target_date = date_row[0]
-
-        # If the target date is before the member's current join date,
-        # any snapshot from that date is from a previous membership
-        if joined_date is not None and target_date < joined_date:
-            return None
-
-        db.cursor.execute(f"""
-            SELECT {key} FROM player_activity
-            WHERE uuid = %s AND snapshot_date = %s
-        """, (uuid, target_date))
-        row = db.cursor.fetchone()
-
-        if row is None:
-            return None  # Player has no record for this date (new member)
-        if row[0] is None:
-            return 0
-        return int(row[0])
-    except Exception as e:
-        log(ERROR, f"Error getting baseline for {uuid}/{key}: {e}", context="vanity_roles")
-        return None
-
-
 def compute_windowed_stats(window_days: int = WINDOW_DAYS) -> Dict[str, WindowedStats]:
     """
     Returns { uuid -> WindowedStats(wars=Δ, raids=Δ) } for the last `window_days`.
     Uses current guild data (live) minus baseline from player_activity database table.
-    """
-    # Load current live data from database (updated every 3 minutes)
-    current = get_current_guild_data()
-    cur_members = current.get("members", []) if isinstance(current, dict) else []
-    cur_by_uuid = {m["uuid"]: m for m in cur_members if isinstance(m, dict) and m.get("uuid")}
 
-    # Get baseline values from database
+    Baselines come from the shared Helpers.database helpers, the same ones /activity
+    and /leaderboard use. A member who joined mid-window has no snapshot from
+    `window_days` ago, so those helpers fall back to their earliest snapshot inside the
+    current membership period — i.e. everything they earned since joining counts. The
+    task used to keep its own baseline lookup that returned None in that case and
+    skipped the member outright, which silently excluded every recent joiner (17 of 148
+    members when this was found).
+    """
     db = DB()
     db.connect()
-
-    out: Dict[str, WindowedStats] = {}
     try:
-        for uuid in cur_by_uuid.keys():
-            # Parse member's current join date to filter out old membership snapshots
-            raw_joined = cur_by_uuid[uuid].get('joined')
+        # Live data from the cache table (refreshed every 3 minutes)
+        current = get_current_guild_data_with_db(db)
+        cur_members = current.get("members", []) if isinstance(current, dict) else []
+        cur_by_uuid = {m["uuid"]: m for m in cur_members if isinstance(m, dict) and m.get("uuid")}
+        if not cur_by_uuid:
+            return {}
+
+        # Join dates scope baselines to the current membership, so a returning member
+        # isn't credited progress from a previous stint.
+        joined_dates_by_uuid: Dict[str, Optional[date]] = {}
+        for uuid, member in cur_by_uuid.items():
+            raw_joined = member.get("joined")
             try:
-                member_joined_date = dateutil_parser.isoparse(raw_joined).date() if raw_joined else None
+                joined_dates_by_uuid[uuid] = dateutil_parser.isoparse(raw_joined).date() if raw_joined else None
             except Exception:
-                member_joined_date = None
+                joined_dates_by_uuid[uuid] = None
 
-            curr_wars = _get_current_value(cur_by_uuid, uuid, "wars")
-            curr_raids = _get_current_value(cur_by_uuid, uuid, "raids")
+        # Members with no snapshot yet in this membership have no measurable baseline.
+        # They must be skipped, not treated as baseline 0: `wars` is a lifetime-cumulative
+        # counter, so a 0 baseline would award someone their whole career's wars on day one.
+        measurable = get_members_with_baseline_history_with_db(db, joined_dates_by_uuid)
 
-            base_wars = _get_baseline_from_db(db, uuid, "wars", window_days, joined_date=member_joined_date)
-            base_raids = _get_baseline_from_db(db, uuid, "raids", window_days, joined_date=member_joined_date)
-
-            # Skip players without baseline data (mid-period joins, returning members)
-            if base_wars is None or base_raids is None:
-                continue
-
-            wars_delta = max(curr_wars - base_wars, 0)
-            raids_delta = max(curr_raids - base_raids, 0)
-            out[uuid] = WindowedStats(wars=wars_delta, raids=raids_delta)
+        base_wars = get_player_activity_baselines_for_members_with_db(db, "wars", window_days, joined_dates_by_uuid)
+        base_raids = get_player_activity_baselines_for_members_with_db(db, "raids", window_days, joined_dates_by_uuid)
     finally:
         db.close()
 
+    out: Dict[str, WindowedStats] = {}
+    skipped = 0
+    for uuid in cur_by_uuid:
+        if uuid not in measurable:
+            skipped += 1
+            continue
+        curr_wars = _get_current_value(cur_by_uuid, uuid, "wars")
+        curr_raids = _get_current_value(cur_by_uuid, uuid, "raids")
+        wars_baseline, _ = base_wars.get(uuid, (0, True))
+        raids_baseline, _ = base_raids.get(uuid, (0, True))
+        out[uuid] = WindowedStats(
+            wars=max(curr_wars - wars_baseline, 0),
+            raids=max(curr_raids - raids_baseline, 0),
+        )
+
+    if skipped:
+        log(INFO, f"{skipped}/{len(cur_by_uuid)} members skipped: no activity snapshot yet this membership",
+            context="vanity_roles")
     return out
 
 # --- NEW: tier helpers returning 't1'/'t2'/'t3' (or None) ---
@@ -258,12 +245,18 @@ class VanityRoles(commands.Cog):
             log(WARN, f"Contribution bucket role not found: '{BUCKET_ROLE_NAME}'", context="vanity_roles")
 
         grants = 0
+        unresolved: List[int] = []
         for section in ("wars", "raids"):
             for tier in ("t3", "t2", "t1"):
                 role = resolved[section][tier]
                 for did in winners_ids[section][tier]:
                     member = await self._get_member_anyhow(guild, did)
                     if member is None:
+                        # Earned a tier but their linked Discord account isn't in the
+                        # server (left, deleted, or a stale discord_links row). Silently
+                        # dropping these is why "X didn't get their role" reports were
+                        # impossible to tell apart from a scoring bug.
+                        unresolved.append(did)
                         continue
 
                     # Build exactly what we need to add (role + bucket if missing)
@@ -286,6 +279,9 @@ class VanityRoles(commands.Cog):
                             await asyncio.sleep(1.0)
                     except Exception as e:
                         log(ERROR, f"assign: add_roles failed for {member.id}: {e}", context="vanity_roles")
+        if unresolved:
+            log(WARN, f"assign: {len(unresolved)} winner(s) not found in the server: "
+                      f"{sorted(set(unresolved))}", context="vanity_roles")
         log(INFO, f"assign: granted roles to ~{grants} members", context="vanity_roles")
         return grants
 
@@ -340,9 +336,13 @@ class VanityRoles(commands.Cog):
                 "wars": {"t1": [], "t2": [], "t3": []},
                 "raids": {"t1": [], "t2": [], "t3": []},
             }
+            unlinked: List[str] = []
             for uuid, stats in stats_by_uuid.items():
                 did = uuid_to_discord.get(uuid)
                 if not did:
+                    # Would have earned a tier but has no discord_links row to award to.
+                    if _war_tier_label(stats.wars) or _raid_tier_label(stats.raids):
+                        unlinked.append(uuid)
                     continue
                 wtier = _war_tier_label(stats.wars)
                 if wtier:
@@ -350,6 +350,10 @@ class VanityRoles(commands.Cog):
                 rtier = _raid_tier_label(stats.raids)
                 if rtier:
                     winners_ids["raids"][rtier].append(did)
+
+            if unlinked:
+                log(WARN, f"{len(unlinked)} member(s) earned a tier but have no Discord link: {unlinked}",
+                    context="vanity_roles")
 
             # 5) Assign winners using resolved Role objects
             await self._assign_roles_to_winners(guild, winners_ids, resolved)

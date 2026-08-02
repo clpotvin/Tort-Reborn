@@ -339,6 +339,37 @@ def get_player_activity_baselines_for_members_with_db(db: DB, key: str, days: in
         raise BatchBaselineQueryError(f"Failed to load batched baselines for key={key}") from e
 
 
+def get_members_with_baseline_history_with_db(db: DB, joined_dates_by_uuid: dict[str, datetime.date | None]) -> set[str]:
+    """Return the uuids that have at least one snapshot in their current membership period.
+
+    The baseline helpers above return (0, True) both for "no snapshot at all" and for
+    a legitimate zero. Callers that turn a baseline into a delta on a lifetime-cumulative
+    column (wars) must tell those apart: a 0 baseline for a member with no history yet
+    credits them their entire lifetime total. Use this to drop those members instead.
+    """
+    if not joined_dates_by_uuid:
+        return set()
+
+    values_sql = []
+    params = []
+    for uuid, joined_date in joined_dates_by_uuid.items():
+        values_sql.append("(%s::uuid, %s::date)")
+        params.extend((uuid, joined_date))
+
+    db.cursor.execute(f"""
+        WITH input(uuid, joined_date) AS (
+            VALUES {", ".join(values_sql)}
+        )
+        SELECT i.uuid FROM input i
+        WHERE EXISTS (
+            SELECT 1 FROM player_activity pa
+            WHERE pa.uuid = i.uuid
+              AND (i.joined_date IS NULL OR pa.snapshot_date >= i.joined_date)
+        )
+    """, tuple(params))
+    return {str(row[0]) for row in db.cursor.fetchall()}
+
+
 def _get_baseline_from_db(db: DB, uuid: str, key: str, days: int, joined_date: datetime.date = None) -> tuple:
     """Core baseline lookup logic.
 
