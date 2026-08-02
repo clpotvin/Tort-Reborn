@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw, ImageFont
 from Helpers.classes import Guild, DB
 from Helpers.functions import getNameFromUUID
 from Helpers.variables import EXEC_GUILD_IDS, IS_TEST_MODE
-from Helpers.logger import log, WARN, ERROR
+from Helpers.logger import log, INFO, WARN, ERROR
 from Helpers import aspect_db
 MAX_COLUMNS = 4
 ROWS_PER_COLUMN = 10
@@ -27,6 +27,24 @@ CELL_WIDTH = 205
 PADDING = 5
 AVATAR_SIZE = 28
 LINE_SPACING = 8
+
+
+async def resolve_name(uuid: str) -> str:
+    """Resolve a UUID to an IGN for players no longer in the guild.
+
+    getNameFromUUID is blocking (requests), so it must be run off the event
+    loop rather than awaited directly. Falls back to a short UUID when the
+    Mojang lookup fails so a dead lookup never breaks the whole response.
+    """
+    try:
+        looked_up = await asyncio.to_thread(getNameFromUUID, uuid)
+    except Exception as e:
+        log(WARN, f"Name lookup failed for {uuid}: {e}", context="aspects")
+        looked_up = False
+
+    if isinstance(looked_up, (list, tuple)) and looked_up:
+        return looked_up[0]
+    return uuid[:8]
 
 
 class AspectDistribution(commands.Cog):
@@ -198,9 +216,7 @@ class AspectDistribution(commands.Cog):
                 if member:
                     names.append(member["name"])
                 else:
-                    looked_up = await getNameFromUUID(u)
-                    name = looked_up[0] if isinstance(looked_up, (list, tuple)) else str(looked_up)
-                    names.append(name)
+                    names.append(await resolve_name(u))
 
             # 4. Fetch avatars
             avatar_tasks = [self.get_avatar(u) for u in recipients]
@@ -254,19 +270,35 @@ class AspectDistribution(commands.Cog):
                 return await ctx.followup.send(embed=embed)
 
             guild = Guild("The Aquarium")
+            member_names = {m["uuid"]: m["name"] for m in guild.all_members}
+
+            # Only list current guild members. distribute() skips anyone not in
+            # the guild (their join date is absent from member_map), so showing
+            # departed members here would advertise aspects that can never be
+            # handed out. The DB rows are left untouched.
             lines = []
             total = 0
-            
+            skipped = 0
+
             for uuid, count in rows:
-                total += count
                 uuid_str = str(uuid)
-                member = next((m for m in guild.all_members if m["uuid"] == uuid_str), None)
-                if member:
-                    name = member["name"]
-                else:
-                    looked_up = await getNameFromUUID(uuid_str)
-                    name = looked_up[0] if isinstance(looked_up, (list, tuple)) else str(looked_up)
+                name = member_names.get(uuid_str)
+                if name is None:
+                    skipped += 1
+                    continue
+                total += count
                 lines.append(f"{name}: {count}")
+
+            if skipped:
+                log(INFO, f"Hid {skipped} departed member(s) from aspect queue", context="aspects")
+
+            if not lines:
+                embed = discord.Embed(
+                    title="Aspect Queue",
+                    description="No uncollected aspects at the moment.",
+                    color=0x2F3136
+                )
+                return await ctx.followup.send(embed=embed)
 
             description = "\n".join(lines) + f"\n\n**Total: {total}**"
             embed = discord.Embed(
