@@ -223,7 +223,9 @@ def _build_shells_card(user_id, ign, operation, amount, actor_name, actor_id):
         try:
             db.cursor.execute(
                 "INSERT INTO audit_log (log_type, actor_name, actor_id, action) VALUES (%s, %s, %s, %s)",
-                ('shell', actor_name, actor_id, f'{operation}ed {amount} to {player.username}.')
+                ('shell', actor_name, actor_id,
+                 f'added {amount} to {player.username}.' if operation == 'add'
+                 else f'removed {amount} from {player.username}.')
             )
             db.connection.commit()
         except Exception as e:
