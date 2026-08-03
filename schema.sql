@@ -324,8 +324,29 @@ BEGIN
     ALTER TABLE new_app ADD COLUMN app_message_id BIGINT;
   END IF;
   -- applications: app_number column for persistent counter-based naming
-  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'app_number') THEN
+  -- (table-existence guard: on a fresh database the table is created later
+  -- in this file, with the column already present)
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'applications')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'app_number') THEN
     ALTER TABLE applications ADD COLUMN app_number INT;
+  END IF;
+
+  -- snipe_participants: uuid column for stable player identity (ign is a
+  -- display snapshot that goes stale on rename). Backfill from linked
+  -- discord_links rows by current name; unmatched rows stay NULL and keep
+  -- ign-keyed fallback identity. The table-existence guard matters: this DO
+  -- block runs before the CREATE TABLE further down, so on a fresh database
+  -- there is nothing to migrate (the CREATE already includes the column).
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'snipe_participants')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'snipe_participants' AND column_name = 'uuid') THEN
+    ALTER TABLE snipe_participants ADD COLUMN uuid UUID;
+    UPDATE snipe_participants sp
+    SET uuid = dl.uuid
+    FROM discord_links dl
+    WHERE sp.uuid IS NULL
+      AND dl.linked = TRUE
+      AND dl.uuid IS NOT NULL
+      AND LOWER(dl.ign) = LOWER(sp.ign);
   END IF;
 
   -- graid_log_queue: the old mode column ('group'/'individual') is replaced by
@@ -339,8 +360,27 @@ BEGIN
   END IF;
 END $$;
 
--- Seed app_counter if missing (won't overwrite existing value)
-INSERT INTO bot_settings (key, value) VALUES ('app_counter', '3725') ON CONFLICT DO NOTHING;
+-- Re-runnable on every replay: resolve remaining NULL-uuid snipe rows from
+-- unambiguous (uuid, name) pairs in the raid logs — a name-history source
+-- that covers snapshots older than the player's current name, which the
+-- discord_links backfill above can never match. Guarded because this runs
+-- before the snipe tables are created on a fresh database.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'snipe_participants') THEN
+    UPDATE snipe_participants sp
+    SET uuid = h.uuid
+    FROM (
+      SELECT LOWER(ign) AS name_key, MIN(uuid::text)::uuid AS uuid
+      FROM graid_log_participants
+      WHERE uuid IS NOT NULL AND ign IS NOT NULL
+      GROUP BY LOWER(ign)
+      HAVING COUNT(DISTINCT uuid) = 1
+    ) h
+    WHERE sp.uuid IS NULL AND h.name_key = LOWER(sp.ign);
+  END IF;
+END $$;
+
 
 -- =============================================================================
 -- Guild Bank Transactions
@@ -468,6 +508,11 @@ CREATE TABLE IF NOT EXISTS annihilation_party_members (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_annihilation_party_members_ign
   ON annihilation_party_members(event_id, LOWER(ign));
 
+-- The name index alone cannot stop a renamed player from holding two slots;
+-- the uuid is the stable identity when resolvable.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_annihilation_party_members_uuid
+  ON annihilation_party_members(event_id, uuid) WHERE uuid IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS idx_annihilation_party_members_party
   ON annihilation_party_members(event_id, party_number, party_joined_at, id);
 
@@ -594,6 +639,9 @@ CREATE TABLE IF NOT EXISTS bot_settings (
   value TEXT NOT NULL
 );
 
+-- Seed app_counter if missing (won't overwrite existing value)
+INSERT INTO bot_settings (key, value) VALUES ('app_counter', '3725') ON CONFLICT DO NOTHING;
+
 -- =============================================================================
 -- Promotion Queue
 -- =============================================================================
@@ -669,13 +717,16 @@ END $$;
 
 CREATE TABLE IF NOT EXISTS snipe_participants (
   snipe_id    INT         NOT NULL REFERENCES snipe_logs(id) ON DELETE CASCADE,
-  ign         VARCHAR(64) NOT NULL,
+  ign         VARCHAR(64) NOT NULL,   -- display snapshot at log time
+  uuid        UUID,                   -- player identity; ign-keyed fallback when NULL
   role        VARCHAR(10) NOT NULL,
   PRIMARY KEY (snipe_id, ign)
 );
 
 CREATE INDEX IF NOT EXISTS idx_snipe_participants_ign
   ON snipe_participants(ign);
+CREATE INDEX IF NOT EXISTS idx_snipe_participants_uuid
+  ON snipe_participants(uuid);
 
 CREATE INDEX IF NOT EXISTS idx_snipe_logs_sniped_at
   ON snipe_logs(sniped_at DESC);
