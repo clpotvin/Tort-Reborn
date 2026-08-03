@@ -25,7 +25,7 @@ else:
 from Helpers.logger import log, INFO, WARN, ERROR
 from Helpers.classes import Guild, DB, BasicPlayerStats
 from Helpers.embed_updater import update_web_poll_embed
-from Helpers.functions import getPlayerDatav3, getNameFromUUID, determine_starting_rank, create_progress_bar, addLine, round_corners
+from Helpers.functions import getPlayerDatav3, getNameFromUUID, getPlayerUUID, determine_starting_rank, create_progress_bar, addLine, round_corners
 from Helpers.links import LinkConflictError, assert_row_linkable
 from Helpers.variables import (
     RAID_LOG_CHANNEL_ID,
@@ -494,6 +494,19 @@ class UpdateMemberData(commands.Cog):
 
                 if not participants:
                     raise ValueError("queue row has no participants")
+
+                # A participant may be queued without a uuid (unlinked member,
+                # no discord_links row yet). The Minecraft identity is
+                # resolvable from the ign regardless — a NULL uuid row would be
+                # invisible to event leaderboards and duplicate the player on
+                # the raids leaderboard.
+                for p in participants:
+                    if not p.get('uuid'):
+                        pdata = await asyncio.to_thread(getPlayerUUID, p['ign'])
+                        if pdata:
+                            p['uuid'] = pdata[1]
+                        else:
+                            log(WARN, f"Could not resolve uuid for '{p['ign']}' in queued graid log #{queue_id}; writing with NULL uuid", context="graid_queue")
 
                 # 1. DB writes (graid_logs, participants, event totals, uncollected_raids).
                 await asyncio.to_thread(_graid_log_manual_sync, participants, raid_type)
