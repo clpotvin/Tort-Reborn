@@ -354,6 +354,21 @@ BEGIN
   END IF;
 END $$;
 
+-- Re-runnable on every replay: resolve remaining NULL-uuid snipe rows from
+-- unambiguous (uuid, name) pairs in the raid logs — a name-history source
+-- that covers snapshots older than the player's current name, which the
+-- discord_links backfill above can never match.
+UPDATE snipe_participants sp
+SET uuid = h.uuid
+FROM (
+  SELECT LOWER(ign) AS name_key, MIN(uuid::text)::uuid AS uuid
+  FROM graid_log_participants
+  WHERE uuid IS NOT NULL AND ign IS NOT NULL
+  GROUP BY LOWER(ign)
+  HAVING COUNT(DISTINCT uuid) = 1
+) h
+WHERE sp.uuid IS NULL AND h.name_key = LOWER(sp.ign);
+
 -- Seed app_counter if missing (won't overwrite existing value)
 INSERT INTO bot_settings (key, value) VALUES ('app_counter', '3725') ON CONFLICT DO NOTHING;
 
