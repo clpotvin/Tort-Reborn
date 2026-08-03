@@ -665,7 +665,18 @@ class UpdateMemberData(commands.Cog):
         self.previous_members = curr_map
         self._save_to_cache("memberList", curr_map)
 
-        # 3b: Sweep for unlinked members who are already in the guild
+        # 3b: Sync renames. The guild API name is authoritative; discord_links.ign
+        # is only ever written at link time and otherwise goes stale forever,
+        # which breaks every name-based lookup downstream (graid credit,
+        # recruiter matching, website uuid resolution).
+        try:
+            renames = await asyncio.to_thread(self._sync_member_igns, curr_map)
+            for old_ign, new_ign in renames:
+                log(INFO, f"Rename sync: {old_ign} -> {new_ign}", context="update_member_data")
+        except Exception as e:
+            log(ERROR, f"Rename sync error: {e}", context="update_member_data")
+
+        # 3c: Sweep for unlinked members who are already in the guild
         # Safety net for race conditions where a player joined before their app was accepted
         try:
             unlinked_rows = await asyncio.to_thread(self._fetch_unlinked_with_app)
@@ -1369,6 +1380,39 @@ class UpdateMemberData(commands.Cog):
             db.cursor.execute("SELECT ign FROM discord_links WHERE uuid = %s", (uuid,))
             row = db.cursor.fetchone()
             return row[0] if row else None
+        finally:
+            db.close()
+
+    @staticmethod
+    def _sync_member_igns(curr_map):
+        """Blocking: refresh discord_links.ign for members whose guild-API name
+        changed. Updates every row carrying the uuid (unlinked history rows are
+        the same person). Returns the applied (old_ign, new_ign) pairs."""
+        db = _db_connect_with_retry()
+        try:
+            db.cursor.execute(
+                "SELECT DISTINCT uuid::text, ign FROM discord_links WHERE uuid IS NOT NULL"
+            )
+            stored = {}
+            for row_uuid, row_ign in db.cursor.fetchall():
+                stored.setdefault(row_uuid.replace('-', ''), set()).add(row_ign)
+
+            renames = []
+            for uuid, info in curr_map.items():
+                name = info.get('name')
+                if not name:
+                    continue
+                names = stored.get(uuid.replace('-', ''))
+                if names and names != {name}:
+                    db.cursor.execute(
+                        "UPDATE discord_links SET ign = %s WHERE uuid = %s",
+                        (name, uuid)
+                    )
+                    old = next(n for n in sorted(names) if n != name)
+                    renames.append((old, name))
+            if renames:
+                db.connection.commit()
+            return renames
         finally:
             db.close()
 
