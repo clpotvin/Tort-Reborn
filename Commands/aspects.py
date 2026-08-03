@@ -287,7 +287,7 @@ class AspectDistribution(commands.Cog):
                     skipped += 1
                     continue
                 total += count
-                lines.append(f"{name}: {count}")
+                lines.append(f"{discord.utils.escape_markdown(name)}: {count}")
 
             if skipped:
                 log(INFO, f"Hid {skipped} departed member(s) from aspect queue", context="aspects")
@@ -330,7 +330,7 @@ class AspectDistribution(commands.Cog):
             if not aspect_db.add_to_blacklist(db, uuid, ctx.author.id):
                 return await ctx.followup.send("✅ Already blacklisted.")
             
-            await ctx.followup.send(f"✅ Added **{user.display_name}** to the aspect blacklist.")
+            await ctx.followup.send(f"✅ Added **{discord.utils.escape_markdown(user.display_name)}** to the aspect blacklist.")
 
         finally:
             db.close()
@@ -354,7 +354,7 @@ class AspectDistribution(commands.Cog):
             if not aspect_db.remove_from_blacklist(db, uuid):
                 return await ctx.followup.send("✅ User wasn't on the aspect blacklist.")
             
-            await ctx.followup.send(f"✅ Removed **{user.display_name}** from the aspect blacklist.")
+            await ctx.followup.send(f"✅ Removed **{discord.utils.escape_markdown(user.display_name)}** from the aspect blacklist.")
 
         finally:
             db.close()
@@ -388,7 +388,7 @@ class AspectDistribution(commands.Cog):
                 member = next((m for m in guild.all_members if m["uuid"] == uuid), None)
                 name = member["name"] if member else uuid[:8]
                 prefix = "→ " if i == 0 else "  "
-                lines.append(f"{prefix}{i+1}. {name}")
+                lines.append(f"{prefix}{i+1}. {discord.utils.escape_markdown(name)}")
             
             description = "\n".join(lines)
             description += f"\n\n**Total in queue:** {len(queue)}"

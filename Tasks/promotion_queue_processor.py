@@ -420,12 +420,12 @@ class PromotionQueueProcessor(commands.Cog):
             title="Promotion Queue - Processing Failed",
             color=0xe33232,
         )
-        embed.add_field(name="IGN", value=entry['ign'], inline=True)
+        embed.add_field(name="IGN", value=discord.utils.escape_markdown(entry['ign']), inline=True)
         embed.add_field(name="Action", value=entry['action_type'], inline=True)
         embed.add_field(name="New Rank", value=entry.get('new_rank') or "N/A", inline=True)
         embed.add_field(
             name="Queued By",
-            value=f"<@{entry['queued_by_discord_id']}> ({entry['queued_by_ign']})",
+            value=f"<@{entry['queued_by_discord_id']}> ({discord.utils.escape_markdown(entry['queued_by_ign'])})",
             inline=False,
         )
         embed.add_field(name="Error", value=f"```{error_msg[:900]}```", inline=False)
@@ -451,14 +451,15 @@ class PromotionQueueProcessor(commands.Cog):
         if successes:
             lines = []
             for ign, action_type, new_rank in successes:
+                safe_ign = discord.utils.escape_markdown(ign)
                 if new_rank:
-                    lines.append(f"**{ign}**: {action_type} -> **{new_rank}**")
+                    lines.append(f"**{safe_ign}**: {action_type} -> **{new_rank}**")
                 else:
-                    lines.append(f"**{ign}**: {action_type}")
+                    lines.append(f"**{safe_ign}**: {action_type}")
             embed.add_field(name="Completed", value="\n".join(lines)[:1024], inline=False)
 
         if failures:
-            lines = [f"**{ign}** ({action_type}): {err[:100]}" for ign, action_type, err in failures]
+            lines = [f"**{discord.utils.escape_markdown(ign)}** ({action_type}): {err[:100]}" for ign, action_type, err in failures]
             embed.add_field(name="Failed", value="\n".join(lines)[:1024], inline=False)
 
         await promo_ch.send(embed=embed)

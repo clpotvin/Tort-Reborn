@@ -408,7 +408,7 @@ class Manage(commands.Cog):
             # Previously getPlayerUUID(ign)[1] crashed with TypeError on a
             # failed lookup; fail with a clear message instead.
             await ctx.followup.send(
-                f':no_entry: Could not resolve **{ign}** — check the spelling and try again.',
+                f':no_entry: Could not resolve **{discord.utils.escape_markdown(ign)}** — check the spelling and try again.',
                 ephemeral=True
             )
         elif result == 'updated':
@@ -418,12 +418,12 @@ class Manage(commands.Cog):
             except:
                 pass
             await ctx.followup.send(
-                f'Updated link for **{user.name}** to **{ign}**',
+                f'Updated link for **{discord.utils.escape_markdown(user.name)}** to **{discord.utils.escape_markdown(ign)}**',
                 ephemeral=True
             )
         else:
             await ctx.followup.send(
-                f'Linked **{user.name}** to **{ign}**',
+                f'Linked **{discord.utils.escape_markdown(user.name)}** to **{discord.utils.escape_markdown(ign)}**',
                 ephemeral=True
             )
 

@@ -116,7 +116,7 @@ class CheckApps(commands.Cog):
                 if getattr(thread, "archived", False):
                     await thread.edit(archived=False)
                 await thread.send(
-                    f"{APP_MANAGER_ROLE_MENTION} **{ign}** has left their guild! "
+                    f"{APP_MANAGER_ROLE_MENTION} **{discord.utils.escape_markdown(ign)}** has left their guild! "
                     f"They can now be invited.\n"
                     f"Run `/app invited` in the ticket channel or this thread to send them the invite message."
                 )

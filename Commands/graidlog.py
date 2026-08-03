@@ -195,7 +195,7 @@ class GraidCommands(commands.Cog):
             await channel.send(embed=embed)
 
         await ctx.followup.send(
-            f":white_check_mark: Logged **{raid_type}** raid with {', '.join(players)}",
+            f":white_check_mark: Logged **{raid_type}** raid with {', '.join(discord.utils.escape_markdown(p) for p in players)}",
             ephemeral=True,
         )
 
@@ -258,7 +258,7 @@ class GraidCommands(commands.Cog):
                 name = display_names.get(key, key)
                 type_parts = [f"{t}:{data[t]}" for t in ["NOTG", "TCC", "TNA", "NOL", "WTP"] if data[t] > 0]
                 type_str = f" ({', '.join(type_parts)})" if type_parts else ""
-                lines.append(f"`{i:>2}.` **{name}** — {data['total']}{type_str}")
+                lines.append(f"`{i:>2}.` **{discord.utils.escape_markdown(name)}** — {data['total']}{type_str}")
 
             embed = discord.Embed(
                 title="Guild Raid Leaderboard",
@@ -307,7 +307,7 @@ class GraidCommands(commands.Cog):
 
             rows = cur.fetchall()
             if not rows:
-                await ctx.followup.send(f"No guild raid logs found for **{ign}**.", ephemeral=True)
+                await ctx.followup.send(f"No guild raid logs found for **{discord.utils.escape_markdown(ign)}**.", ephemeral=True)
                 return
 
             total = len(rows)
@@ -348,13 +348,13 @@ class GraidCommands(commands.Cog):
 
             type_lines = [f"**{t}**: {c}" for t, c in type_counts.most_common()]
             embed = discord.Embed(
-                title=f"Guild Raid Stats: {ign}",
+                title=f"Guild Raid Stats: {discord.utils.escape_markdown(ign)}",
                 description=f"**{total}** total raids",
                 color=0x3474EB,
             )
             embed.add_field(name="Raid Types", value="\n".join(type_lines) or "—", inline=True)
 
-            tm_lines = [f"{tm}: {c}" for tm, c in teammates.most_common(5)]
+            tm_lines = [f"{discord.utils.escape_markdown(tm)}: {c}" for tm, c in teammates.most_common(5)]
             embed.add_field(name="Top Teammates", value="\n".join(tm_lines) or "—", inline=True)
             embed.add_field(name="Best Day", value=f"{best_day} ({best_day_count} raids)", inline=False)
 
@@ -486,7 +486,7 @@ class GraidCommands(commands.Cog):
                 top_with_offsets.append((name, total))
             top_with_offsets.sort(key=lambda x: -x[1])
 
-            top_lines = [f"`{i+1}.` **{name}** — {total}" for i, (name, total) in enumerate(top_with_offsets[:5])]
+            top_lines = [f"`{i+1}.` **{discord.utils.escape_markdown(name)}** — {total}" for i, (name, total) in enumerate(top_with_offsets[:5])]
 
             embed = discord.Embed(title="Guild Raid Overview", color=0x3474EB)
             embed.add_field(name="Summary", value=f"**{total_raids}** raids by **{unique_players}** players", inline=False)

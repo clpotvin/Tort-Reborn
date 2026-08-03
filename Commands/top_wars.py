@@ -174,7 +174,7 @@ class ConfirmView(discord.ui.View):
             for winner in self.winners:
                 discord_id = winner.get('discord_id')
                 if not discord_id:
-                    failed.append(f"{winner['name']} (no Discord link)")
+                    failed.append(f"{discord.utils.escape_markdown(winner['name'])} (no Discord link)")
                     continue
 
                 db.cursor.execute('SELECT balance FROM shells WHERE "user" = %s', (discord_id,))

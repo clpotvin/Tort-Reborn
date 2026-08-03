@@ -406,7 +406,7 @@ def build_reward_rows(
 def _mention(row: dict) -> str:
     if row.get("discord_id"):
         return f"<@{row['discord_id']}>"
-    return f"**{row.get('display_name') or row.get('uuid', '')[:8]}**"
+    return f"**{discord.utils.escape_markdown(row.get('display_name') or row.get('uuid', '')[:8])}**"
 
 
 def _reward_line(row: dict) -> str:
@@ -681,7 +681,7 @@ class GraidEvent(commands.Cog):
             db.connection.commit()
 
             lines = [
-                f"`{row['placement']:>2}.` **{row['display_name']}** - {_format_points(row['ranking_points'])} points"
+                f"`{row['placement']:>2}.` **{discord.utils.escape_markdown(row['display_name'])}** - {_format_points(row['ranking_points'])} points"
                 for row in rows[:10]
             ]
             desc = "\n".join(lines) if lines else "_No qualifying participants._"
@@ -707,7 +707,7 @@ class GraidEvent(commands.Cog):
 
             rows = _load_reward_rows(cur, event, include_below_threshold=True)
             lines = [
-                f"`{row['placement']:>2}.` **{row['display_name']}** - {_format_points(row['ranking_points'])} points"
+                f"`{row['placement']:>2}.` **{discord.utils.escape_markdown(row['display_name'])}** - {_format_points(row['ranking_points'])} points"
                 for row in rows[:5]
             ]
             desc = "\n".join(lines) if lines else "_No one on the board yet._"

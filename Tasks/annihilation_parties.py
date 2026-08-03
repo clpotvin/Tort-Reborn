@@ -329,7 +329,7 @@ class StaffMemberPickerView(discord.ui.View):
             return
 
         await interaction.response.edit_message(
-            content=f"Remove **{member['ign']}** from Party {member['party_number']}?",
+            content=f"Remove **{discord.utils.escape_markdown(member['ign'])}** from Party {member['party_number']}?",
             view=ConfirmRemovalView(
                 self.cog,
                 self.invoker_id,
@@ -978,7 +978,7 @@ class AnnihilationParties(commands.Cog):
         self._forget_event(event_id)
         self._schedule_board_refresh(event_id)
         await interaction.followup.send(
-            f"Removed **{removed['ign']}** from Party {removed['party_number']}",
+            f"Removed **{discord.utils.escape_markdown(removed['ign'])}** from Party {removed['party_number']}",
             ephemeral=True,
         )
 
