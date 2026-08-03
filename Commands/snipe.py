@@ -160,15 +160,22 @@ def _norm_uuid(value) -> str | None:
 
 def _resolve_uuid_db(db, ign: str) -> str | None:
     """Resolve a current IGN to a Minecraft uuid via discord_links (kept fresh
-    by the rename-sync loop), preferring the linked row. Returns None if the
-    name is not in discord_links."""
+    by the rename-sync loop). Only an unambiguous answer counts: several rows
+    may share a name (stale unlinked history), so return the single distinct
+    uuid, or the single LINKED row's uuid, and otherwise None so the caller
+    falls back to the Mojang lookup instead of guessing."""
     db.cursor.execute(
-        'SELECT uuid FROM discord_links WHERE LOWER(ign) = LOWER(%s) AND uuid IS NOT NULL '
-        'ORDER BY linked DESC LIMIT 1',
+        'SELECT uuid, linked FROM discord_links WHERE LOWER(ign) = LOWER(%s) AND uuid IS NOT NULL',
         (ign,)
     )
-    row = db.cursor.fetchone()
-    return str(row[0]) if row else None
+    rows = db.cursor.fetchall()
+    uuids = {str(row[0]) for row in rows}
+    if len(uuids) == 1:
+        return next(iter(uuids))
+    linked_uuids = {str(row[0]) for row in rows if row[1]}
+    if len(linked_uuids) == 1:
+        return next(iter(linked_uuids))
+    return None
 
 
 async def _resolve_identity(db, ign: str) -> tuple[str, str | None]:
