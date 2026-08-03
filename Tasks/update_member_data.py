@@ -671,8 +671,10 @@ class UpdateMemberData(commands.Cog):
         # recruiter matching, website uuid resolution).
         try:
             renames = await asyncio.to_thread(self._sync_member_igns, curr_map)
-            for old_ign, new_ign in renames:
-                log(INFO, f"Rename sync: {old_ign} -> {new_ign}", context="update_member_data")
+            for rename in renames:
+                log(INFO, f"Rename sync: {rename['old']} -> {rename['new']}", context="update_member_data")
+            if renames:
+                await self._apply_rename_nicknames(renames)
         except Exception as e:
             log(ERROR, f"Rename sync error: {e}", context="update_member_data")
 
@@ -1387,34 +1389,73 @@ class UpdateMemberData(commands.Cog):
     def _sync_member_igns(curr_map):
         """Blocking: refresh discord_links.ign for members whose guild-API name
         changed. Updates every row carrying the uuid (unlinked history rows are
-        the same person). Returns the applied (old_ign, new_ign) pairs."""
+        the same person). Returns dicts {old, new, discord_id, rank} per rename,
+        where discord_id/rank come from the linked row (None when unlinked) so
+        the caller can rebuild the Discord nickname."""
         db = _db_connect_with_retry()
         try:
             db.cursor.execute(
-                "SELECT DISTINCT uuid::text, ign FROM discord_links WHERE uuid IS NOT NULL"
+                "SELECT uuid::text, ign, discord_id, linked, rank FROM discord_links WHERE uuid IS NOT NULL"
             )
             stored = {}
-            for row_uuid, row_ign in db.cursor.fetchall():
-                stored.setdefault(row_uuid.replace('-', ''), set()).add(row_ign)
+            for row_uuid, row_ign, row_discord_id, row_linked, row_rank in db.cursor.fetchall():
+                entry = stored.setdefault(
+                    row_uuid.replace('-', ''),
+                    {'names': set(), 'discord_id': None, 'rank': None},
+                )
+                entry['names'].add(row_ign)
+                if row_linked:
+                    entry['discord_id'] = row_discord_id
+                    entry['rank'] = row_rank
 
             renames = []
             for uuid, info in curr_map.items():
                 name = info.get('name')
                 if not name:
                     continue
-                names = stored.get(uuid.replace('-', ''))
-                if names and names != {name}:
+                entry = stored.get(uuid.replace('-', ''))
+                if entry and entry['names'] != {name}:
                     db.cursor.execute(
                         "UPDATE discord_links SET ign = %s WHERE uuid = %s",
                         (name, uuid)
                     )
-                    old = next(n for n in sorted(names) if n != name)
-                    renames.append((old, name))
+                    old = next(n for n in sorted(entry['names']) if n != name)
+                    renames.append({
+                        'old': old,
+                        'new': name,
+                        'discord_id': entry['discord_id'],
+                        'rank': entry['rank'],
+                    })
             if renames:
                 db.connection.commit()
             return renames
         finally:
             db.close()
+
+    async def _apply_rename_nicknames(self, renames):
+        """Rebuild '{rank} {ign}' nicknames for renamed linked members, matching
+        what registration/promotion set. Discord can refuse (server owner, role
+        hierarchy) — log and continue, never break the loop."""
+        guild = self.client.get_guild(TAQ_GUILD_ID)
+        if guild is None:
+            return
+        for rename in renames:
+            discord_id = rename.get('discord_id')
+            if not discord_id:
+                continue
+            member = guild.get_member(discord_id)
+            if member is None:
+                try:
+                    member = await guild.fetch_member(discord_id)
+                except Exception:
+                    continue
+            nick = f"{rename.get('rank') or ''} {rename['new']}".strip()
+            try:
+                await member.edit(nick=nick, reason="Minecraft name change")
+            except discord.Forbidden:
+                log(WARN, f"No permission to update nickname for {rename['new']}", context="update_member_data")
+            except Exception as e:
+                log(ERROR, f"Nickname update failed for {rename['new']}: {e}", context="update_member_data")
 
 
 def setup(client):
