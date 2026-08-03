@@ -10,6 +10,7 @@ from Helpers.logger import log, INFO, ERROR
 from Helpers.database import DB
 from Helpers.embed_updater import update_web_poll_embed, update_hammerhead_poll_embed
 from Helpers.functions import getPlayerDatav3, getPlayerUUID
+from Helpers.links import LinkConflictError, assert_uuid_free
 from Helpers.variables import TAQ_GUILD_ID, INVITED_CATEGORY_NAME
 
 
@@ -184,12 +185,13 @@ class ProcessWebsiteDecisions(commands.Cog):
             else:
                 await channel.send(msg_text)
 
+            linked_ok = True
             if ign and uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                linked_ok = await self._link_or_report(channel, link_id, ign, uuid, linked=False)
 
             # Trigger immediate registration (same pattern as app_commands.py)
             cog = self.client.get_cog("UpdateMemberData")
-            if cog and uuid:
+            if cog and uuid and linked_ok:
                 try:
                     await cog._auto_register_joined_member(uuid, ign)
                 except Exception as e:
@@ -219,7 +221,7 @@ class ProcessWebsiteDecisions(commands.Cog):
                 await channel.send(msg_text)
 
             if ign and uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                await self._link_or_report(channel, link_id, ign, uuid, linked=False)
 
             await update_web_poll_embed(self.client, channel.id,
                                         ":yellow_circle: Accepted - Pending Leave", 0xFFE019)
@@ -243,7 +245,7 @@ class ProcessWebsiteDecisions(commands.Cog):
                 await channel.send(msg_text)
 
             if ign and uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                await self._link_or_report(channel, link_id, ign, uuid, linked=False)
 
             guild_obj = self.client.get_guild(channel.guild.id) or channel.guild
             invited_cat = discord.utils.get(guild_obj.categories, name=INVITED_CATEGORY_NAME)
@@ -301,7 +303,7 @@ class ProcessWebsiteDecisions(commands.Cog):
             uuid_data = await asyncio.to_thread(getPlayerUUID, ign)
             uuid = uuid_data[1] if uuid_data else None
             if uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=True)
+                await self._link_or_report(channel, link_id, ign, uuid, linked=True)
             if applicant:
                 try:
                     await applicant.edit(nick=ign)
@@ -433,6 +435,9 @@ class ProcessWebsiteDecisions(commands.Cog):
         db = DB()
         db.connect()
         try:
+            # Guard even the linked=False writes: a row seeded with another
+            # member's uuid gets flipped to linked later (rescind/auto-register).
+            assert_uuid_free(db.cursor, uuid, discord_id)
             db.cursor.execute(
                 """INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, app_channel)
                    VALUES (%s, %s, %s, %s, '', %s)
@@ -445,6 +450,17 @@ class ProcessWebsiteDecisions(commands.Cog):
             db.connection.commit()
         finally:
             db.close()
+
+    async def _link_or_report(self, channel, link_id, ign, uuid, linked):
+        """Link, or report a uuid conflict in the app channel.
+        Returns True when the link was written."""
+        try:
+            await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=linked)
+            return True
+        except LinkConflictError as e:
+            log(ERROR, f"Link conflict for {ign}: {e}", context="process_website_decisions")
+            await channel.send(f":warning: {e.user_message()}")
+            return False
 
     @staticmethod
     def _db_set_guild_leave(app_id, guild_leave_pending):

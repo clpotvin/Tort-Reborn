@@ -16,6 +16,7 @@ from Helpers.app_transcript import (
 from Helpers.database import DB
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import generate_applicant_info, getPlayerUUID, getPlayerDatav3
+from Helpers.links import LinkConflictError, assert_row_linkable, assert_uuid_free
 from Helpers.openai_helper import parse_recruiter_source, match_recruiter_name
 from Helpers.sheets import add_row
 from Helpers.variables import (
@@ -195,13 +196,17 @@ class WebAppCommands(commands.Cog):
             )
 
             # Link and mark as linked immediately
+            link_conflict = None
             if ign and uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                try:
+                    await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                except LinkConflictError as e:
+                    link_conflict = e
 
             # Trigger auto-registration directly
             from Tasks.update_member_data import UpdateMemberData
             cog = self.client.get_cog("UpdateMemberData")
-            if cog and uuid:
+            if cog and uuid and not link_conflict:
                 try:
                     await cog._auto_register_joined_member(uuid, ign)
                 except Exception as e:
@@ -209,7 +214,10 @@ class WebAppCommands(commands.Cog):
                     log(LOG_ERROR, f"Immediate registration failed for {ign}: {e}", context="app_commands")
 
             await update_web_poll_embed(self.client, channel.id, ":orange_circle: Registered", 0xFFE019)
-            feedback = f"Application accepted. IGN: `{ign}`. Player was already in TAq — registered immediately."
+            if link_conflict:
+                feedback = f"Application accepted, but NOT registered: {link_conflict.user_message()}"
+            else:
+                feedback = f"Application accepted. IGN: `{ign}`. Player was already in TAq — registered immediately."
 
         elif in_guild:
             await channel.send(
@@ -224,7 +232,10 @@ class WebAppCommands(commands.Cog):
             )
 
             if ign and uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                try:
+                    await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                except LinkConflictError as e:
+                    await ctx.followup.send(e.user_message(), ephemeral=True)
 
             await update_web_poll_embed(self.client, channel.id, ":yellow_circle: Accepted - Pending Leave", 0xFFE019)
             feedback = (
@@ -243,7 +254,10 @@ class WebAppCommands(commands.Cog):
             )
 
             if ign and uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                try:
+                    await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=False)
+                except LinkConflictError as e:
+                    await ctx.followup.send(e.user_message(), ephemeral=True)
 
             guild = self.client.get_guild(channel.guild.id) or channel.guild
             invited_cat = discord.utils.get(guild.categories, name=INVITED_CATEGORY_NAME)
@@ -292,7 +306,10 @@ class WebAppCommands(commands.Cog):
             uuid_data = await asyncio.to_thread(getPlayerUUID, ign)
             uuid = uuid_data[1] if uuid_data else None
             if uuid:
-                await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=True)
+                try:
+                    await asyncio.to_thread(self._link_discord, link_id, ign, uuid, channel.id, linked=True)
+                except LinkConflictError as e:
+                    await ctx.followup.send(e.user_message(), ephemeral=True)
             if applicant:
                 try:
                     await applicant.edit(nick=ign)
@@ -494,7 +511,12 @@ class WebAppCommands(commands.Cog):
         await channel.send("This application acceptance has been rescinded.")
 
         # Update DB status to denied
-        await asyncio.to_thread(self._db_rescind, app["id"])
+        link_conflict = await asyncio.to_thread(self._db_rescind, app["id"])
+        if link_conflict:
+            await ctx.followup.send(
+                f"Rescinded, but the member row was not re-linked: {link_conflict.user_message()}",
+                ephemeral=True,
+            )
 
         # Update poll embed
         await update_web_poll_embed(self.client, channel.id,
@@ -602,13 +624,20 @@ class WebAppCommands(commands.Cog):
                 (app_id,)
             )
             row = db.cursor.fetchone()
+            conflict = None
             if row:
-                db.cursor.execute(
-                    """UPDATE discord_links SET linked = TRUE
-                       WHERE discord_id = %s AND linked = FALSE""",
-                    (int(row[0]),)
-                )
+                try:
+                    assert_row_linkable(db.cursor, int(row[0]))
+                    db.cursor.execute(
+                        """UPDATE discord_links SET linked = TRUE
+                           WHERE discord_id = %s AND linked = FALSE""",
+                        (int(row[0]),)
+                    )
+                except LinkConflictError as e:
+                    # Still record the denial; only the relink is blocked.
+                    conflict = e
             db.connection.commit()
+            return conflict
         finally:
             db.close()
 
@@ -616,6 +645,9 @@ class WebAppCommands(commands.Cog):
     def _link_discord(discord_id, ign, uuid, app_channel, linked=False):
         db = DB(); db.connect()
         try:
+            # Guard even the linked=False writes: a row seeded with another
+            # member's uuid gets flipped to linked later (rescind/auto-register).
+            assert_uuid_free(db.cursor, uuid, discord_id)
             db.cursor.execute(
                 """INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, app_channel)
                    VALUES (%s, %s, %s, %s, '', %s)

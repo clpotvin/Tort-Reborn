@@ -8,6 +8,7 @@ from discord import default_permissions
 from Helpers.classes import LinkAccount, PlayerStats, BasicPlayerStats
 from Helpers.database import DB
 from Helpers.functions import getPlayerUUID, determine_starting_rank
+from Helpers.links import LinkConflictError, assert_uuid_free
 from Helpers.variables import HOME_GUILD_IDS, discord_ranks
 
 
@@ -21,6 +22,8 @@ def _fetch_new_member_data(user_id, ign):
     try:
         db.cursor.execute('SELECT * FROM discord_links WHERE discord_id = %s', (user_id,))
         rows = db.cursor.fetchall()
+        if not pdata.error:
+            assert_uuid_free(db.cursor, pdata.UUID, user_id)
     finally:
         db.close()
 
@@ -36,7 +39,11 @@ class NewMember(commands.Cog):
     async def new_member(self, message, user: discord.Member, ign):
         if message.interaction.user.guild_permissions.manage_roles:
             await message.defer(ephemeral=True)
-            rows, pdata = await asyncio.to_thread(_fetch_new_member_data, user.id, ign)
+            try:
+                rows, pdata = await asyncio.to_thread(_fetch_new_member_data, user.id, ign)
+            except LinkConflictError as e:
+                await message.respond(e.user_message(), ephemeral=True)
+                return
             if pdata.error:
                 embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
                                       description=f'Could not retrieve information of `{ign}`.\nPlease check your spelling or try again later.',

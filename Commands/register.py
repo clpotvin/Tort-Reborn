@@ -6,6 +6,7 @@ from discord.ext import commands
 
 from Helpers.database import DB
 from Helpers.functions import getPlayerUUID
+from Helpers.links import LinkConflictError, assert_uuid_free
 from Helpers.variables import HOME_GUILD_IDS
 
 
@@ -68,6 +69,12 @@ class Register(commands.Cog):
         rank = ally_config['rank']
 
         try:
+            await asyncio.to_thread(self._check_link_conflict, user.id, uuid)
+        except LinkConflictError as e:
+            await ctx.followup.send(e.user_message(), ephemeral=True)
+            return
+
+        try:
             if ally_role not in user.roles:
                 await user.add_roles(
                     ally_role,
@@ -88,7 +95,11 @@ class Register(commands.Cog):
             )
             return
 
-        await asyncio.to_thread(self._upsert_ally_link, user.id, canonical_ign, uuid, rank)
+        try:
+            await asyncio.to_thread(self._upsert_ally_link, user.id, canonical_ign, uuid, rank)
+        except LinkConflictError as e:
+            await ctx.followup.send(e.user_message(), ephemeral=True)
+            return
 
         await ctx.followup.send(
             f'Registered {user.mention} as **{rank} {discord.utils.escape_markdown(canonical_ign)}** for **{guild}**.',
@@ -96,10 +107,21 @@ class Register(commands.Cog):
         )
 
     @staticmethod
+    def _check_link_conflict(discord_id: int, uuid: str):
+        """Blocking DB read — call via asyncio.to_thread."""
+        db = DB()
+        db.connect()
+        try:
+            assert_uuid_free(db.cursor, uuid, discord_id)
+        finally:
+            db.close()
+
+    @staticmethod
     def _upsert_ally_link(discord_id: int, ign: str, uuid: str, rank: str):
         db = DB()
         db.connect()
         try:
+            assert_uuid_free(db.cursor, uuid, discord_id)
             db.cursor.execute(
                 """INSERT INTO discord_links (discord_id, ign, uuid, linked, rank)
                    VALUES (%s, %s, %s, TRUE, %s)

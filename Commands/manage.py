@@ -12,6 +12,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from Helpers.classes import LinkAccount, PlayerStats, PlayerShells
 from Helpers.database import DB
+from Helpers.links import LinkConflictError, assert_uuid_free
 from Helpers.functions import addLine, split_sentence, expand_image, getPlayerUUID, timed_get
 from Helpers.logger import log, ERROR
 from Helpers.variables import HOME_GUILD_IDS, discord_ranks, discord_rank_roles
@@ -122,6 +123,7 @@ def _link_user(user_id, ign, base_nick):
 
     db = DB(); db.connect()
     try:
+        assert_uuid_free(db.cursor, uuid, user_id)
         db.cursor.execute(
             "SELECT * FROM discord_links WHERE discord_id = %s", (user_id,)
         )
@@ -402,7 +404,11 @@ class Manage(commands.Cog):
     ):
         await ctx.defer(ephemeral=True)
         base = (user.nick.split(' ')[0] if user.nick else '')
-        result = await asyncio.to_thread(_link_user, user.id, ign, base)
+        try:
+            result = await asyncio.to_thread(_link_user, user.id, ign, base)
+        except LinkConflictError as e:
+            await ctx.followup.send(e.user_message(), ephemeral=True)
+            return
 
         if result is None:
             # Previously getPlayerUUID(ign)[1] crashed with TypeError on a
