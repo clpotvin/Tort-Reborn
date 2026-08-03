@@ -213,10 +213,11 @@ class WebAppCommands(commands.Cog):
                     from Helpers.logger import log, ERROR as LOG_ERROR
                     log(LOG_ERROR, f"Immediate registration failed for {ign}: {e}", context="app_commands")
 
-            await update_web_poll_embed(self.client, channel.id, ":orange_circle: Registered", 0xFFE019)
             if link_conflict:
+                await update_web_poll_embed(self.client, channel.id, ":red_circle: Link Conflict", 0xE33232)
                 feedback = f"Application accepted, but NOT registered: {link_conflict.user_message()}"
             else:
+                await update_web_poll_embed(self.client, channel.id, ":orange_circle: Registered", 0xFFE019)
                 feedback = f"Application accepted. IGN: `{ign}`. Player was already in TAq — registered immediately."
 
         elif in_guild:

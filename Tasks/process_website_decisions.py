@@ -198,8 +198,12 @@ class ProcessWebsiteDecisions(commands.Cog):
                     log(ERROR, f"Immediate registration failed for {ign}: {e}",
                         context="process_website_decisions")
 
-            await update_web_poll_embed(self.client, channel.id,
-                                        ":orange_circle: Registered", 0xFFE019)
+            if linked_ok:
+                await update_web_poll_embed(self.client, channel.id,
+                                            ":orange_circle: Registered", 0xFFE019)
+            else:
+                await update_web_poll_embed(self.client, channel.id,
+                                            ":red_circle: Link Conflict", 0xE33232)
             await asyncio.to_thread(self._db_set_guild_leave, app_id, False)
 
         elif in_guild:

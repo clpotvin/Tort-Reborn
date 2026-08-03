@@ -507,6 +507,7 @@ class NewMember(Modal):
                 await msg.edit(content=e.user_message(), embed=None)
                 return
         if pdata.error:
+            db.close()
             embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
                                   description=f'Could not retrieve information of `{self.children[0].value}`.\nPlease check your spelling or try again later.',
                                   color=0xe33232)
