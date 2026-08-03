@@ -502,11 +502,12 @@ class UpdateMemberData(commands.Cog):
                 # the raids leaderboard.
                 for p in participants:
                     if not p.get('uuid'):
-                        pdata = await asyncio.to_thread(getPlayerUUID, p['ign'])
+                        ign = p.get('ign')
+                        pdata = await asyncio.to_thread(getPlayerUUID, ign) if ign else None
                         if pdata:
                             p['uuid'] = pdata[1]
                         else:
-                            log(WARN, f"Could not resolve uuid for '{p['ign']}' in queued graid log #{queue_id}; writing with NULL uuid", context="graid_queue")
+                            log(WARN, f"Could not resolve uuid for '{ign}' in queued graid log #{queue_id}; writing with NULL uuid", context="graid_queue")
 
                 # 1. DB writes (graid_logs, participants, event totals, uncollected_raids).
                 await asyncio.to_thread(_graid_log_manual_sync, participants, raid_type)
