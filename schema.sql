@@ -332,7 +332,7 @@ BEGIN
   -- the announce flag — party size no longer changes how a raid is processed.
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'graid_log_queue' AND column_name = 'announce') THEN
     ALTER TABLE graid_log_queue ADD COLUMN announce BOOLEAN NOT NULL DEFAULT TRUE;
-    UPDATE graid_log_queue SET announce = (mode = 'group');
+    UPDATE graid_log_queue SET announce = COALESCE(mode = 'group', TRUE);
   END IF;
   IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'graid_log_queue' AND column_name = 'mode') THEN
     ALTER TABLE graid_log_queue DROP COLUMN mode;
