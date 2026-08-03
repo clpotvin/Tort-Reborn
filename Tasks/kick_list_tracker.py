@@ -69,14 +69,22 @@ def _add_to_kick_list_sync(uuid: str, ign: str, tier: int, added_by: str):
         db.close()
 
 
-def _remove_from_kick_list_sync(ign: str) -> bool:
+def _remove_from_kick_list_sync(ign: str, uuid: str | None = None) -> bool:
+    """Remove by uuid when known (the table's PK — survives renames), falling
+    back to the stored name snapshot for entries added before uuid resolution
+    or when the lookup failed."""
     db = DB()
     db.connect()
     try:
-        db.cursor.execute(
-            "DELETE FROM kick_list WHERE LOWER(ign) = LOWER(%s)", (ign,)
-        )
-        removed = db.cursor.rowcount > 0
+        removed = False
+        if uuid:
+            db.cursor.execute("DELETE FROM kick_list WHERE uuid = %s", (uuid,))
+            removed = db.cursor.rowcount > 0
+        if not removed:
+            db.cursor.execute(
+                "DELETE FROM kick_list WHERE LOWER(ign) = LOWER(%s)", (ign,)
+            )
+            removed = db.cursor.rowcount > 0
         db.connection.commit()
         return removed
     finally:

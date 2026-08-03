@@ -5,6 +5,7 @@ from collections.abc import Iterable
 import discord
 
 from Helpers.database import DB
+from Helpers.functions import getPlayerUUID
 
 PARTY_COUNT = 5
 PARTY_SIZE = 10
@@ -370,9 +371,16 @@ def _assert_unique_identity(
     discord_id: int,
     ign: str,
     *,
+    uuid: str | None = None,
     exclude_member_id: int | None = None,
 ) -> None:
+    # Identity is the Minecraft uuid when known — the name comparison alone
+    # lets a renamed player hold two slots (or be blocked by someone's old name).
+    identity_sql = "(discord_id = %s OR LOWER(ign) = LOWER(%s))"
     params: list = [event_id, discord_id, ign]
+    if uuid:
+        identity_sql = "(discord_id = %s OR LOWER(ign) = LOWER(%s) OR uuid = %s)"
+        params.append(uuid)
     exclude_sql = ""
     if exclude_member_id is not None:
         exclude_sql = "AND id <> %s"
@@ -382,7 +390,7 @@ def _assert_unique_identity(
         SELECT discord_id, ign
         FROM annihilation_party_members
         WHERE event_id = %s
-          AND (discord_id = %s OR LOWER(ign) = LOWER(%s))
+          AND {identity_sql}
           {exclude_sql}
         LIMIT 1
         """,
@@ -427,12 +435,18 @@ def add_member(
     ign, build, party_number, combat_role, notes = _validate_entry_values(
         ign, build, party_number, combat_role, notes
     )
+    # Resolve the typed name's Minecraft uuid before taking the event lock —
+    # no HTTP while holding the transaction. The discord link is preferred
+    # inside the transaction; Mojang covers alts and unlinked names, so the
+    # row is never silently written without an identity.
+    player_data = getPlayerUUID(ign)
+    fallback_uuid = player_data[1] if player_data else None
     db = _db()
     try:
         _lock_open_event(db, event_id)
-        _assert_unique_identity(db, event_id, discord_id, ign)
+        uuid = _linked_uuid_for_ign(db, discord_id, ign) or fallback_uuid
+        _assert_unique_identity(db, event_id, discord_id, ign, uuid=uuid)
         slot_number = _available_slot(db, event_id, party_number)
-        uuid = _linked_uuid_for_ign(db, discord_id, ign)
         db.cursor.execute(
             """
             INSERT INTO annihilation_party_members (
@@ -507,6 +521,7 @@ def update_member(
                 event_id,
                 owner_discord_id,
                 ign,
+                uuid=uuid,
                 exclude_member_id=member_id,
             )
         else:

@@ -328,6 +328,21 @@ BEGIN
     ALTER TABLE applications ADD COLUMN app_number INT;
   END IF;
 
+  -- snipe_participants: uuid column for stable player identity (ign is a
+  -- display snapshot that goes stale on rename). Backfill from linked
+  -- discord_links rows by current name; unmatched rows stay NULL and keep
+  -- ign-keyed fallback identity.
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'snipe_participants' AND column_name = 'uuid') THEN
+    ALTER TABLE snipe_participants ADD COLUMN uuid UUID;
+    UPDATE snipe_participants sp
+    SET uuid = dl.uuid
+    FROM discord_links dl
+    WHERE sp.uuid IS NULL
+      AND dl.linked = TRUE
+      AND dl.uuid IS NOT NULL
+      AND LOWER(dl.ign) = LOWER(sp.ign);
+  END IF;
+
   -- graid_log_queue: the old mode column ('group'/'individual') is replaced by
   -- the announce flag — party size no longer changes how a raid is processed.
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'graid_log_queue' AND column_name = 'announce') THEN
@@ -467,6 +482,11 @@ CREATE TABLE IF NOT EXISTS annihilation_party_members (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_annihilation_party_members_ign
   ON annihilation_party_members(event_id, LOWER(ign));
+
+-- The name index alone cannot stop a renamed player from holding two slots;
+-- the uuid is the stable identity when resolvable.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_annihilation_party_members_uuid
+  ON annihilation_party_members(event_id, uuid) WHERE uuid IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_annihilation_party_members_party
   ON annihilation_party_members(event_id, party_number, party_joined_at, id);
@@ -669,13 +689,16 @@ END $$;
 
 CREATE TABLE IF NOT EXISTS snipe_participants (
   snipe_id    INT         NOT NULL REFERENCES snipe_logs(id) ON DELETE CASCADE,
-  ign         VARCHAR(64) NOT NULL,
+  ign         VARCHAR(64) NOT NULL,   -- display snapshot at log time
+  uuid        UUID,                   -- player identity; ign-keyed fallback when NULL
   role        VARCHAR(10) NOT NULL,
   PRIMARY KEY (snipe_id, ign)
 );
 
 CREATE INDEX IF NOT EXISTS idx_snipe_participants_ign
   ON snipe_participants(ign);
+CREATE INDEX IF NOT EXISTS idx_snipe_participants_uuid
+  ON snipe_participants(uuid);
 
 CREATE INDEX IF NOT EXISTS idx_snipe_logs_sniped_at
   ON snipe_logs(sniped_at DESC);

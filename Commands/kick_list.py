@@ -68,7 +68,11 @@ class KickList(commands.Cog):
     ):
         await ctx.interaction.response.defer(ephemeral=True)
 
-        removed = await asyncio.to_thread(_remove_from_kick_list_sync, ign)
+        # Resolve the current name to a uuid so a renamed player can still be
+        # removed — the stored ign is a snapshot from when they were added.
+        result = await asyncio.to_thread(getPlayerUUID, ign)
+        uuid = result[1] if result else None
+        removed = await asyncio.to_thread(_remove_from_kick_list_sync, ign, uuid)
         if not removed:
             await ctx.followup.send(
                 f"**{discord.utils.escape_markdown(ign)}** was not found on the kick list.", ephemeral=True
