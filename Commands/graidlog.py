@@ -116,6 +116,11 @@ class GraidCommands(commands.Cog):
             for m in current_members
             if m.get('name') or m.get('username')
         }
+        uuid_by_name = {
+            (m.get('name') or m.get('username') or '').casefold(): m.get('uuid')
+            for m in current_members
+            if m.get('name') or m.get('username')
+        }
 
         if not current_names:
             await ctx.followup.send(':no_entry: Guild member data unavailable. Try again later.', ephemeral=True)
@@ -154,28 +159,35 @@ class GraidCommands(commands.Cog):
             )
             log_id = cur.fetchone()[0]
 
+            # Identity comes from the live guild data the players were just
+            # validated against — discord_links.ign can lag a rename, and a
+            # missed uuid here silently costs the player event points and payout.
+            uuids = {}
             for ign in players:
-                cur.execute("SELECT uuid FROM discord_links WHERE LOWER(ign) = LOWER(%s)", (ign,))
-                uuid_row = cur.fetchone()
-                uuid_val = uuid_row[0] if uuid_row else None
+                uuid_val = uuid_by_name.get(ign.casefold())
+                if not uuid_val:
+                    cur.execute("SELECT uuid FROM discord_links WHERE LOWER(ign) = LOWER(%s)", (ign,))
+                    uuid_row = cur.fetchone()
+                    uuid_val = uuid_row[0] if uuid_row else None
+                uuids[ign] = uuid_val
+
+            for ign in players:
                 cur.execute(
                     "INSERT INTO graid_log_participants (log_id, uuid, ign) VALUES (%s, %s, %s)",
-                    (log_id, uuid_val, ign)
+                    (log_id, uuids[ign], ign)
                 )
 
             # Upsert totals if event is active
             if event_id is not None:
                 for ign in players:
-                    cur.execute("SELECT uuid FROM discord_links WHERE LOWER(ign) = LOWER(%s)", (ign,))
-                    uuid_row = cur.fetchone()
-                    if uuid_row and uuid_row[0]:
+                    if uuids[ign]:
                         cur.execute("""
                             INSERT INTO graid_event_totals (event_id, uuid, total)
                             VALUES (%s, %s, 1)
                             ON CONFLICT (event_id, uuid) DO UPDATE
                               SET total = graid_event_totals.total + 1,
                                   last_updated = NOW()
-                        """, (event_id, uuid_row[0]))
+                        """, (event_id, uuids[ign]))
 
             db.connection.commit()
         finally:
@@ -194,8 +206,13 @@ class GraidCommands(commands.Cog):
             )
             await channel.send(embed=embed)
 
+        unresolved = [p for p in players if not uuids.get(p)]
+        warning = (
+            f"\n:warning: No uuid resolved for {', '.join(f'`{p}`' for p in unresolved)} — "
+            f"logged without event credit; link the account and re-check."
+        ) if unresolved else ""
         await ctx.followup.send(
-            f":white_check_mark: Logged **{raid_type}** raid with {', '.join(discord.utils.escape_markdown(p) for p in players)}",
+            f":white_check_mark: Logged **{raid_type}** raid with {', '.join(discord.utils.escape_markdown(p) for p in players)}{warning}",
             ephemeral=True,
         )
 

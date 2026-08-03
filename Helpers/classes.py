@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timezone
 import json
 import os
@@ -469,16 +470,40 @@ class LinkAccount(Modal):
         self.add_item(InputText(label="Player's Name", placeholder="Player's In-Game Name without rank"))
 
     async def callback(self, interaction: discord.Interaction):
+        # The uuid lookup is HTTP and can outlast Discord's 3s initial response
+        # window — defer first, respond via followups only.
+        await interaction.response.defer(ephemeral=True)
+
+        # Resolve the Minecraft uuid up front — a row without one is invisible
+        # to every uuid-keyed join (shells snapshot, raid credit, profiles).
+        ign = self.children[0].value
+        player_data = await asyncio.to_thread(getPlayerUUID, ign)
+        uuid = player_data[1] if player_data else None
+        canonical_ign = player_data[0] if player_data else ign
+
         db = DB()
         db.connect()
-        db.cursor.execute(
-            'INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES (%s, %s, %s, %s)',
-            (self.user.id, self.children[0].value, False, self.rank)
-        )
-        db.connection.commit()
-        await self.user.edit(nick=f"{self.rank} {self.children[0].value}")
-        await interaction.response.send_message(f'{self.added}\n\n{self.removed}', ephemeral=True)
-        db.close()
+        try:
+            if uuid:
+                assert_uuid_free(db.cursor, uuid, self.user.id)
+            db.cursor.execute(
+                'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank) VALUES (%s, %s, %s, %s, %s)',
+                (self.user.id, canonical_ign, uuid, False, self.rank)
+            )
+            db.connection.commit()
+        except LinkConflictError as e:
+            await interaction.followup.send(e.user_message(), ephemeral=True)
+            return
+        finally:
+            db.close()
+        message = f'{self.added}\n\n{self.removed}'
+        try:
+            await self.user.edit(nick=f"{self.rank} {canonical_ign}")
+        except (discord.Forbidden, discord.HTTPException):
+            message += "\n\n:warning: Could not update the nickname (missing permissions) — set it manually."
+        if not uuid:
+            message += f"\n\n:warning: Could not resolve a Minecraft account for `{ign}` — linked without a uuid; re-link once the name is confirmed."
+        await interaction.followup.send(message, ephemeral=True)
 
 
 class NewMember(Modal):
