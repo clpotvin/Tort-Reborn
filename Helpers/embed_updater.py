@@ -1,8 +1,16 @@
 import asyncio
 
+from Helpers.app_transcript import CLOSED_POLL_STATUS
 from Helpers.database import DB
 from Helpers.poll_edit import safe_edit_poll
 from Helpers.variables import MEMBER_APP_CHANNEL_ID, HAMMERHEAD_APP_CHANNEL_ID
+
+
+def is_poll_status_downgrade(current_status, new_status):
+    """Closed is terminal: never regress a closed ticket to an earlier lifecycle
+    state (e.g. auto-registration completing after the ticket was closed). A
+    regressed poll_status stalls the auto-transcribe queue. Pure."""
+    return current_status == CLOSED_POLL_STATUS and new_status != CLOSED_POLL_STATUS
 
 
 async def update_web_poll_embed(client, channel_id: int, new_status: str, colour: int):
@@ -13,21 +21,30 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
         try:
             db.connect()
             db.cursor.execute(
-                "SELECT id, poll_message_id FROM applications WHERE channel_id = %s", (cid,)
+                "SELECT id, poll_message_id, poll_status FROM applications WHERE channel_id = %s",
+                (cid,),
             )
             row = db.cursor.fetchone()
-            return (row[0], row[1]) if row else (None, None)
+            return (row[0], row[1], row[2]) if row else (None, None, None)
         finally:
             db.close()
 
     def _update_db_status(cid, status):
+        """Atomic form of the downgrade guard: the pre-read check above is
+        advisory only (another call can close the ticket between the read and
+        this write), so the UPDATE itself refuses to regress a Closed ticket.
+        Returns True when the row was actually updated."""
         db = DB()
         try:
             db.connect()
             db.cursor.execute(
-                "UPDATE applications SET poll_status = %s WHERE channel_id = %s", (status, cid)
+                "UPDATE applications SET poll_status = %s "
+                "WHERE channel_id = %s AND NOT (poll_status = %s AND %s <> %s)",
+                (status, cid, CLOSED_POLL_STATUS, status, CLOSED_POLL_STATUS),
             )
+            updated = db.cursor.rowcount > 0
             db.connection.commit()
+            return updated
         finally:
             db.close()
 
@@ -50,7 +67,9 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
         finally:
             db.close()
 
-    app_id, poll_message_id = await asyncio.to_thread(_fetch_poll_data, channel_id)
+    app_id, poll_message_id, current_status = await asyncio.to_thread(_fetch_poll_data, channel_id)
+    if is_poll_status_downgrade(current_status, new_status):
+        return
     if not poll_message_id:
         return
 
@@ -83,7 +102,8 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
                 if not found_votes:
                     embed.add_field(name="Votes", value=vote_text, inline=False)
 
-    await asyncio.to_thread(_update_db_status, channel_id, new_status)
+    if not await asyncio.to_thread(_update_db_status, channel_id, new_status):
+        return
     await safe_edit_poll(exec_chan, poll_message_id, modify_embed=_modify, include_view=False)
 
 

@@ -27,8 +27,8 @@ class TranscriptError(Exception):
 def classify_transcript_candidate(head, now, delay=AUTO_TRANSCRIBE_DELAY):
     """Decide what to do with the lowest un-transcribed ticket (`head`).
 
-    `head` is a dict with keys `poll_status`, `channel_id`, `effective_closed_at`,
-    or None when there is no un-transcribed ticket.
+    `head` is a dict with keys `poll_status`, `channel_id`, `closed_at`,
+    `effective_closed_at`, or None when there is no un-transcribed ticket.
 
     Returns:
         "none"       -- nothing to do
@@ -38,7 +38,15 @@ def classify_transcript_candidate(head, now, delay=AUTO_TRANSCRIBE_DELAY):
     """
     if head is None:
         return "none"
-    if head.get("poll_status") != CLOSED_POLL_STATUS:
+    # A ticket counts as closed if poll_status says so OR closed_at is stamped.
+    # closed_at is written once when the channel enters Closed Applications and
+    # never regresses, so it wins over poll_status, which later lifecycle writers
+    # (e.g. auto-registration finishing after the close) can clobber.
+    is_closed = (
+        head.get("poll_status") == CLOSED_POLL_STATUS
+        or head.get("closed_at") is not None
+    )
+    if not is_closed:
         return "wait"  # still open -> blocks higher tickets (strict order)
     if not head.get("channel_id"):
         return "skip"  # closed but nothing to transcribe
