@@ -259,7 +259,7 @@ class CheckApps(commands.Cog):
         try:
             db.cursor.execute(
                 """SELECT id, app_number, application_type, discord_id, discord_username,
-                          status, answers, poll_status, channel_id,
+                          status, answers, poll_status, channel_id, closed_at,
                           COALESCE(closed_at, reviewed_at) AS effective_closed_at
                      FROM applications
                     WHERE application_type IN ('guild', 'community')
@@ -276,7 +276,7 @@ class CheckApps(commands.Cog):
             return None
 
         (app_id, app_number, application_type, discord_id, discord_username,
-         status, answers, poll_status, channel_id, effective_closed_at) = row
+         status, answers, poll_status, channel_id, closed_at, effective_closed_at) = row
         if isinstance(answers, str):
             answers = json.loads(answers)
         return {
@@ -289,6 +289,7 @@ class CheckApps(commands.Cog):
             "answers": answers or {},
             "poll_status": poll_status,
             "channel_id": channel_id,
+            "closed_at": closed_at,
             "effective_closed_at": effective_closed_at,
         }
 

@@ -14,6 +14,7 @@ def _head(**overrides):
     base = {
         "poll_status": CLOSED_POLL_STATUS,
         "channel_id": 123,
+        "closed_at": NOW - datetime.timedelta(days=4),
         "effective_closed_at": NOW - datetime.timedelta(days=4),
     }
     base.update(overrides)
@@ -25,7 +26,41 @@ def test_none_when_no_head():
 
 
 def test_wait_when_head_still_open():
-    assert classify_transcript_candidate(_head(poll_status=":green_circle: Received"), NOW) == "wait"
+    head = _head(poll_status=":green_circle: Received", closed_at=None, effective_closed_at=None)
+    assert classify_transcript_candidate(head, NOW) == "wait"
+
+
+def test_transcribe_when_closed_at_set_despite_stale_poll_status():
+    # Regression: auto-registration completing after close overwrote poll_status
+    # (Closed -> Registered) and stalled the queue. closed_at is stamped once and
+    # never regresses, so it wins over poll_status.
+    head = _head(poll_status=":orange_circle: Registered")
+    assert classify_transcript_candidate(head, NOW) == "transcribe"
+
+
+def test_skip_when_closed_at_set_stale_poll_status_and_no_channel():
+    head = _head(poll_status=":orange_circle: Registered", channel_id=None)
+    assert classify_transcript_candidate(head, NOW) == "skip"
+
+
+def test_wait_when_closed_at_set_but_delay_not_elapsed():
+    head = _head(
+        poll_status=":orange_circle: Registered",
+        closed_at=NOW - datetime.timedelta(days=2),
+        effective_closed_at=NOW - datetime.timedelta(days=2),
+    )
+    assert classify_transcript_candidate(head, NOW) == "wait"
+
+
+def test_wait_when_reviewed_but_not_closed():
+    # reviewed_at feeds effective_closed_at via COALESCE; a reviewed-but-open
+    # ticket (no closed_at, poll_status not Closed) must still wait.
+    head = _head(
+        poll_status=":orange_circle: Accepted",
+        closed_at=None,
+        effective_closed_at=NOW - datetime.timedelta(days=10),
+    )
+    assert classify_transcript_candidate(head, NOW) == "wait"
 
 
 def test_skip_when_no_channel():

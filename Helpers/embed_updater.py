@@ -1,8 +1,16 @@
 import asyncio
 
+from Helpers.app_transcript import CLOSED_POLL_STATUS
 from Helpers.database import DB
 from Helpers.poll_edit import safe_edit_poll
 from Helpers.variables import MEMBER_APP_CHANNEL_ID, HAMMERHEAD_APP_CHANNEL_ID
+
+
+def is_poll_status_downgrade(current_status, new_status):
+    """Closed is terminal: never regress a closed ticket to an earlier lifecycle
+    state (e.g. auto-registration completing after the ticket was closed). A
+    regressed poll_status stalls the auto-transcribe queue. Pure."""
+    return current_status == CLOSED_POLL_STATUS and new_status != CLOSED_POLL_STATUS
 
 
 async def update_web_poll_embed(client, channel_id: int, new_status: str, colour: int):
@@ -13,10 +21,11 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
         try:
             db.connect()
             db.cursor.execute(
-                "SELECT id, poll_message_id FROM applications WHERE channel_id = %s", (cid,)
+                "SELECT id, poll_message_id, poll_status FROM applications WHERE channel_id = %s",
+                (cid,),
             )
             row = db.cursor.fetchone()
-            return (row[0], row[1]) if row else (None, None)
+            return (row[0], row[1], row[2]) if row else (None, None, None)
         finally:
             db.close()
 
@@ -50,7 +59,9 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
         finally:
             db.close()
 
-    app_id, poll_message_id = await asyncio.to_thread(_fetch_poll_data, channel_id)
+    app_id, poll_message_id, current_status = await asyncio.to_thread(_fetch_poll_data, channel_id)
+    if is_poll_status_downgrade(current_status, new_status):
+        return
     if not poll_message_id:
         return
 
