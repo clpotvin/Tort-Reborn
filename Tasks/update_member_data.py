@@ -462,7 +462,7 @@ class UpdateMemberData(commands.Cog):
             db = _db_connect_with_retry()
             try:
                 db.cursor.execute("""
-                    SELECT id, raid_type, mode, participants
+                    SELECT id, raid_type, announce, participants
                     FROM graid_log_queue
                     WHERE status = 'pending'
                     ORDER BY created_at
@@ -483,7 +483,7 @@ class UpdateMemberData(commands.Cog):
 
         log(INFO, f"Processing {len(rows)} queued graid log(s)", context="graid_queue")
 
-        for queue_id, raid_type, mode, participants_data in rows:
+        for queue_id, raid_type, announce, participants_data in rows:
             try:
                 # JSONB columns come back as already-parsed objects from psycopg,
                 # but tolerate the string case just in case.
@@ -498,10 +498,10 @@ class UpdateMemberData(commands.Cog):
                 # 1. DB writes (graid_logs, participants, event totals, uncollected_raids).
                 await asyncio.to_thread(_graid_log_manual_sync, participants, raid_type)
 
-                # 2. Discord announcement — match the website's previous behavior:
-                # only post for full groups with a known raid type. Individual logs are
-                # silent (they're for fixing missed/desynced raids, not announcements).
-                if mode == 'group' and raid_type:
+                # 2. Discord announcement — only when requested and the raid type
+                # is known. Unknown-type raids are silent fix-ups for missed or
+                # desynced raids, whatever the party size.
+                if announce and raid_type:
                     names = [p['ign'] for p in participants]
                     await self._post_raid_announcement(raid_type, names, guild)
 
@@ -517,7 +517,7 @@ class UpdateMemberData(commands.Cog):
                     finally:
                         db.close()
                 await asyncio.to_thread(_mark_done, queue_id)
-                log(INFO, f"Processed queued graid log #{queue_id} ({raid_type or 'Unknown'}, {mode})", context="graid_queue")
+                log(INFO, f"Processed queued graid log #{queue_id} ({raid_type or 'Unknown'}, {'announced' if announce and raid_type else 'silent'})", context="graid_queue")
 
             except Exception as e:
                 log(ERROR, f"Failed to process queued graid log #{queue_id}: {e}", context="graid_queue")
