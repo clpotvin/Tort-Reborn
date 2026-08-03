@@ -1022,7 +1022,8 @@ def _format_participants_log(pairs: list[tuple[str, str]]) -> str:
     parts = []
     for role in _ROLE_ORDER:
         if role in grouped:
-            parts.append(f"{' '.join(grouped[role])} {role}")
+            names = ' '.join(discord.utils.escape_markdown(ign) for ign in grouped[role])
+            parts.append(f"{names} {role}")
     return ' / '.join(parts)
 
 

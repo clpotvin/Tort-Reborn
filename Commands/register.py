@@ -91,7 +91,7 @@ class Register(commands.Cog):
         await asyncio.to_thread(self._upsert_ally_link, user.id, canonical_ign, uuid, rank)
 
         await ctx.followup.send(
-            f'Registered {user.mention} as **{rank} {canonical_ign}** for **{guild}**.',
+            f'Registered {user.mention} as **{rank} {discord.utils.escape_markdown(canonical_ign)}** for **{guild}**.',
             ephemeral=True,
         )
 

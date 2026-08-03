@@ -38,7 +38,7 @@ class KickList(commands.Cog):
 
         result = await asyncio.to_thread(getPlayerUUID, ign)
         if not result:
-            await ctx.followup.send(f"Could not find player **{ign}**.", ephemeral=True)
+            await ctx.followup.send(f"Could not find player **{discord.utils.escape_markdown(ign)}**.", ephemeral=True)
             return
 
         username, uuid = result
@@ -55,7 +55,7 @@ class KickList(commands.Cog):
         await asyncio.to_thread(_add_to_kick_list_sync, uuid, username, tier, added_by)
         priority = {1: "High", 2: "Medium", 3: "Low"}[tier]
         await ctx.followup.send(
-            f"Added **{username}** to the kick list ({priority} Priority).", ephemeral=True
+            f"Added **{discord.utils.escape_markdown(username)}** to the kick list ({priority} Priority).", ephemeral=True
         )
 
         await refresh_kick_list_message(self.client)
@@ -71,12 +71,12 @@ class KickList(commands.Cog):
         removed = await asyncio.to_thread(_remove_from_kick_list_sync, ign)
         if not removed:
             await ctx.followup.send(
-                f"**{ign}** was not found on the kick list.", ephemeral=True
+                f"**{discord.utils.escape_markdown(ign)}** was not found on the kick list.", ephemeral=True
             )
             return
 
         await ctx.followup.send(
-            f"Removed **{ign}** from the kick list.", ephemeral=True
+            f"Removed **{discord.utils.escape_markdown(ign)}** from the kick list.", ephemeral=True
         )
 
         await refresh_kick_list_message(self.client)

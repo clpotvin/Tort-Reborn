@@ -423,8 +423,8 @@ class TerritoryTracker(commands.Cog):
 
                         # get the guild that took the territory and build message
                         if lost_terr:
-                            attacker = new_data.get(lost_terr, {}).get("guild", {}).get("name", "Unknown")
-                            attacker_prefix = new_data.get(lost_terr, {}).get("guild", {}).get("prefix", "???")
+                            attacker = discord.utils.escape_markdown(new_data.get(lost_terr, {}).get("guild", {}).get("name", "Unknown"))
+                            attacker_prefix = discord.utils.escape_markdown(new_data.get(lost_terr, {}).get("guild", {}).get("prefix", "???"))
                             if should_ping_spearhead:
                                 mention = f"<@&{SPEARHEAD_ROLE_ID}>"
                                 msg = f"{mention} **Attack on {claim_name}!** {terr_type.capitalize()} **{lost_terr}** taken by **{attacker} [{attacker_prefix}]**"
@@ -506,7 +506,7 @@ class TerritoryTracker(commands.Cog):
                             # Send congratulations message to military channel (no ping)
                             alert_chan = self.client.get_channel(MILITARY_CHANNEL_ID)
                             if alert_chan:
-                                congrats_msg = f"🎉 Congratulations on a successful snipe of **{claim_name}** owned by **{old['owner']}**!"
+                                congrats_msg = f"🎉 Congratulations on a successful snipe of **{claim_name}** owned by **{discord.utils.escape_markdown(old['owner'])}**!"
                                 await alert_chan.send(congrats_msg)
                         elif DEBUG_HQ_CONGRATS:
                             log(INFO,

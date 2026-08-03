@@ -384,7 +384,7 @@ class CheckWebsiteApps(commands.Cog):
                     filename = f"{channel_label}-{pdata.UUID}.png"
                     player_info_file = discord.File(buf, filename=filename)
                     poll_embed.set_image(url=f"attachment://{filename}")
-                    poll_embed.title = f"Application {channel_label} ({pdata.username})"
+                    poll_embed.title = f"Application {channel_label} ({discord.utils.escape_markdown(pdata.username)})"
 
                     # Check blacklist
                     blacklist = get_blacklist()
@@ -392,7 +392,7 @@ class CheckWebsiteApps(commands.Cog):
                         if pdata.UUID == player["UUID"]:
                             desc = (
                                 f":no_entry: Player present on blacklist!\n"
-                                f"**Name:** {pdata.username}\n**UUID:** {pdata.UUID}"
+                                f"**Name:** {discord.utils.escape_markdown(pdata.username)}\n**UUID:** {pdata.UUID}"
                             )
                             if player.get("reason"):
                                 desc += f"\n**Reason:** {player['reason']}"
@@ -428,7 +428,7 @@ class CheckWebsiteApps(commands.Cog):
 
         # Post the application content in the thread
         stats_line = f"<https://wynncraft.com/stats/player/{ign}>\n" if ign else ""
-        thread_header = f"**Application from {mention} ({discord_username}):**\n{stats_line}\n"
+        thread_header = f"**Application from {mention} ({discord.utils.escape_markdown(discord_username)}):**\n{stats_line}\n"
         thread_combined = f"{thread_header}{formatted}"
         if len(thread_combined) <= 2000:
             await thread.send(thread_combined)
@@ -490,12 +490,12 @@ class CheckWebsiteApps(commands.Cog):
         for i, desc in enumerate(embeds_data):
             part_label = f"(Part {i + 1}/{total_parts})" if total_parts > 1 else ""
             embed = discord.Embed(
-                title=f"Hammerhead Application - {ign} {part_label}",
+                title=f"Hammerhead Application - {discord.utils.escape_markdown(ign)} {part_label}",
                 description=desc,
                 colour=0x04B0EB,  # Hammerhead rank colour
             )
             if i == 0:
-                embed.add_field(name="Applicant", value=f"{mention} ({discord_username})", inline=True)
+                embed.add_field(name="Applicant", value=f"{mention} ({discord.utils.escape_markdown(discord_username)})", inline=True)
                 embed.add_field(name="Type", value="Hammerhead", inline=True)
             if i == total_parts - 1:
                 embed.add_field(name="Status", value=":green_circle: Received", inline=True)
