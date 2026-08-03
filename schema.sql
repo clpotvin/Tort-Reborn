@@ -234,7 +234,7 @@ CREATE TABLE IF NOT EXISTS graid_raid_offsets (
 CREATE TABLE IF NOT EXISTS graid_log_queue (
   id               SERIAL      PRIMARY KEY,
   raid_type        VARCHAR(40),                 -- Full raid name, NULL = unknown
-  mode             VARCHAR(16) NOT NULL,        -- 'group' or 'individual'
+  announce         BOOLEAN     NOT NULL DEFAULT TRUE,  -- post to Discord (only honored for known raid types)
   participants     JSONB       NOT NULL,        -- [{uuid: "..."|null, ign: "..."}, ...]
   submitted_by     BIGINT,                      -- Discord ID of the submitter
   submitted_by_ign VARCHAR(64),
@@ -326,6 +326,16 @@ BEGIN
   -- applications: app_number column for persistent counter-based naming
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'app_number') THEN
     ALTER TABLE applications ADD COLUMN app_number INT;
+  END IF;
+
+  -- graid_log_queue: the old mode column ('group'/'individual') is replaced by
+  -- the announce flag — party size no longer changes how a raid is processed.
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'graid_log_queue' AND column_name = 'announce') THEN
+    ALTER TABLE graid_log_queue ADD COLUMN announce BOOLEAN NOT NULL DEFAULT TRUE;
+    UPDATE graid_log_queue SET announce = (mode = 'group');
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'graid_log_queue' AND column_name = 'mode') THEN
+    ALTER TABLE graid_log_queue DROP COLUMN mode;
   END IF;
 END $$;
 
