@@ -403,7 +403,9 @@ def _assert_unique_identity(
         raise AnnihilationPartyError(
             "You already have an entry. Use **Modify entry** instead"
         )
-    raise AnnihilationPartyError(f"`{ign}` is already registered for this event.")
+    # A uuid match can surface a row under a different (older) name — report
+    # the name actually on the board, not the one that was typed.
+    raise AnnihilationPartyError(f"`{row[1]}` is already registered for this event.")
 
 
 def _available_slot(db: DB, event_id: int, party_number: int) -> int:

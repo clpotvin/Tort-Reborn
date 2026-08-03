@@ -247,3 +247,103 @@ def test_pycord_28_modal_contains_native_selects():
     assert modal.get_item("scrolls").options
     assert any(option.default for option in modal.get_item("scrolls").options)
     assert modal.get_item("ign") is None
+
+
+# ── uuid-based signup dedup (_assert_unique_identity) ────────────────────────
+
+class _FakeIdentityCursor:
+    """Replays one fetchone result and records the executed identity query."""
+
+    def __init__(self, row):
+        self.row = row
+        self.queries = []
+
+    def execute(self, sql, params=None):
+        self.queries.append((sql, params))
+
+    def fetchone(self):
+        return self.row
+
+
+class _FakeIdentityDB:
+    def __init__(self, row):
+        self.cursor = _FakeIdentityCursor(row)
+
+
+def test_unique_identity_matches_by_uuid_and_reports_board_name():
+    from Helpers.annihilation_parties import _assert_unique_identity
+
+    db = _FakeIdentityDB((999, "OldName"))
+    with pytest.raises(AnnihilationPartyError) as excinfo:
+        _assert_unique_identity(
+            db, 1, 42, "NewName", uuid="110c11c8-d8b7-478d-8adf-b0f606d5f939"
+        )
+    # The message names the row already on the board, not the typed name.
+    assert "OldName" in str(excinfo.value)
+    sql, params = db.cursor.queries[0]
+    assert "uuid = %s" in sql
+    assert params == (1, 42, "NewName", "110c11c8-d8b7-478d-8adf-b0f606d5f939")
+
+
+def test_unique_identity_without_uuid_keeps_name_only_match():
+    from Helpers.annihilation_parties import _assert_unique_identity
+
+    db = _FakeIdentityDB(None)
+    _assert_unique_identity(db, 1, 42, "SomeName")
+    sql, params = db.cursor.queries[0]
+    assert "uuid" not in sql
+    assert params == (1, 42, "SomeName")
+
+
+def test_unique_identity_same_discord_id_reports_own_entry():
+    from Helpers.annihilation_parties import _assert_unique_identity
+
+    db = _FakeIdentityDB((42, "SomeName"))
+    with pytest.raises(AnnihilationPartyError) as excinfo:
+        _assert_unique_identity(db, 1, 42, "SomeName", uuid="abc")
+    assert "already have an entry" in str(excinfo.value)
+
+
+def test_add_member_prefers_link_but_falls_back_to_mojang(monkeypatch):
+    import Helpers.annihilation_parties as ap
+
+    # No linked account row → the pre-lock Mojang resolution must supply the uuid.
+    captured = {}
+
+    class _Cursor:
+        def execute(self, sql, params=None):
+            self.sql = sql
+            self.params = params
+            if "INSERT INTO annihilation_party_members" in sql:
+                captured["insert_params"] = params
+
+        def fetchone(self):
+            if "INSERT INTO annihilation_party_members" in getattr(self, "sql", ""):
+                return (77,)
+            return None
+
+        def fetchall(self):
+            return []
+
+    class _DB:
+        cursor = _Cursor()
+
+        def close(self):
+            pass
+
+        class connection:
+            @staticmethod
+            def commit():
+                pass
+
+    monkeypatch.setattr(ap, "_db", lambda: _DB())
+    monkeypatch.setattr(ap, "_lock_open_event", lambda db, event_id: None)
+    monkeypatch.setattr(ap, "_available_slot", lambda db, event_id, party: 1)
+    monkeypatch.setattr(ap, "getPlayerUUID", lambda ign: [ign, "967a422d-60bc-4cc6-8fff-c2d067f841eb"])
+
+    member_id = ap.add_member(
+        event_id=1, discord_id=42, ign="RestlessFish080", build="Trapper",
+        party_number=1, combat_role=None, bringing_scrolls=False, notes=None,
+    )
+    assert member_id == 77
+    assert "967a422d-60bc-4cc6-8fff-c2d067f841eb" in captured["insert_params"]

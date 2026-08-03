@@ -324,15 +324,21 @@ BEGIN
     ALTER TABLE new_app ADD COLUMN app_message_id BIGINT;
   END IF;
   -- applications: app_number column for persistent counter-based naming
-  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'app_number') THEN
+  -- (table-existence guard: on a fresh database the table is created later
+  -- in this file, with the column already present)
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'applications')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'applications' AND column_name = 'app_number') THEN
     ALTER TABLE applications ADD COLUMN app_number INT;
   END IF;
 
   -- snipe_participants: uuid column for stable player identity (ign is a
   -- display snapshot that goes stale on rename). Backfill from linked
   -- discord_links rows by current name; unmatched rows stay NULL and keep
-  -- ign-keyed fallback identity.
-  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'snipe_participants' AND column_name = 'uuid') THEN
+  -- ign-keyed fallback identity. The table-existence guard matters: this DO
+  -- block runs before the CREATE TABLE further down, so on a fresh database
+  -- there is nothing to migrate (the CREATE already includes the column).
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'snipe_participants')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'snipe_participants' AND column_name = 'uuid') THEN
     ALTER TABLE snipe_participants ADD COLUMN uuid UUID;
     UPDATE snipe_participants sp
     SET uuid = dl.uuid
@@ -357,20 +363,24 @@ END $$;
 -- Re-runnable on every replay: resolve remaining NULL-uuid snipe rows from
 -- unambiguous (uuid, name) pairs in the raid logs — a name-history source
 -- that covers snapshots older than the player's current name, which the
--- discord_links backfill above can never match.
-UPDATE snipe_participants sp
-SET uuid = h.uuid
-FROM (
-  SELECT LOWER(ign) AS name_key, MIN(uuid::text)::uuid AS uuid
-  FROM graid_log_participants
-  WHERE uuid IS NOT NULL AND ign IS NOT NULL
-  GROUP BY LOWER(ign)
-  HAVING COUNT(DISTINCT uuid) = 1
-) h
-WHERE sp.uuid IS NULL AND h.name_key = LOWER(sp.ign);
+-- discord_links backfill above can never match. Guarded because this runs
+-- before the snipe tables are created on a fresh database.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'snipe_participants') THEN
+    UPDATE snipe_participants sp
+    SET uuid = h.uuid
+    FROM (
+      SELECT LOWER(ign) AS name_key, MIN(uuid::text)::uuid AS uuid
+      FROM graid_log_participants
+      WHERE uuid IS NOT NULL AND ign IS NOT NULL
+      GROUP BY LOWER(ign)
+      HAVING COUNT(DISTINCT uuid) = 1
+    ) h
+    WHERE sp.uuid IS NULL AND h.name_key = LOWER(sp.ign);
+  END IF;
+END $$;
 
--- Seed app_counter if missing (won't overwrite existing value)
-INSERT INTO bot_settings (key, value) VALUES ('app_counter', '3725') ON CONFLICT DO NOTHING;
 
 -- =============================================================================
 -- Guild Bank Transactions
@@ -628,6 +638,9 @@ CREATE TABLE IF NOT EXISTS bot_settings (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
+
+-- Seed app_counter if missing (won't overwrite existing value)
+INSERT INTO bot_settings (key, value) VALUES ('app_counter', '3725') ON CONFLICT DO NOTHING;
 
 -- =============================================================================
 -- Promotion Queue
