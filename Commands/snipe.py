@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from Helpers.classes import Guild, Page, PlayerStats
 from Helpers.database import DB, get_current_guild_data
-from Helpers.functions import addLine, generate_badge, get_guild_color, vertical_gradient, round_corners, timed_get
+from Helpers.functions import addLine, generate_badge, get_guild_color, getPlayerUUID, vertical_gradient, round_corners, timed_get
 from Helpers.logger import log, ERROR
 from Helpers.snipe_utils import ALL_TERRITORY_NAMES, display_hq, is_dry, normalize_hq_for_storage
 from Helpers.variables import ALL_GUILD_IDS, HQ_TEAM_ROLE_ID, TAQ_GUILD_ID, SNIPE_LOG_CHANNEL_ID, discord_ranks
@@ -147,6 +147,89 @@ def _resolve_igns(db, igns: list[str]) -> dict[str, str]:
     return {row[0].lower(): row[0] for row in db.cursor.fetchall()}
 
 
+def _ident_key(alias: str = 'sp') -> str:
+    """Identity key expression for grouping/dedup across players:
+    the uuid when known, the lowercased ign snapshot otherwise."""
+    return f"COALESCE({alias}.uuid::text, 'ign:' || LOWER({alias}.ign))"
+
+
+def _norm_uuid(value) -> str | None:
+    """Normalize a uuid to undashed lowercase for comparisons across sources."""
+    return str(value).replace('-', '').lower() if value else None
+
+
+def _resolve_uuid_db(db, ign: str) -> str | None:
+    """Resolve a current IGN to a Minecraft uuid via discord_links (kept fresh
+    by the rename-sync loop). Only an unambiguous answer counts: several rows
+    may share a name (stale unlinked history), so return the single distinct
+    uuid, or the single LINKED row's uuid, and otherwise None so the caller
+    falls back to the Mojang lookup instead of guessing."""
+    db.cursor.execute(
+        'SELECT uuid, linked FROM discord_links WHERE LOWER(ign) = LOWER(%s) AND uuid IS NOT NULL',
+        (ign,)
+    )
+    rows = db.cursor.fetchall()
+    uuids = {str(row[0]) for row in rows}
+    if len(uuids) == 1:
+        return next(iter(uuids))
+    linked_uuids = {str(row[0]) for row in rows if row[1]}
+    if len(linked_uuids) == 1:
+        return next(iter(linked_uuids))
+    return None
+
+
+async def _resolve_identity(db, ign: str) -> tuple[str, str | None]:
+    """Resolve an input IGN to (display ign, uuid or None).
+
+    The uuid comes from discord_links, falling back to the Mojang/Wynncraft
+    lookup for names not linked (e.g. ex-members); both may fail. The display
+    ign is the most recent snipe_participants snapshot for that identity,
+    falling back to the stored casing for the name, then the input as typed.
+    """
+    uuid = _resolve_uuid_db(db, ign)
+    if uuid is None:
+        looked_up = await asyncio.to_thread(getPlayerUUID, ign)
+        if looked_up:
+            uuid = looked_up[1]
+    if uuid is not None:
+        db.cursor.execute(
+            'SELECT ign FROM snipe_participants WHERE uuid = %s ORDER BY snipe_id DESC LIMIT 1',
+            (uuid,)
+        )
+        row = db.cursor.fetchone()
+        if row:
+            return row[0], uuid
+    return _resolve_ign(db, ign), uuid
+
+
+def _player_filter(uuid: str | None, ign: str, alias: str = 'sp') -> tuple[str, list]:
+    """WHERE fragment matching one player's participant rows.
+
+    With a uuid, unbackfilled rows (uuid IS NULL) that still bear the player's
+    current name keep counting; without one, fall back to name matching."""
+    if uuid is not None:
+        return (
+            f'({alias}.uuid = %s OR ({alias}.uuid IS NULL AND LOWER({alias}.ign) = LOWER(%s)))',
+            [uuid, ign],
+        )
+    return f'LOWER({alias}.ign) = LOWER(%s)', [ign]
+
+
+def _player_key_parts(uuid: str | None, ign: str, alias: str = 'sp') -> tuple[str, list, str]:
+    """Return (key_sql, key_params, match_value) for grouping by player identity
+    when one target player must be picked out of the groups afterwards.
+
+    Folds the target's unbackfilled rows (uuid IS NULL, current name) into
+    their uuid group so both sides mirror _player_filter's semantics."""
+    if uuid is not None:
+        key_sql = (
+            f"COALESCE({alias}.uuid::text, CASE WHEN LOWER({alias}.ign) = LOWER(%s) "
+            f"THEN %s ELSE 'ign:' || LOWER({alias}.ign) END)"
+        )
+        return key_sql, [ign, uuid], uuid
+    return _ident_key(alias), [], f'ign:{ign.lower()}'
+
+
 # ── Paginator helper ─────────────────────────────────────────────────────────
 
 def _make_paginator(book: list) -> pages.Paginator:
@@ -172,9 +255,10 @@ def _pages_from_cards(cards: list, prefix: str) -> list:
 # ── Comprehensive leaderboard data fetch ─────────────────────────────────────
 
 def _fetch_lb_data(db, sc: str, sp: list) -> list:
-    """Fetch one row per (ign, snipe) and aggregate per player in Python."""
+    """Fetch one row per (player, snipe) and aggregate per player identity in
+    Python; each player is displayed under their most recent ign snapshot."""
     db.cursor.execute(
-        f"SELECT sp.ign, sl.hq, sl.difficulty, "
+        f"SELECT {_ident_key('sp')}, sp.ign, sp.snipe_id, sl.hq, sl.difficulty, "
         f"DATE(sl.sniped_at AT TIME ZONE 'UTC') "
         f"FROM snipe_participants sp "
         f"JOIN snipe_logs sl ON sl.id = sp.snipe_id "
@@ -182,20 +266,22 @@ def _fetch_lb_data(db, sc: str, sp: list) -> list:
         sp
     )
     raw = db.cursor.fetchall()
-    accum = defaultdict(lambda: {'best_diff': 0, 'best_hq': None, 'total': 0, 'dates': set()})
-    for ign, hq, diff, snipe_date in raw:
-        pd = accum[ign]
+    accum = defaultdict(lambda: {'best_diff': 0, 'best_hq': None, 'total': 0, 'dates': set(), 'latest': (0, None)})
+    for player_key, ign, snipe_id, hq, diff, snipe_date in raw:
+        pd = accum[player_key]
         pd['total'] += 1
+        if snipe_id >= pd['latest'][0]:
+            pd['latest'] = (snipe_id, ign)
         if diff > pd['best_diff']:
             pd['best_diff'] = diff
             pd['best_hq'] = hq
         if snipe_date:
             pd['dates'].add(snipe_date)
     result = []
-    for ign, pd in accum.items():
+    for pd in accum.values():
         best_streak, cur_streak = _compute_streaks(list(pd['dates']))
         result.append({
-            'ign': ign, 'total': pd['total'],
+            'ign': pd['latest'][1], 'total': pd['total'],
             'best_diff': pd['best_diff'], 'best_hq': pd['best_hq'],
             'best_streak': best_streak, 'cur_streak': cur_streak,
         })
@@ -1185,6 +1271,11 @@ class SnipeTracker(commands.Cog):
             for m in current_members
             if m.get('name') or m.get('username')
         }
+        uuid_by_name = {
+            (m.get('name') or m.get('username') or '').casefold(): m.get('uuid')
+            for m in current_members
+            if m.get('name') or m.get('username')
+        }
         if not current_names:
             await ctx.followup.send(':no_entry: Current TAq member data is unavailable. Please try again later.', ephemeral=True)
             return
@@ -1256,8 +1347,8 @@ class SnipeTracker(commands.Cog):
             for ign, role in pairs:
                 ign = current_names.get(ign.casefold(), ign)
                 db.cursor.execute(
-                    'INSERT INTO snipe_participants (snipe_id, ign, role) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING',
-                    (snipe_id, ign, role)
+                    'INSERT INTO snipe_participants (snipe_id, ign, uuid, role) VALUES (%s, %s, %s, %s) ON CONFLICT DO NOTHING',
+                    (snipe_id, ign, uuid_by_name.get(ign.casefold()), role)
                 )
             db.connection.commit()
         finally:
@@ -1312,15 +1403,18 @@ class SnipeTracker(commands.Cog):
         db = DB()
         db.connect()
         try:
-            # Resolve canonical IGN casing
-            ign = _resolve_ign(db, ign)
+            # Resolve player identity (uuid + latest display name)
+            ign, uuid = await _resolve_identity(db, ign)
+            pc, pc_params = _player_filter(uuid, ign)
+            key_sql, key_params, key_match = _player_key_parts(uuid, ign)
 
             # Total snipes + rank by count
             db.cursor.execute(
-                'SELECT total, rank FROM ('
-                '  SELECT ign, COUNT(*) AS total, RANK() OVER (ORDER BY COUNT(*) DESC) AS rank'
-                '  FROM snipe_participants GROUP BY ign'
-                ') ranked WHERE ign = %s', (ign,)
+                f'SELECT total, rank FROM ('
+                f'  SELECT {key_sql} AS player_key, COUNT(*) AS total,'
+                f'    RANK() OVER (ORDER BY COUNT(*) DESC) AS rank'
+                f'  FROM snipe_participants sp GROUP BY 1'
+                f') ranked WHERE player_key = %s', key_params + [key_match]
             )
             rank_total_row = db.cursor.fetchone()
             total_snipes   = rank_total_row[0] if rank_total_row else 0
@@ -1328,29 +1422,28 @@ class SnipeTracker(commands.Cog):
 
             # Personal best difficulty + difficulty rank
             db.cursor.execute(
-                'SELECT hq, best_diff, rank FROM ('
-                '  SELECT sp.ign,'
-                '    MAX(sl.difficulty) AS best_diff,'
-                '    (SELECT sl2.hq FROM snipe_logs sl2 JOIN snipe_participants sp2 ON sp2.snipe_id = sl2.id'
-                '     WHERE sp2.ign = sp.ign ORDER BY sl2.difficulty DESC, sl2.id DESC LIMIT 1) AS hq,'
-                '    RANK() OVER (ORDER BY MAX(sl.difficulty) DESC) AS rank'
-                '  FROM snipe_logs sl JOIN snipe_participants sp ON sp.snipe_id = sl.id GROUP BY sp.ign'
-                ') ranked WHERE ign = %s', (ign,)
+                f'SELECT hq, best_diff, rank FROM ('
+                f'  SELECT {key_sql} AS player_key,'
+                f'    MAX(sl.difficulty) AS best_diff,'
+                f'    (array_agg(sl.hq ORDER BY sl.difficulty DESC, sl.id DESC))[1] AS hq,'
+                f'    RANK() OVER (ORDER BY MAX(sl.difficulty) DESC) AS rank'
+                f'  FROM snipe_logs sl JOIN snipe_participants sp ON sp.snipe_id = sl.id GROUP BY 1'
+                f') ranked WHERE player_key = %s', key_params + [key_match]
             )
             pb_row    = db.cursor.fetchone()
             rank_diff = pb_row[2] if pb_row else None
 
             # Zero-connection snipes
             db.cursor.execute(
-                'SELECT COUNT(*) FROM snipe_logs sl JOIN snipe_participants sp ON sp.snipe_id = sl.id'
-                ' WHERE sp.ign = %s AND sl.conns = 0', (ign,)
+                f'SELECT COUNT(*) FROM snipe_logs sl JOIN snipe_participants sp ON sp.snipe_id = sl.id'
+                f' WHERE {pc} AND sl.conns = 0', pc_params
             )
             zero_conn_count = db.cursor.fetchone()[0]
 
             # Dry snipe count
             db.cursor.execute(
-                'SELECT sl.hq, sl.conns FROM snipe_logs sl'
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE sp.ign = %s', (ign,)
+                f'SELECT sl.hq, sl.conns FROM snipe_logs sl'
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE {pc}', pc_params
             )
             dry_snipes = sum(
                 1 for hq_abbr, c in db.cursor.fetchall()
@@ -1359,8 +1452,8 @@ class SnipeTracker(commands.Cog):
 
             # First and latest snipe timestamps
             db.cursor.execute(
-                'SELECT MIN(sl.sniped_at), MAX(sl.sniped_at) FROM snipe_logs sl'
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE sp.ign = %s', (ign,)
+                f'SELECT MIN(sl.sniped_at), MAX(sl.sniped_at) FROM snipe_logs sl'
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE {pc}', pc_params
             )
             time_row     = db.cursor.fetchone()
             first_snipe  = time_row[0] if time_row else None
@@ -1368,8 +1461,8 @@ class SnipeTracker(commands.Cog):
 
             # Unique guilds and HQs sniped
             db.cursor.execute(
-                'SELECT COUNT(DISTINCT sl.guild_tag), COUNT(DISTINCT sl.hq) FROM snipe_logs sl'
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE sp.ign = %s', (ign,)
+                f'SELECT COUNT(DISTINCT sl.guild_tag), COUNT(DISTINCT sl.hq) FROM snipe_logs sl'
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE {pc}', pc_params
             )
             uniq_row      = db.cursor.fetchone()
             unique_guilds = uniq_row[0] if uniq_row else 0
@@ -1377,59 +1470,63 @@ class SnipeTracker(commands.Cog):
 
             # Most snipes in a single day
             db.cursor.execute(
-                'SELECT MAX(daily_count) FROM ('
-                '  SELECT COUNT(*) AS daily_count FROM snipe_logs sl'
-                '  JOIN snipe_participants sp ON sp.snipe_id = sl.id'
-                '  WHERE sp.ign = %s GROUP BY DATE(sl.sniped_at)'
-                ') daily', (ign,)
+                f'SELECT MAX(daily_count) FROM ('
+                f'  SELECT COUNT(*) AS daily_count FROM snipe_logs sl'
+                f'  JOIN snipe_participants sp ON sp.snipe_id = sl.id'
+                f'  WHERE {pc} GROUP BY DATE(sl.sniped_at)'
+                f') daily', pc_params
             )
             most_in_day = db.cursor.fetchone()[0] or 0
 
             # Top 3 most sniped guilds
             db.cursor.execute(
-                'SELECT sl.guild_tag, COUNT(*) AS n FROM snipe_logs sl'
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id'
-                ' WHERE sp.ign = %s GROUP BY sl.guild_tag ORDER BY n DESC LIMIT 3', (ign,)
+                f'SELECT sl.guild_tag, COUNT(*) AS n FROM snipe_logs sl'
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id'
+                f' WHERE {pc} GROUP BY sl.guild_tag ORDER BY n DESC LIMIT 3', pc_params
             )
             top_guilds = db.cursor.fetchall()
 
             # All sniped HQs by frequency
             db.cursor.execute(
-                'SELECT sl.hq, COUNT(*) AS n FROM snipe_logs sl'
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id'
-                ' WHERE sp.ign = %s GROUP BY sl.hq ORDER BY n DESC', (ign,)
+                f'SELECT sl.hq, COUNT(*) AS n FROM snipe_logs sl'
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id'
+                f' WHERE {pc} GROUP BY sl.hq ORDER BY n DESC', pc_params
             )
             hq_rows = db.cursor.fetchall()
 
-            # Top teammates by shared snipe count
+            # Top teammates by shared snipe count, keyed by teammate identity
+            # (self excluded by identity, not name, so renames never leak in)
+            tm_key, tm_key_params, tm_match = _player_key_parts(uuid, ign, alias='other_sp')
             db.cursor.execute(
-                'SELECT other_sp.ign, COUNT(*) AS shared FROM snipe_participants other_sp'
-                ' WHERE other_sp.snipe_id IN ('
-                '   SELECT sp.snipe_id FROM snipe_participants sp WHERE sp.ign = %s'
-                ' ) AND other_sp.ign != %s'
-                ' GROUP BY other_sp.ign ORDER BY shared DESC LIMIT 6', (ign, ign)
+                f'SELECT (array_agg(other_sp.ign ORDER BY other_sp.snipe_id DESC))[1] AS tm_ign,'
+                f' COUNT(*) AS shared FROM snipe_participants other_sp'
+                f' WHERE other_sp.snipe_id IN ('
+                f'   SELECT sp.snipe_id FROM snipe_participants sp WHERE {pc}'
+                f' ) AND {tm_key} != %s'
+                f' GROUP BY {tm_key} ORDER BY shared DESC LIMIT 6',
+                pc_params + tm_key_params + [tm_match] + tm_key_params
             )
             teammate_rows = db.cursor.fetchall()
 
             # Most played role + count (all-time)
             db.cursor.execute(
-                'SELECT role, COUNT(*) FROM snipe_participants WHERE ign = %s'
-                ' GROUP BY role ORDER BY COUNT(*) DESC LIMIT 1', (ign,)
+                f'SELECT role, COUNT(*) FROM snipe_participants sp WHERE {pc}'
+                f' GROUP BY role ORDER BY COUNT(*) DESC LIMIT 1', pc_params
             )
             role_row = db.cursor.fetchone()
             top_role = f'{role_row[0]} ({role_row[1]})' if role_row else None
 
             # Number of distinct seasons with at least one snipe
             db.cursor.execute(
-                'SELECT COUNT(DISTINCT sl.season) FROM snipe_logs sl'
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE sp.ign = %s', (ign,)
+                f'SELECT COUNT(DISTINCT sl.season) FROM snipe_logs sl'
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE {pc}', pc_params
             )
             seasons_active = db.cursor.fetchone()[0] or 0
 
             # Compute daily snipe streaks
             db.cursor.execute(
-                "SELECT DISTINCT DATE(sl.sniped_at AT TIME ZONE 'UTC') FROM snipe_logs sl"
-                ' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE sp.ign = %s', (ign,)
+                f"SELECT DISTINCT DATE(sl.sniped_at AT TIME ZONE 'UTC') FROM snipe_logs sl"
+                f' JOIN snipe_participants sp ON sp.snipe_id = sl.id WHERE {pc}', pc_params
             )
             snipe_dates          = [row[0] for row in db.cursor.fetchall()]
             streak_best, streak_cur = _compute_streaks(snipe_dates)
@@ -1525,11 +1622,12 @@ class SnipeTracker(commands.Cog):
         db.connect()
         try:
             db.cursor.execute(
-                f'SELECT sp.ign, COUNT(*) AS times, MAX(sl.difficulty) AS best_diff '
+                f'SELECT (array_agg(sp.ign ORDER BY sp.snipe_id DESC))[1] AS ign, '
+                f'COUNT(*) AS times, MAX(sl.difficulty) AS best_diff '
                 f'FROM snipe_participants sp '
                 f'JOIN snipe_logs sl ON sl.id = sp.snipe_id '
                 f'WHERE sp.role = %s {sc} '
-                f'GROUP BY sp.ign ORDER BY {order}',
+                f'GROUP BY {_ident_key("sp")} ORDER BY {order}',
                 [role] + sp
             )
             all_rows = db.cursor.fetchall()
@@ -1567,22 +1665,27 @@ class SnipeTracker(commands.Cog):
         db.connect()
         try:
             db.cursor.execute(
-                f"SELECT sp.ign, COUNT(*) AS total, MAX(sl.difficulty) AS best_diff, "
+                f"SELECT {_ident_key('sp')} AS player_key, "
+                f"(array_agg(sp.ign ORDER BY sp.snipe_id DESC))[1] AS ign, "
+                f"COUNT(*) AS total, MAX(sl.difficulty) AS best_diff, "
                 f"MAX(CASE WHEN sp.role = 'Healer' THEN 1 ELSE 0 END) AS has_healer, "
                 f"MAX(CASE WHEN sp.role = 'Tank' THEN 1 ELSE 0 END) AS has_tank, "
                 f"MAX(CASE WHEN sp.role = 'DPS' THEN 1 ELSE 0 END) AS has_dps "
                 f' FROM snipe_participants sp'
                 f' JOIN snipe_logs sl ON sl.id = sp.snipe_id'
                 f' WHERE 1=1 {sc}'
-                f' GROUP BY sp.ign ORDER BY total DESC',
+                f' GROUP BY player_key ORDER BY total DESC',
                 sp
             )
             raw_rows = db.cursor.fetchall()
         finally:
             db.close()
 
-        # Optionally filter to current TAq members
+        # Optionally filter to current TAq members. Membership is decided by
+        # uuid against live guild data so a member's pre-rename rows stay
+        # visible; name matching is the fallback for uuid-less rows only.
         current_names = None
+        current_uuids = None
         if inguild:
             current_data = get_current_guild_data()
             current_members = current_data.get('members', []) if isinstance(current_data, dict) else []
@@ -1591,15 +1694,24 @@ class SnipeTracker(commands.Cog):
                 for member in current_members
                 if member.get('name') or member.get('username')
             }
+            current_uuids = {
+                _norm_uuid(member.get('uuid'))
+                for member in current_members
+                if member.get('uuid')
+            }
             if not current_names:
                 await ctx.followup.send(':no_entry: Current TAq member data is unavailable right now.')
                 return
 
         # Build role strings per player
         rows = []
-        for ign, total, best_diff, has_healer, has_tank, has_dps in raw_rows:
-            if current_names is not None and ign.casefold() not in current_names:
-                continue
+        for player_key, ign, total, best_diff, has_healer, has_tank, has_dps in raw_rows:
+            if current_names is not None:
+                if not player_key.startswith('ign:'):
+                    if _norm_uuid(player_key) not in current_uuids:
+                        continue
+                elif ign.casefold() not in current_names:
+                    continue
             roles = []
             if has_healer:
                 roles.append('Healer')
@@ -1633,16 +1745,23 @@ class SnipeTracker(commands.Cog):
         db = DB()
         db.connect()
         try:
+            key_a, key_b = _ident_key('a'), _ident_key('b')
             db.cursor.execute(
-                f'SELECT a.ign, b.ign, COUNT(*) AS shared, MAX(sl.difficulty) AS best_diff'
+                f'SELECT (array_agg(a.ign ORDER BY a.snipe_id DESC))[1] AS ign_a,'
+                f' (array_agg(b.ign ORDER BY b.snipe_id DESC))[1] AS ign_b,'
+                f' COUNT(*) AS shared, MAX(sl.difficulty) AS best_diff'
                 f' FROM snipe_participants a'
-                f' JOIN snipe_participants b ON a.snipe_id = b.snipe_id AND a.ign < b.ign'
+                f' JOIN snipe_participants b ON a.snipe_id = b.snipe_id AND {key_a} < {key_b}'
                 f' JOIN snipe_logs sl ON sl.id = a.snipe_id'
                 f' WHERE 1=1 {sc}'
-                f' GROUP BY a.ign, b.ign ORDER BY shared DESC, best_diff DESC, a.ign ASC, b.ign ASC',
+                f' GROUP BY {key_a}, {key_b} ORDER BY shared DESC, best_diff DESC, ign_a ASC, ign_b ASC',
                 sp
             )
-            rows = db.cursor.fetchall()
+            # Pairs are keyed by identity; keep the displayed names alphabetical
+            rows = [
+                (*sorted((ign_a, ign_b)), shared, best_diff)
+                for ign_a, ign_b, shared, best_diff in db.cursor.fetchall()
+            ]
         finally:
             db.close()
 
@@ -1682,16 +1801,17 @@ class SnipeTracker(commands.Cog):
         db = DB()
         db.connect()
         try:
-            # Resolve canonical IGN casing
-            ign = _resolve_ign(db, ign)
+            # Resolve player identity (uuid + latest display name)
+            ign, uuid = await _resolve_identity(db, ign)
+            pc, pc_params = _player_filter(uuid, ign)
 
             # Total snipes and average difficulty
             db.cursor.execute(
-                'SELECT COUNT(*), AVG(sl.difficulty) '
-                'FROM snipe_logs sl '
-                'JOIN snipe_participants sp ON sp.snipe_id = sl.id '
-                'WHERE sp.ign = %s',
-                (ign,)
+                f'SELECT COUNT(*), AVG(sl.difficulty) '
+                f'FROM snipe_logs sl '
+                f'JOIN snipe_participants sp ON sp.snipe_id = sl.id '
+                f'WHERE {pc}',
+                pc_params
             )
             summary_row = db.cursor.fetchone()
             total_snipes_all = summary_row[0] or 0
@@ -1699,12 +1819,12 @@ class SnipeTracker(commands.Cog):
 
             # Most frequently sniped HQ
             db.cursor.execute(
-                'SELECT sl.hq, COUNT(*) AS n '
-                'FROM snipe_logs sl '
-                'JOIN snipe_participants sp ON sp.snipe_id = sl.id '
-                'WHERE sp.ign = %s '
-                'GROUP BY sl.hq ORDER BY n DESC, sl.hq ASC LIMIT 1',
-                (ign,)
+                f'SELECT sl.hq, COUNT(*) AS n '
+                f'FROM snipe_logs sl '
+                f'JOIN snipe_participants sp ON sp.snipe_id = sl.id '
+                f'WHERE {pc} '
+                f'GROUP BY sl.hq ORDER BY n DESC, sl.hq ASC LIMIT 1',
+                pc_params
             )
             top_hq_row = db.cursor.fetchone()
             top_hq = display_hq(top_hq_row[0]) if top_hq_row else None
@@ -1712,24 +1832,25 @@ class SnipeTracker(commands.Cog):
 
             # Last 5 snipes for this player
             db.cursor.execute(
-                'SELECT sl.id, sl.sniped_at, sl.hq, sl.guild_tag, sl.difficulty, sl.conns '
-                'FROM snipe_logs sl '
-                'JOIN snipe_participants sp ON sp.snipe_id = sl.id '
-                'WHERE sp.ign = %s '
-                'ORDER BY sl.sniped_at DESC LIMIT 5',
-                (ign,)
+                f'SELECT sl.id, sl.sniped_at, sl.hq, sl.guild_tag, sl.difficulty, sl.conns '
+                f'FROM snipe_logs sl '
+                f'JOIN snipe_participants sp ON sp.snipe_id = sl.id '
+                f'WHERE {pc} '
+                f'ORDER BY sl.sniped_at DESC LIMIT 5',
+                pc_params
             )
             recent_snipes = db.cursor.fetchall()
 
             # All participants for snipes involving this player
+            pc_self, pc_self_params = _player_filter(uuid, ign, alias='self_sp')
             db.cursor.execute(
                 f'SELECT sp.snipe_id, sp.ign, sp.role '
                 f'FROM snipe_participants sp '
                 f'WHERE sp.snipe_id IN ('
-                f'  SELECT snipe_id FROM snipe_participants WHERE ign = %s'
+                f'  SELECT self_sp.snipe_id FROM snipe_participants self_sp WHERE {pc_self}'
                 f') '
                 f'ORDER BY sp.snipe_id DESC, {role_case}, sp.ign ASC',
-                (ign,)
+                pc_self_params
             )
             team_rows = db.cursor.fetchall()
         finally:
