@@ -14,10 +14,14 @@ def _head(**overrides):
     base = {
         "poll_status": CLOSED_POLL_STATUS,
         "channel_id": 123,
-        "closed_at": NOW - datetime.timedelta(days=4),
         "effective_closed_at": NOW - datetime.timedelta(days=4),
     }
     base.update(overrides)
+    # Mirror _fetch_transcript_head: effective_closed_at is
+    # COALESCE(closed_at, reviewed_at), so closed_at tracks the effective
+    # timestamp unless a test explicitly decouples them (reviewed-but-open).
+    if "closed_at" not in overrides:
+        base["closed_at"] = base["effective_closed_at"]
     return base
 
 

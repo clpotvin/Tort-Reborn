@@ -30,13 +30,21 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
             db.close()
 
     def _update_db_status(cid, status):
+        """Atomic form of the downgrade guard: the pre-read check above is
+        advisory only (another call can close the ticket between the read and
+        this write), so the UPDATE itself refuses to regress a Closed ticket.
+        Returns True when the row was actually updated."""
         db = DB()
         try:
             db.connect()
             db.cursor.execute(
-                "UPDATE applications SET poll_status = %s WHERE channel_id = %s", (status, cid)
+                "UPDATE applications SET poll_status = %s "
+                "WHERE channel_id = %s AND NOT (poll_status = %s AND %s <> %s)",
+                (status, cid, CLOSED_POLL_STATUS, status, CLOSED_POLL_STATUS),
             )
+            updated = db.cursor.rowcount > 0
             db.connection.commit()
+            return updated
         finally:
             db.close()
 
@@ -94,7 +102,8 @@ async def update_web_poll_embed(client, channel_id: int, new_status: str, colour
                 if not found_votes:
                     embed.add_field(name="Votes", value=vote_text, inline=False)
 
-    await asyncio.to_thread(_update_db_status, channel_id, new_status)
+    if not await asyncio.to_thread(_update_db_status, channel_id, new_status):
+        return
     await safe_edit_poll(exec_chan, poll_message_id, modify_embed=_modify, include_view=False)
 
 
