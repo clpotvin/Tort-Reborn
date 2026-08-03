@@ -11,6 +11,13 @@ CREATE TABLE IF NOT EXISTS discord_links (
   wars_on_join INT
 );
 
+-- A Minecraft account may be linked to at most one Discord account at a time.
+-- Duplicate linked rows fan out every uuid join (bot and website), duplicating
+-- leaderboard rows and double-counting raid points. Unlinked historical rows
+-- may still share a uuid (e.g. a member who left and relinked elsewhere).
+CREATE UNIQUE INDEX IF NOT EXISTS discord_links_linked_uuid_uq
+  ON discord_links (uuid) WHERE linked AND uuid IS NOT NULL;
+
 CREATE TABLE IF NOT EXISTS new_app (
   id                   SERIAL       PRIMARY KEY,
   channel              BIGINT       NOT NULL UNIQUE,

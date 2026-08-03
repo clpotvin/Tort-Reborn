@@ -26,6 +26,7 @@ from Helpers.logger import log, INFO, WARN, ERROR
 from Helpers.classes import Guild, DB, BasicPlayerStats
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import getPlayerDatav3, getNameFromUUID, determine_starting_rank, create_progress_bar, addLine, round_corners
+from Helpers.links import LinkConflictError, assert_row_linkable
 from Helpers.variables import (
     RAID_LOG_CHANNEL_ID,
     BOT_LOG_CHANNEL_ID,
@@ -965,6 +966,7 @@ class UpdateMemberData(commands.Cog):
             db = DB()
             try:
                 db.connect()
+                assert_row_linkable(db.cursor, did)
                 db.cursor.execute(
                     """UPDATE discord_links
                        SET linked = TRUE, rank = %s, ign = %s, wars_on_join = %s
@@ -981,7 +983,11 @@ class UpdateMemberData(commands.Cog):
             finally:
                 db.close()
 
-        await asyncio.to_thread(_complete_registration, discord_id, ign, uuid, wars_on_join, starting_rank)
+        try:
+            await asyncio.to_thread(_complete_registration, discord_id, ign, uuid, wars_on_join, starting_rank)
+        except LinkConflictError as e:
+            log(ERROR, f"Registration link conflict for {ign}: {e}", context="auto_register")
+            return
 
         # Update poll embed
         if app_channel_id:

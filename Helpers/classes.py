@@ -13,6 +13,7 @@ from Helpers.database import (
     get_player_activity_baselines_with_db,
 )
 from Helpers.functions import getPlayerUUID, getPlayerDatav3, getPlayerProfileDatav3, urlify, determine_starting_rank, timed_get
+from Helpers.links import LinkConflictError, assert_uuid_free
 from discord.ext.pages import Page as _Page
 
 from Helpers.variables import wynn_ranks, WELCOME_CHANNEL_ID, discord_ranks
@@ -498,7 +499,15 @@ class NewMember(Modal):
         db.cursor.execute('SELECT * FROM discord_links WHERE discord_id = %s', (self.user.id,))
         rows = db.cursor.fetchall()
         pdata = BasicPlayerStats(self.children[0].value)
+        if not pdata.error:
+            try:
+                assert_uuid_free(db.cursor, pdata.UUID, self.user.id)
+            except LinkConflictError as e:
+                db.close()
+                await msg.edit(content=e.user_message(), embed=None)
+                return
         if pdata.error:
+            db.close()
             embed = discord.Embed(title=':no_entry: Oops! Something did not go as intended.',
                                   description=f'Could not retrieve information of `{self.children[0].value}`.\nPlease check your spelling or try again later.',
                                   color=0xe33232)
