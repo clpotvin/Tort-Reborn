@@ -94,8 +94,18 @@ class Shell(commands.Cog):
             page_num = int(math.ceil(len(shelldata) / 10))
             i = 1
 
+            # Row geometry, mirroring Commands/leaderboard.py: the bar is centered in the
+            # canvas and every element is placed relative to SIDE_PAD (bar's left edge) or
+            # BAR_R (right edge) so the two insets stay symmetric. The gutter is narrower
+            # than the leaderboard's 30px because nothing overhangs the bar here -- widen
+            # it if an icon is ever added outside the bar.
+            BAR_W = 380
+            SIDE_PAD = 15
+            BAR_R = SIDE_PAD + BAR_W
+            CANVAS_W = BAR_R + SIDE_PAD
+
             for page in range(page_num):
-                img = Image.new('RGBA', (410, 0), color='#00000000')
+                img = Image.new('RGBA', (CANVAS_W, 0), color='#00000000')
                 d = ImageDraw.Draw(img)
                 d.fontmode = '1'
                 page_playerdata = shelldata[(10 * page):(10 * page + 10)]
@@ -103,17 +113,19 @@ class Shell(commands.Cog):
                 for p, player in enumerate(page_playerdata):
                     img, d = expand_image(img, border=(0, 0, 0, 36), fill='#00000000')
                     bg_color = {1: bg1, 2: bg2, 3: bg3}.get(i, bg)
-                    bg_color.add(img, 380, (0, p * 36 + 3))
-                    img.paste(bg_color.divider, (55, p * 36 + 3), bg_color.divider)
+                    # start=True draws the mirrored left cap; without it the bar has a raw
+                    # cut edge, which only looked right while it was flush against x=0.
+                    bg_color.add(img, BAR_W, (SIDE_PAD, p * 36 + 3), start=True)
+                    img.paste(bg_color.divider, (SIDE_PAD + 55, p * 36 + 3), bg_color.divider)
                     pos = f'{i}.'
-                    addLine(f'&f{pos}', d, gameFont, 10, p * 36 + 9)
-                    addLine(f"&f{player['name']}", d, gameFont, 65, p * 36 + 9)
+                    addLine(f'&f{pos}', d, gameFont, SIDE_PAD + 10, p * 36 + 9)
+                    addLine(f"&f{player['name']}", d, gameFont, SIDE_PAD + 65, p * 36 + 9)
                     _, _, w, h = d.textbbox((0, 0), f"{player['shells']:,}", font=gameFont)
                     if i == 1:
                         widest = w
-                    addLine(f"&f{player['shells']:,}", d, gameFont, img.width - 40 - w, p * 36 + 9)
-                    img.paste(shells_img, (img.width - 65 - widest, p * 36 + 11), shells_img)
-                    img.paste(bg_color.divider, (img.width - 75 - widest, p * 36 + 3), bg_color.divider)
+                    addLine(f"&f{player['shells']:,}", d, gameFont, BAR_R - 10 - w, p * 36 + 9)
+                    img.paste(shells_img, (BAR_R - 35 - widest, p * 36 + 11), shells_img)
+                    img.paste(bg_color.divider, (BAR_R - 45 - widest, p * 36 + 3), bg_color.divider)
                     i += 1
 
                 img, d = expand_image(img, border=(0, 120, 0, 10), fill='#00000000')

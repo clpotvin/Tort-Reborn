@@ -220,8 +220,17 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
     widest = 0
     book: List[Page] = []
 
+    # Row geometry. The bar is centered in the canvas; the gutter on each side is sized
+    # to fit the warning icon that overhangs the bar's right edge (16px icon + 6px gap
+    # + 8px margin). Everything inside the row is positioned relative to SIDE_PAD (left
+    # edge of the bar) or BAR_R (right edge) so the two insets stay symmetric.
+    BAR_W = 530
+    SIDE_PAD = 30
+    BAR_R = SIDE_PAD + BAR_W
+    CANVAS_W = BAR_R + SIDE_PAD
+
     for page_index in range(total_pages):
-        img = Image.new('RGBA', (560, 0), color='#00000000')
+        img = Image.new('RGBA', (CANVAS_W, 0), color='#00000000')
         draw = ImageDraw.Draw(img)
         draw.fontmode = '1'
 
@@ -237,16 +246,16 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
             else:
                 bg_color = bg_other
 
-            # Warning icon for partial window/late join/missing baseline
-            if player['warning']:
-                img.paste(warning_icon, (img.width - 24, row_idx * 36 + 11), warning_icon)
-
             # Slot background & dividers
-            # LEFT_PAD = 15: canvas is 560px, bg bar is 530px -- shift content right by 15 for equal padding
-            LEFT_PAD = 15
-            bg_color.add(img, 530, (LEFT_PAD, row_idx * 36 + 3), start=True)
-            img.paste(bg_color.divider, (LEFT_PAD + 55, row_idx * 36 + 3), bg_color.divider)
-            addLine(f'&f{rank_counter}.', draw, game_font, LEFT_PAD + 10, row_idx * 36 + 9)
+            bg_color.add(img, BAR_W, (SIDE_PAD, row_idx * 36 + 3), start=True)
+            img.paste(bg_color.divider, (SIDE_PAD + 55, row_idx * 36 + 3), bg_color.divider)
+            addLine(f'&f{rank_counter}.', draw, game_font, SIDE_PAD + 10, row_idx * 36 + 9)
+
+            # Warning icon for partial window/late join/missing baseline. Sits in the
+            # right gutter, just outside the bar -- drawn after the bar so it can't be
+            # painted over.
+            if player['warning']:
+                img.paste(warning_icon, (BAR_R + 6, row_idx * 36 + 11), warning_icon)
 
             # Rank stars (based on discord rank mapping)
             rank_key = (player.get('rank') or '').lower()
@@ -257,22 +266,22 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
                     break
             stars = rank_map.get(general_rank, '')
             for s in range(len(stars)):
-                img.paste(rank_star, (LEFT_PAD + 65 + (s * 12), row_idx * 36 + 14), rank_star)
+                img.paste(rank_star, (SIDE_PAD + 65 + (s * 12), row_idx * 36 + 14), rank_star)
 
             # Name divider
-            img.paste(bg_color.divider, (LEFT_PAD + 133, row_idx * 36 + 3), bg_color.divider)
-            addLine(f'&f{player["name"]}', draw, game_font, LEFT_PAD + 143, row_idx * 36 + 9)
+            img.paste(bg_color.divider, (SIDE_PAD + 133, row_idx * 36 + 3), bg_color.divider)
+            addLine(f'&f{player["name"]}', draw, game_font, SIDE_PAD + 143, row_idx * 36 + 9)
 
-            # Value text right aligned
+            # Value text right aligned, 10px inside the bar to mirror the rank number
             value_str = "{:,}".format(int(player['contributed']))
             _, _, w, _ = draw.textbbox((0, 0), value_str, font=game_font)
             if rank_counter == 1:
                 widest = w
-            addLine(f'&f{value_str}', draw, game_font, img.width - 40 - w, row_idx * 36 + 9)
+            addLine(f'&f{value_str}', draw, game_font, BAR_R - 10 - w, row_idx * 36 + 9)
 
             # Icon & divider near value
-            img.paste(icon, (img.width - 65 - widest, row_idx * 36 + 11), icon)
-            img.paste(bg_color.divider, (img.width - 75 - widest, row_idx * 36 + 3), bg_color.divider)
+            img.paste(icon, (BAR_R - 35 - widest, row_idx * 36 + 11), icon)
+            img.paste(bg_color.divider, (BAR_R - 45 - widest, row_idx * 36 + 3), bg_color.divider)
 
             rank_counter += 1
 
