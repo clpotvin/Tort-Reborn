@@ -6,8 +6,7 @@ from discord.ext import commands
 from discord.commands import SlashCommandGroup
 
 from Helpers.database import DB
-from Helpers.openai_helper import query as openai_query
-from Helpers.variables import ERROR_CHANNEL_ID, MEETING_ANNOUNCEMENT_CHANNEL_ID, EXECUTIVE_ROLE_ID, EXEC_GUILD_IDS
+from Helpers.variables import MEETING_ANNOUNCEMENT_CHANNEL_ID, EXECUTIVE_ROLE_ID, EXEC_GUILD_IDS
 
 # =============================================================================
 # Constants
@@ -15,31 +14,11 @@ from Helpers.variables import ERROR_CHANNEL_ID, MEETING_ANNOUNCEMENT_CHANNEL_ID,
 
 GMT = timezone.utc
 
-AGENDA_SYSTEM_PROMPT = """You format meeting agendas for a gaming guild Discord server called "The Aquarium" [TAq].
-
-Given selected topics and notes, produce a meeting agenda using this exact format:
-
-**Meeting Agenda:**
-
-> Business As Usual
-- [Topic]: [Details if any]
-- [Topic]: [Details if any]
-
-> [Requested Topic Name]
-- [Details/Description]
-
-> Other
-- [Any additional notes]
-
-Rules:
-- Use > for section headers (Discord block quotes)
-- Use - for bullet points under each section
-- Each requested topic that has a description gets its own > section
-- Requested topics without descriptions can be grouped under a single > section
-- Only include the "Other" section if there are additional notes provided
-- Keep it concise - do not add filler text
-- Do NOT include any @everyone or timestamp lines
-- Output ONLY the agenda text, nothing else"""
+# The agenda is assembled in code rather than by a language model. It used to go
+# through gpt-4.1-nano for formatting, but the model rewrote and shortened the
+# descriptions people had written, so what got posted was not what they typed.
+# The layout is fully mechanical, so it is built literally here and every topic
+# and description is reproduced verbatim.
 
 CREATE_BAU_TABLE = """
 CREATE TABLE IF NOT EXISTS agenda_bau_topics (
@@ -318,29 +297,11 @@ class MeetingDetailsModal(discord.ui.Modal):
         self.stop()
 
 
-class FeedbackModal(discord.ui.Modal):
-    def __init__(self):
-        super().__init__(title="Regeneration Feedback")
-        self.feedback_input = discord.ui.InputText(
-            label="What should be changed?",
-            placeholder="e.g. Combine the first two sections...",
-            style=discord.InputTextStyle.long,
-        )
-        self.add_item(self.feedback_input)
-        self.result = None
-
-    async def callback(self, interaction: discord.Interaction):
-        self.result = self.feedback_input.value.strip()
-        await interaction.response.defer()
-        self.stop()
-
-
 class AgendaPreviewView(discord.ui.View):
     def __init__(self, invoker_id: int):
         super().__init__(timeout=300)
         self.invoker_id = invoker_id
-        self.action = None  # "post", "regenerate", "cancel"
-        self.feedback = None
+        self.action = None  # "post", "cancel"
 
     @discord.ui.button(label="Post", style=discord.ButtonStyle.success)
     async def post_button(self, button: discord.ui.Button, interaction: discord.Interaction):
@@ -348,17 +309,6 @@ class AgendaPreviewView(discord.ui.View):
             return await interaction.response.send_message("This isn't your session.", ephemeral=True)
         self.action = "post"
         await interaction.response.defer()
-        self.stop()
-
-    @discord.ui.button(label="Regenerate", style=discord.ButtonStyle.secondary)
-    async def regenerate_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        if interaction.user.id != self.invoker_id:
-            return await interaction.response.send_message("This isn't your session.", ephemeral=True)
-        self.action = "regenerate"
-        modal = FeedbackModal()
-        await interaction.response.send_modal(modal)
-        await modal.wait()
-        self.feedback = modal.result
         self.stop()
 
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.danger)
@@ -564,94 +514,81 @@ class Agenda(commands.Cog):
         if unix_ts is None:
             return await ctx.edit(content="Invalid date/time format. Use YYYY-MM-DD and HH:MM.", view=None)
 
-        # Build OpenAI input
-        openai_input = self._build_openai_input(chosen_bau, chosen_req, notes)
+        # Step 4: Build and preview. Assembled directly from what was entered,
+        # so there is nothing to regenerate — the same input always yields the
+        # same agenda, with descriptions exactly as written.
+        agenda_text = self._format_agenda(chosen_bau, chosen_req, notes)
 
-        # Step 4: Generate and preview
-        await ctx.edit(content="Generating agenda...", view=None)
-        agenda_text = await self._generate_agenda(openai_input)
-        if agenda_text is None:
-            return await ctx.edit(content="Failed to generate agenda. Check error channel for details.")
+        full_message = f"@everyone Meeting at <t:{unix_ts}:f>\n\n{agenda_text}"
+        embed = discord.Embed(title="Agenda Preview", description=full_message, color=0x2b82d4)
+        preview_view = AgendaPreviewView(invoker_id)
+        await ctx.edit(content=None, embed=embed, view=preview_view)
+        timed_out = await preview_view.wait()
+        if timed_out:
+            return await ctx.edit(content="Session timed out.", embed=None, view=None)
 
-        # Preview loop (supports regeneration)
-        while True:
-            full_message = f"@everyone Meeting at <t:{unix_ts}:f>\n\n{agenda_text}"
-            embed = discord.Embed(title="Agenda Preview", description=full_message, color=0x2b82d4)
-            preview_view = AgendaPreviewView(invoker_id)
-            await ctx.edit(content=None, embed=embed, view=preview_view)
-            timed_out = await preview_view.wait()
-            if timed_out:
-                return await ctx.edit(content="Session timed out.", embed=None, view=None)
+        if preview_view.action == "post":
+            # Post to announcement channel
+            channel = self.client.get_channel(MEETING_ANNOUNCEMENT_CHANNEL_ID)
+            if channel is None:
+                return await ctx.edit(content="Announcement channel not found.", embed=None, view=None)
+            await channel.send(full_message)
+            # Delete selected requested topics from DB
+            ids_to_delete = [int(tid) for tid in selected_req_ids]
+            await asyncio.to_thread(_db_remove_req_topics, ids_to_delete)
+            await ctx.edit(content="Agenda posted!", embed=None, view=None)
+        else:  # cancel
+            await ctx.edit(content="Agenda creation cancelled.", embed=None, view=None)
 
-            if preview_view.action == "post":
-                # Post to announcement channel
-                channel = self.client.get_channel(MEETING_ANNOUNCEMENT_CHANNEL_ID)
-                if channel is None:
-                    return await ctx.edit(content="Announcement channel not found.", embed=None, view=None)
-                await channel.send(full_message)
-                # Delete selected requested topics from DB
-                ids_to_delete = [int(tid) for tid in selected_req_ids]
-                await asyncio.to_thread(_db_remove_req_topics, ids_to_delete)
-                await ctx.edit(content="Agenda posted!", embed=None, view=None)
-                break
+    @staticmethod
+    def _bullets(text: str) -> list[str]:
+        """Turn a description or note block into bullet lines, verbatim.
 
-            elif preview_view.action == "regenerate":
-                feedback = getattr(preview_view, "feedback", None) or ""
-                regen_input = f"{openai_input}\n\n## Previous Output\n{agenda_text}\n\n## Feedback\n{feedback}"
-                await ctx.edit(content="Regenerating agenda...", embed=None, view=None)
-                agenda_text = await self._generate_agenda(regen_input)
-                if agenda_text is None:
-                    return await ctx.edit(content="Failed to regenerate agenda. Check error channel for details.")
+        Multi-line entries keep their line breaks as separate bullets, and a
+        line the author already bulleted is left alone rather than ending up
+        double-bulleted.
+        """
+        lines = []
+        for raw in text.strip().splitlines():
+            line = raw.strip()
+            if not line:
                 continue
+            lines.append(line if line.startswith(("-", "*", "•")) else f"- {line}")
+        return lines
 
-            else:  # cancel
-                await ctx.edit(content="Agenda creation cancelled.", embed=None, view=None)
-                break
+    def _format_agenda(self, bau: list[dict], req: list[dict], notes: str) -> str:
+        """Build the agenda exactly as entered — no rewriting, no summarising."""
+        sections: list[list[str]] = []
 
-    def _build_openai_input(self, bau: list[dict], req: list[dict], notes: str) -> str:
-        parts = []
         if bau:
-            parts.append("## BAU Topics")
+            block = ["> Business As Usual"]
             for t in bau:
-                line = f"- {t['topic']}"
-                if t["description"]:
-                    line += f": {t['description']}"
-                parts.append(line)
+                desc = (t.get("description") or "").strip()
+                # BAU entries stay one-per-line: "Topic: description as written".
+                block.append(f"- {t['topic']}: {desc}" if desc else f"- {t['topic']}")
+            sections.append(block)
 
-        if req:
-            parts.append("\n## Requested Topics")
-            for t in req:
-                line = f"- {t['topic']}"
-                if t["description"]:
-                    line += f": {t['description']}"
-                parts.append(line)
+        # A requested topic with a description gets its own section; the ones
+        # without are collected into a single list at the end.
+        undescribed = []
+        for t in req:
+            desc = (t.get("description") or "").strip()
+            if desc:
+                sections.append([f"> {t['topic']}", *self._bullets(desc)])
+            else:
+                undescribed.append(t["topic"])
 
-        if notes:
-            parts.append(f"\n## Additional Notes\n{notes}")
+        if undescribed:
+            sections.append(["> Requested Topics", *[f"- {name}" for name in undescribed]])
 
-        return "\n".join(parts) if parts else "No topics selected."
+        if notes and notes.strip():
+            sections.append(["> Other", *self._bullets(notes)])
 
-    async def _generate_agenda(self, input_text: str) -> str | None:
-        try:
-            result = await asyncio.to_thread(
-                openai_query,
-                instructions=AGENDA_SYSTEM_PROMPT,
-                input_text=input_text,
-                model="gpt-4.1-nano",
-                temperature=0.3,
-                max_tokens=1500,
-            )
-            if result["error"]:
-                ch = self.client.get_channel(ERROR_CHANNEL_ID)
-                if ch:
-                    await ch.send(f"## Agenda generation error\n```\n{result['error']}\n```")
-                return None
-            return result["content"]
-        except Exception as e:
-            ch = self.client.get_channel(ERROR_CHANNEL_ID)
-            if ch:
-                await ch.send(f"## Agenda generation exception\n```\n{e}\n```")
-            return None
+        if not sections:
+            return "**Meeting Agenda:**\n\n> No topics selected."
+
+        body = "\n\n".join("\n".join(block) for block in sections)
+        return f"**Meeting Agenda:**\n\n{body}"
 
 
 class _ModalTriggerView(discord.ui.View):
