@@ -89,6 +89,20 @@ def query(
             }
         response = client.responses.create(**kwargs)
         text = response.output_text
+        if not text:
+            # Diagnostic for empty output_text: this is normally where json.loads()
+            # would blow up on "" with a generic "Expecting value" error that hides
+            # the real cause. Logging the response shape now so we can tell reasoning-token
+            # exhaustion apart from a refusal/other empty-output case
+            schema_name = json_schema.__name__ if json_schema is not None else None
+            log(
+                ERROR,
+                f"Empty output_text from model={model} schema={schema_name} "
+                f"status={getattr(response, 'status', None)} "
+                f"incomplete_details={getattr(response, 'incomplete_details', None)} "
+                f"usage={getattr(response, 'usage', None)}",
+                context="openai_helper",
+            )
         data = None
         if json_schema is not None:
             import json
