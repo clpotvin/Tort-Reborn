@@ -172,20 +172,13 @@ class WavePromote(commands.Cog):
 
                 successes.append((target, current_rank, new_rank_key))
 
-                # Google Sheets tracking (non-fatal)
+                # Recruiter payout credit (non-fatal)
                 try:
-                    from Helpers.sheets import update_promo, find_by_ign, update_paid
                     from Helpers.functions import getUsernameFromUUID
+                    from Helpers.recruiting import credit_piranha_promotion
                     name_result = await asyncio.to_thread(getUsernameFromUUID, uuid)
-                    if name_result:
-                        if new_index >= ranks_list.index("Manatee"):
-                            await asyncio.to_thread(update_promo, name_result, "manateePromo")
-                        if new_index >= ranks_list.index("Piranha"):
-                            await asyncio.to_thread(update_promo, name_result, "piranhaPromo")
-                            sheet_row = await asyncio.to_thread(find_by_ign, name_result)
-                            if sheet_row.get("success") and sheet_row.get("data"):
-                                if sheet_row["data"].get("paid") == "NYP":
-                                    await asyncio.to_thread(update_paid, name_result, "N")
+                    if name_result and new_index >= ranks_list.index("Piranha"):
+                        await credit_piranha_promotion(self.client, name_result)
                 except Exception as e:
                     err_ch = self.client.get_channel(ERROR_CHANNEL_ID)
                     if err_ch:

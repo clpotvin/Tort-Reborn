@@ -645,37 +645,14 @@ class UpdateMemberData(commands.Cog):
                     await ch.send(embed=el)
                 if guild_log_ch:
                     await guild_log_ch.send(embed=el)
-                # Update recruiter tracking sheet for each member who left
+                # Void any pending recruit credit for members who left before Piranha
                 for uuid in left:
                     try:
-                        from Helpers.sheets import find_by_ign, update_type, update_paid
+                        from Helpers.recruiting import void_pending_recruit
                         ign = prev_map[uuid]['name']
-                        sheet_row = await asyncio.to_thread(find_by_ign, ign)
-                        sheet_ign = ign
-                        if not (sheet_row.get("success") and sheet_row.get("data")):
-                            alt_ign = await asyncio.to_thread(self._db_get_ign_by_uuid, uuid)
-                            if alt_ign and alt_ign.lower() != ign.lower():
-                                sheet_row = await asyncio.to_thread(find_by_ign, alt_ign)
-                                if sheet_row.get("success") and sheet_row.get("data"):
-                                    sheet_ign = alt_ign
-                        if sheet_row.get("success") and sheet_row.get("data"):
-                            await asyncio.to_thread(update_type, sheet_ign, "Left")
-                            paid = sheet_row["data"].get("paid", "")
-                            if paid in ("NYP", "NP"):
-                                await asyncio.to_thread(update_paid, sheet_ign, "LG")
-                        else:
-                            alt_ign = await asyncio.to_thread(self._db_get_ign_by_uuid, uuid)
-                            err_ch = self.client.get_channel(ERROR_CHANNEL_ID)
-                            if err_ch:
-                                await err_ch.send(
-                                    f"## Recruiter Tracker - Leave: IGN Not Found\n"
-                                    f"**API Name:** `{ign}` | "
-                                    f"**DB Name:** `{alt_ign or 'N/A'}` | "
-                                    f"**UUID:** `{uuid}`\n"
-                                    f"Player left guild but was not found on the recruiter sheet."
-                                )
+                        await asyncio.to_thread(void_pending_recruit, ign, uuid)
                     except Exception as e:
-                        log(ERROR, f"Recruiter sheet leave update for {uuid}: {e}", context="guild_log")
+                        log(ERROR, f"Recruit credit void for {uuid}: {e}", context="guild_log")
         self.previous_members = curr_map
         self._save_to_cache("memberList", curr_map)
 
@@ -1383,17 +1360,6 @@ class UpdateMemberData(commands.Cog):
         db = _db_connect_with_retry()
         try:
             db.cursor.execute("SELECT discord_id FROM discord_links WHERE uuid = %s", (uuid,))
-            row = db.cursor.fetchone()
-            return row[0] if row else None
-        finally:
-            db.close()
-
-    @staticmethod
-    def _db_get_ign_by_uuid(uuid: str):
-        """Blocking: look up stored IGN by UUID in discord_links."""
-        db = _db_connect_with_retry()
-        try:
-            db.cursor.execute("SELECT ign FROM discord_links WHERE uuid = %s", (uuid,))
             row = db.cursor.fetchone()
             return row[0] if row else None
         finally:

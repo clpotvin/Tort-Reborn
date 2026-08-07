@@ -608,6 +608,35 @@ CREATE TABLE IF NOT EXISTS application_votes (
 );
 
 -- =============================================================================
+-- Recruiter Tracking & Payouts
+-- =============================================================================
+-- Pending on accept, becomes payable once the recruit reaches Piranha
+-- (posted_at set, task-board embed sent) — see Helpers/recruiting.py.
+
+CREATE TABLE IF NOT EXISTS recruit_credits (
+  id                    SERIAL       PRIMARY KEY,
+  app_id                INT          NOT NULL REFERENCES applications(id) ON DELETE CASCADE,
+  recruiter_ign         VARCHAR(50)  NOT NULL,
+  recruit_ign           VARCHAR(50)  NOT NULL,
+  recruit_discord_id    VARCHAR(30),
+  excluded              BOOLEAN      DEFAULT FALSE,  -- recruiter was owner/chief: counted, never paid
+  recruit_number        INT,                          -- recruiter's Nth paid credit, set when finalized
+  payout_le             INT,                          -- set when finalized
+  eligible_at           TIMESTAMPTZ,                  -- when the recruit reached Piranha
+  posted_at             TIMESTAMPTZ,                  -- when the task-board embed was sent (claim marker)
+  task_board_message_id BIGINT,
+  voided_at             TIMESTAMPTZ,                  -- recruit left the guild before reaching Piranha
+  paid                  BOOLEAN      DEFAULT FALSE,
+  paid_at               TIMESTAMPTZ,
+  paid_by               VARCHAR(50),
+  created_at            TIMESTAMPTZ  DEFAULT NOW(),
+  UNIQUE (app_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_recruit_credits_recruiter ON recruit_credits(recruiter_ign);
+CREATE INDEX IF NOT EXISTS idx_recruit_credits_recruit_ign ON recruit_credits(recruit_ign);
+
+-- =============================================================================
 -- Blacklist
 -- =============================================================================
 
