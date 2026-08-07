@@ -19,7 +19,7 @@ from Helpers.logger import log, SYSTEM, SUCCESS, ERROR, INFO
 from Helpers import logger
 from Helpers import telemetry
 from Commands.generate import ApplicationButtonView
-from Helpers.views import ApplicationVoteView, ThreadVoteView
+from Helpers.views import ApplicationVoteView, ThreadVoteView, RecruitPaidView, RecruiterReviewView
 
 
 
@@ -73,6 +73,8 @@ async def on_ready():
         client.add_view(ApplicationButtonView())
         client.add_view(ApplicationVoteView())
         client.add_view(ThreadVoteView())
+        client.add_view(RecruitPaidView())
+        client.add_view(RecruiterReviewView())
         try:
             await client.sync_commands()
             client.synced = True

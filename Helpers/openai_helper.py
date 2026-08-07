@@ -80,11 +80,8 @@ def query(
         if temperature is not None:
             kwargs["temperature"] = temperature
         if reasoning_effort is not None:
-            # gpt-5-family reasoning models spend part of max_output_tokens on hidden
-            # reasoning before emitting visible text. For small, simple extraction tasks
-            # that budget can get fully consumed by reasoning, leaving output_text empty
-            # (see the diagnostic log below). "minimal" keeps reasoning short so there's
-            # room left for the actual answer.
+            # gpt-5 models spend max_output_tokens on hidden reasoning before the
+            # visible answer. "minimal" keeps that from eating the whole budget.
             kwargs["reasoning"] = {"effort": reasoning_effort}
         if json_schema is not None:
             kwargs["text"] = {
@@ -98,10 +95,7 @@ def query(
         response = client.responses.create(**kwargs)
         text = response.output_text
         if not text:
-            # Diagnostic for empty output_text: this is normally where json.loads()
-            # would blow up on "" with a generic "Expecting value" error that hides
-            # the real cause. Logging the response shape now so we can tell reasoning-token
-            # exhaustion apart from a refusal/other empty-output case
+            # json.loads("") below just says "Expecting value", log the real reason.
             schema_name = json_schema.__name__ if json_schema is not None else None
             log(
                 ERROR,

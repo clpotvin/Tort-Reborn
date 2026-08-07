@@ -323,25 +323,19 @@ class PromotionQueueProcessor(commands.Cog):
 
         await asyncio.to_thread(self._update_rank_in_db, member.id, new_rank_key)
 
-        # Google Sheets tracking (non-fatal)
+        # Recruiter payout credit (non-fatal)
         try:
-            from Helpers.sheets import update_promo, find_by_ign, update_paid
+            from Helpers.recruiting import credit_piranha_promotion
             ranks_list = list(discord_ranks)
             new_index = ranks_list.index(new_rank_key)
             ign = entry['ign']
-            if new_index >= ranks_list.index("Manatee"):
-                await asyncio.to_thread(update_promo, ign, "manateePromo")
             if new_index >= ranks_list.index("Piranha"):
-                await asyncio.to_thread(update_promo, ign, "piranhaPromo")
-                sheet_row = await asyncio.to_thread(find_by_ign, ign)
-                if sheet_row.get("success") and sheet_row.get("data"):
-                    if sheet_row["data"].get("paid") == "NYP":
-                        await asyncio.to_thread(update_paid, ign, "N")
+                await credit_piranha_promotion(self.client, ign)
         except Exception as e:
             err_ch = self.client.get_channel(ERROR_CHANNEL_ID)
             if err_ch:
                 await err_ch.send(
-                    f"## Promotion Queue - Sheets Update Error\n"
+                    f"## Promotion Queue - Recruiter Credit Error\n"
                     f"**User:** <@{member.id}> | **New rank:** `{new_rank_key}`\n"
                     f"```\n{str(e)[:500]}\n```"
                 )
