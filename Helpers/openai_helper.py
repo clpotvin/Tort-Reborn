@@ -67,6 +67,7 @@ def query(
     json_schema: type[BaseModel] | None = None,
     temperature: float | None = None,
     max_tokens: int = 500,
+    reasoning_effort: str | None = None,
 ) -> dict:
     client = _get_client()
     try:
@@ -78,6 +79,13 @@ def query(
         }
         if temperature is not None:
             kwargs["temperature"] = temperature
+        if reasoning_effort is not None:
+            # gpt-5-family reasoning models spend part of max_output_tokens on hidden
+            # reasoning before emitting visible text. For small, simple extraction tasks
+            # that budget can get fully consumed by reasoning, leaving output_text empty
+            # (see the diagnostic log below). "minimal" keeps reasoning short so there's
+            # room left for the actual answer.
+            kwargs["reasoning"] = {"effort": reasoning_effort}
         if json_schema is not None:
             kwargs["text"] = {
                 "format": {
@@ -167,7 +175,8 @@ def parse_recruiter_source(reference_text: str) -> dict:
         input_text=reference_text,
         json_schema=RecruiterSource,
         model="gpt-5-nano",
-        max_tokens=200,
+        max_tokens=500,
+        reasoning_effort="minimal",
     )
     if result["error"]:
         return {"recruiter": "", "certainty": 0.0, "error": result["error"]}
@@ -239,7 +248,8 @@ def match_recruiter_name(recruiter_input: str, member_names: list[str]) -> dict:
         input_text=input_text,
         json_schema=RecruiterMatch,
         model="gpt-5-nano",
-        max_tokens=100,
+        max_tokens=400,
+        reasoning_effort="minimal",
     )
     if result["error"]:
         return {"matched_name": "", "confidence": 0.0, "error": result["error"]}
