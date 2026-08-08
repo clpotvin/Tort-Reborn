@@ -576,7 +576,6 @@ def _generate_snipe_card(
 
     f_title = ImageFont.truetype('images/profile/5x5.ttf',  30)
     f_label = ImageFont.truetype('images/profile/5x5.ttf',  22)
-    f_name  = ImageFont.truetype('images/profile/game.ttf', 50)
     f_pb    = ImageFont.truetype('images/profile/game.ttf', 35)
     f_value = ImageFont.truetype('images/profile/game.ttf', 32)
     f_small = ImageFont.truetype('images/profile/game.ttf', 26)
@@ -587,7 +586,9 @@ def _generate_snipe_card(
 
     # ── Left panel ───────────────────────────────────────────────────────────
     draw.text((LX, 28), 'SNIPE STATS', font=f_title, fill=ACCENT)
-    addLine(ign, draw, f_name, LX, 62, drop_x=5, drop_y=5)
+    ign_font = _fit_font(ign, draw, 'images/profile/game.ttf', 50, LW)
+    ign_h = draw.textbbox((0, 0), ign, font=ign_font)[3]
+    addLine(ign, draw, ign_font, LX, 112 - ign_h, drop_x=5, drop_y=5)
 
     if rank_text and rank_color:
         badge = generate_badge(text=rank_text, base_color=rank_color, scale=2)
