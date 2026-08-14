@@ -21,6 +21,8 @@ Three things make it more than a LAG():
 """
 from datetime import timedelta
 
+from psycopg2.extras import execute_values
+
 # A day cannot hold more than 24 hours of playtime. Two members have breached
 # this on real data (32.2h and 27.5h on the same date), so the guard fires.
 MAX_HOURS_PER_DAY = 24.0
@@ -36,9 +38,13 @@ SOURCE_ROWS = """
     ORDER BY uuid, snapshot_date
 """
 
+# VALUES %s is the execute_values template: psycopg2 substitutes one rendered
+# tuple per row, so a page of rows costs a single round trip. executemany would
+# send one statement per row, which over a managed endpoint means tens of
+# thousands of round trips for a full backfill.
 UPSERT = """
     INSERT INTO playtime_daily (uuid, day, hours, wars, raids, span_days, source)
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    VALUES %s
     ON CONFLICT (uuid, day) DO UPDATE SET
         hours     = EXCLUDED.hours,
         wars      = EXCLUDED.wars,
@@ -46,6 +52,11 @@ UPSERT = """
         span_days = EXCLUDED.span_days,
         source    = EXCLUDED.source
 """
+
+
+def upsert_rows(db, rows, batch=5000):
+    """Upsert derived rows, one round trip per batch. Caller commits."""
+    execute_values(db.cursor, UPSERT, rows, page_size=batch)
 
 
 def build_rows(records):
@@ -110,7 +121,6 @@ def refresh_playtime_daily(db, since_day=None, batch=5000):
     if not rows:
         return 0, 0
 
-    for start in range(0, len(rows), batch):
-        db.cursor.executemany(UPSERT, rows[start:start + batch])
+    upsert_rows(db, rows, batch)
     db.connection.commit()
     return len(rows), len({r[1] for r in rows})
