@@ -27,6 +27,7 @@ from Helpers.classes import Guild, DB, BasicPlayerStats
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import getPlayerDatav3, getNameFromUUID, getPlayerUUID, determine_starting_rank, create_progress_bar, addLine, round_corners
 from Helpers.links import LinkConflictError, assert_row_linkable
+from Helpers.playtime_daily import refresh_playtime_daily
 from Helpers.variables import (
     RAID_LOG_CHANNEL_ID,
     BOT_LOG_CHANNEL_ID,
@@ -99,6 +100,159 @@ def _db_connect_with_retry(max_attempts: int = 3, backoff_first: float = 0.5):
             delay *= 2
             attempt += 1
     raise last
+
+def _refresh_playtime_daily_sync():
+    """Re-derive playtime_daily right after the snapshot that feeds it.
+
+    Without this the derived table only advances when someone runs the backfill
+    script by hand, so every daily-sourced chart quietly stops moving while the
+    snapshots keep arriving — a stall that looks like inactivity rather than a
+    broken pipeline. Failure is logged and swallowed: the snapshot itself has
+    already been written, and the next night's run recomputes from scratch.
+    """
+    db = None
+    try:
+        db = _db_connect_with_retry()
+        rows, days = refresh_playtime_daily(db)
+        log(INFO, f"playtime_daily refreshed: {rows} rows across {days} days",
+            context="update_member_data")
+    except Exception as e:
+        log(ERROR, f"Failed to refresh playtime_daily: {e}", context="update_member_data")
+    finally:
+        if db is not None:
+            try:
+                db.close()
+            except Exception:
+                pass
+
+
+def _floor_to_presence_bucket(dt):
+    """Floor a UTC datetime to the start of its 15-minute presence bucket."""
+    return dt.replace(minute=(dt.minute // 15) * 15, second=0, microsecond=0)
+
+
+def _write_counter_sample_sync(members):
+    """Keep the last cumulative playtime/wars/raids reading for the current hour.
+
+    The loop has already fetched all three for the guildData cache, so this is
+    free. Storing them per hour is what makes hour-of-day activity derivable:
+    the daily snapshot in player_activity can only ever say how much happened
+    on a date, never when during it.
+
+    Counters are monotonic, so GREATEST keeps a carried-forward or out-of-order
+    reading from walking a value backwards. Members whose fetch failed and had
+    no cached value are skipped rather than written as zero.
+    """
+    now = datetime.datetime.now(timezone.utc)
+    hour = now.replace(minute=0, second=0, microsecond=0)
+
+    uuids, playtimes, wars, raids = [], [], [], []
+    for m in members:
+        if not m.get('uuid') or m.get('playtime') is None:
+            continue
+        uuids.append(m['uuid'])
+        playtimes.append(float(m['playtime']))
+        wars.append(int(m.get('wars') or 0))
+        raids.append(int(m.get('raids') or 0))
+
+    if not uuids:
+        log(WARN, "No usable member counters this tick — skipping", context="update_member_data")
+        return
+
+    db = None
+    try:
+        db = _db_connect_with_retry()
+        db.cursor.execute("""
+            INSERT INTO member_counters_hourly (uuid, hour, playtime, wars, raids)
+            SELECT m.uuid, %s, m.playtime, m.wars, m.raids
+            FROM unnest(%s::uuid[], %s::real[], %s::int[], %s::int[])
+                 AS m(uuid, playtime, wars, raids)
+            ON CONFLICT (uuid, hour) DO UPDATE SET
+                playtime = GREATEST(member_counters_hourly.playtime, EXCLUDED.playtime),
+                wars     = GREATEST(member_counters_hourly.wars,     EXCLUDED.wars),
+                raids    = GREATEST(member_counters_hourly.raids,    EXCLUDED.raids)
+        """, (hour, uuids, playtimes, wars, raids))
+        db.connection.commit()
+    except Exception as e:
+        log(ERROR, f"Failed to write counter sample: {e}", context="update_member_data")
+    finally:
+        if db is not None:
+            try:
+                db.close()
+            except Exception:
+                pass
+
+
+def _write_presence_sample_sync(online_map, member_count, guild_online):
+    """Record who is online at this tick into the 15-minute presence buckets.
+
+    Reads the online_map the loop already builds from the guild fetch, so it
+    costs no extra Wynncraft API calls. Presence history is the only source
+    for hour-of-day activity — player_activity is daily-cumulative and cannot
+    be re-derived at a finer grain after the fact, so this runs on every tick.
+
+    guild_online is the endpoint's own top-level count and is the one to trust
+    for "how many were on": members with restrictions.online_status set are
+    included there but have their per-member flag reported false, so they are
+    invisible to online_map and can never land in presence_buckets. Both
+    numbers are stored so the unattributable remainder stays visible instead of
+    quietly deflating every guild-wide chart.
+
+    Takes its own connection and swallows its own errors: this is nice-to-have
+    telemetry and must never take down the guildData cache write it follows.
+    """
+    now = datetime.datetime.now(timezone.utc).replace(microsecond=0)
+    bucket_start = _floor_to_presence_bucket(now)
+    online_uuids = [uuid for uuid, is_online in online_map.items() if is_online]
+
+    # Fall back to the attributable count only if the guild payload lacked the
+    # field; never let a missing value record as zero members online.
+    authoritative = guild_online if isinstance(guild_online, int) else len(online_uuids)
+
+    db = None
+    try:
+        db = _db_connect_with_retry()
+
+        db.cursor.execute("SELECT MAX(tick_at) FROM presence_ticks")
+        row = db.cursor.fetchone()
+        last_tick = row[0] if row else None
+        gap = round((now - last_tick).total_seconds()) if last_tick else None
+
+        # The tick row is the dedup key for the whole sample: if this exact
+        # second was already recorded (loop restart racing its predecessor),
+        # its members were already counted and re-incrementing would inflate
+        # the bucket above the ticks that back it.
+        db.cursor.execute("""
+            INSERT INTO presence_ticks
+                (tick_at, online_count, member_count, gap_seconds, attributed_count)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (tick_at) DO NOTHING
+            RETURNING tick_at
+        """, (now, authoritative, member_count, gap, len(online_uuids)))
+        if db.cursor.fetchone() is None:
+            log(WARN, f"Duplicate presence tick at {now.isoformat()} — skipping", context="update_member_data")
+            return
+
+        if online_uuids:
+            db.cursor.execute("""
+                INSERT INTO presence_buckets (uuid, bucket_start, samples)
+                SELECT m.uuid, %s, 1
+                FROM unnest(%s::uuid[]) AS m(uuid)
+                ON CONFLICT (uuid, bucket_start)
+                DO UPDATE SET samples = presence_buckets.samples + 1
+            """, (bucket_start, online_uuids))
+
+        db.connection.commit()
+
+    except Exception as e:
+        log(ERROR, f"Failed to write presence sample: {e}", context="update_member_data")
+    finally:
+        if db is not None:
+            try:
+                db.close()
+            except Exception:
+                pass
+
 
 def _upsert_raid_group_sync(uuid_list):
     if not uuid_list:
@@ -224,7 +378,8 @@ def _graid_log_manual_sync(participants, raid_type):
         db.close()
 
 
-def _write_current_snapshot_sync(contrib_map, rank_map, pf_map, online_map, guild_members):
+def _write_current_snapshot_sync(contrib_map, rank_map, pf_map, online_map, guild_members,
+                                 guild_online=None):
     snap = {'time': int(time.time()), 'members': []}
 
     if not guild_members:
@@ -351,6 +506,11 @@ def _write_current_snapshot_sync(contrib_map, rank_map, pf_map, online_map, guil
                 db.close()
         except:
             pass
+
+    # Independent of the cache write above: a failed cache write still means
+    # the guild fetch succeeded, so the samples are still valid.
+    _write_presence_sample_sync(online_map, len(guild_members), guild_online)
+    _write_counter_sample_sync(snap['members'])
 
 
 class UpdateMemberData(commands.Cog):
@@ -887,7 +1047,7 @@ class UpdateMemberData(commands.Cog):
         online_map = {m['uuid']: m.get('online', False) for m in guild.all_members}
         await asyncio.to_thread(
             _write_current_snapshot_sync,
-            contrib_map, rank_map, pf_map, online_map, guild.all_members
+            contrib_map, rank_map, pf_map, online_map, guild.all_members, guild.online
         )
         
         end = datetime.datetime.now(timezone.utc)
@@ -1257,6 +1417,7 @@ class UpdateMemberData(commands.Cog):
         success, written, total, failed_api, private = await self._run_snapshot(today_utc)
         if success:
             log(INFO, f"Daily activity snapshot complete ({written}/{total} members, {failed_api} failed API, {private} private)", context="update_member_data")
+            await asyncio.to_thread(_refresh_playtime_daily_sync)
         else:
             log(ERROR, "Daily activity snapshot failed", context="update_member_data")
 

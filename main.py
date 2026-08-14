@@ -310,6 +310,7 @@ extensions = [
     'Tasks.annihilation_parties',
     'Tasks.annihilation_announcements',
     'Tasks.loop_lag',
+    'Tasks.presence_rollup',
 ]
 
 for ext in extensions:
