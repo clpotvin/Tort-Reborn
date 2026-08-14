@@ -283,6 +283,160 @@ END $$;
 CREATE INDEX IF NOT EXISTS idx_player_activity_date
   ON player_activity(snapshot_date DESC);
 
+-- ── Presence sampling ────────────────────────────────────────────────────────
+-- player_activity is one cumulative snapshot per day, so it can answer "how
+-- long did they play on the 4th" but never "at what hour". These two tables
+-- record who is online at each update_member_data tick (every 3 minutes),
+-- accumulated into 15-minute buckets.
+--
+-- presence_ticks is what keeps the derived charts honest. An empty bucket
+-- means "nobody was online" only if ticks were actually recorded for it;
+-- without the tick log, bot downtime is indistinguishable from a dead
+-- timezone. Consumers normalise a bucket by the ticks observed inside it
+-- (5 expected at a 3-minute cadence) and render unobserved spans as gaps.
+
+CREATE TABLE IF NOT EXISTS presence_buckets (
+  uuid         UUID        NOT NULL,
+  bucket_start TIMESTAMPTZ NOT NULL,           -- floored to 15 minutes, UTC
+  samples      SMALLINT    NOT NULL DEFAULT 0, -- ticks seen online in this bucket
+  PRIMARY KEY (uuid, bucket_start)
+);
+
+CREATE INDEX IF NOT EXISTS idx_presence_buckets_bucket
+  ON presence_buckets(bucket_start DESC);
+
+-- online_count is the guild endpoint's own top-level count; attributed_count is
+-- how many of those we could pin to a specific member.
+--
+-- They differ, and the difference is the point. A member with
+-- restrictions.online_status = true is counted in the guild's total but has
+-- their per-member `online` flag reported false, so presence_buckets can never
+-- see them. Measured on the live endpoint: 10 of 150 members restrict their
+-- status, and across repeated samples not one of them ever reported
+-- online = true while the top-level count stayed exactly that much higher.
+-- Guild-wide charts therefore read online_count; only per-member views are
+-- limited to attributed_count, and the gap between the two is reportable
+-- rather than silent.
+CREATE TABLE IF NOT EXISTS presence_ticks (
+  tick_at          TIMESTAMPTZ PRIMARY KEY,
+  online_count     SMALLINT    NOT NULL,  -- authoritative: includes hidden members
+  member_count     SMALLINT    NOT NULL,
+  gap_seconds      INT,                   -- since the previous tick; NULL on the first tick ever
+  attributed_count SMALLINT    NOT NULL DEFAULT 0  -- of online_count, how many we can name
+);
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                 WHERE table_name = 'presence_ticks' AND column_name = 'attributed_count') THEN
+    ALTER TABLE presence_ticks ADD COLUMN attributed_count SMALLINT NOT NULL DEFAULT 0;
+  END IF;
+END $$;
+
+-- ── Hourly counter samples ───────────────────────────────────────────────────
+-- The last cumulative reading seen for each member in each hour.
+--
+-- player_activity records these same counters once a day, which can say how
+-- much someone played on the 4th but never at what hour. The 3-minute loop
+-- already fetches all three to build the guildData cache, so keeping the last
+-- reading per hour costs nothing extra and makes hour-of-day derivable from
+-- the difference between consecutive hours.
+--
+-- Values are cumulative and monotonic, so the write uses GREATEST: a stale or
+-- out-of-order read can never walk a counter backwards. Deltas are computed at
+-- query time and only trusted where consecutive samples are exactly one hour
+-- apart — a wider span means the bot was down, and attributing a whole gap to
+-- one hour would invent activity that could have happened at any point in it.
+--
+-- This only ever describes time after it was deployed. The daily history in
+-- playtime_daily is not re-derivable at this grain and remains the long-range
+-- source.
+CREATE TABLE IF NOT EXISTS member_counters_hourly (
+  uuid     UUID        NOT NULL,
+  hour     TIMESTAMPTZ NOT NULL,
+  playtime REAL        NOT NULL,
+  wars     INT         NOT NULL,
+  raids    INT         NOT NULL,
+  PRIMARY KEY (uuid, hour)
+);
+
+CREATE INDEX IF NOT EXISTS idx_member_counters_hour
+  ON member_counters_hourly(hour DESC);
+
+-- ── Derived activity series ──────────────────────────────────────────────────
+-- Rollups the charts read. Everything here is recomputable from the raw
+-- sources (player_activity, presence_buckets, presence_ticks), so any of it
+-- can be dropped and rebuilt.
+
+-- Per-player playtime attributed to a calendar day, derived from consecutive
+-- player_activity snapshots. source records how trustworthy the row is:
+--   exact        – the two snapshots were one day apart
+--   interpolated – they spanned span_days > 1 (missed snapshot, or a member
+--                  who left and rejoined); hours are that span's delta split
+--                  evenly, so the shape within the span is invented
+--   clamped      – the delta ran negative (uuid reuse or an API correction)
+--                  and was floored to zero
+--   capped       – the delta implied more than 24 hours in a day, which is
+--                  impossible; it was clipped to 24 and the excess discarded
+CREATE TABLE IF NOT EXISTS playtime_daily (
+  uuid      UUID        NOT NULL,
+  day       DATE        NOT NULL,
+  hours     REAL        NOT NULL,
+  wars      INT         NOT NULL DEFAULT 0,
+  raids     INT         NOT NULL DEFAULT 0,
+  span_days SMALLINT    NOT NULL DEFAULT 1,
+  source    VARCHAR(16) NOT NULL CHECK (source IN ('exact', 'interpolated', 'clamped', 'capped')),
+  PRIMARY KEY (uuid, day)
+);
+
+-- Widen the source constraint on databases created before 'capped' existed.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.constraint_column_usage
+             WHERE table_name = 'playtime_daily' AND constraint_name = 'playtime_daily_source_check') THEN
+    ALTER TABLE playtime_daily DROP CONSTRAINT playtime_daily_source_check;
+  END IF;
+  ALTER TABLE playtime_daily ADD CONSTRAINT playtime_daily_source_check
+    CHECK (source IN ('exact', 'interpolated', 'clamped', 'capped'));
+END $$;
+
+CREATE INDEX IF NOT EXISTS idx_playtime_daily_day
+  ON playtime_daily(day DESC);
+
+-- Per-player minutes online in an hour, folded up from presence_buckets. A
+-- sample is worth 15 / (ticks observed in its bucket) minutes, so a lagging
+-- loop stretches its surviving samples instead of under-reporting the hour.
+CREATE TABLE IF NOT EXISTS presence_hourly (
+  uuid    UUID        NOT NULL,
+  hour    TIMESTAMPTZ NOT NULL,
+  minutes REAL        NOT NULL,
+  PRIMARY KEY (uuid, hour)
+);
+
+CREATE INDEX IF NOT EXISTS idx_presence_hourly_hour
+  ON presence_hourly(hour DESC);
+
+-- Guild-wide shape of the same hour, plus how much of it was actually
+-- observed. ticks_observed is the honesty column: 20 is full coverage at a
+-- 3-minute cadence, 0 means the sampler was down and the hour is a gap
+-- rather than a quiet period.
+CREATE TABLE IF NOT EXISTS presence_coverage_hourly (
+  hour             TIMESTAMPTZ PRIMARY KEY,
+  ticks_observed   SMALLINT    NOT NULL,
+  online_avg       REAL        NOT NULL,  -- from the guild's own count
+  online_peak      SMALLINT    NOT NULL,
+  distinct_members SMALLINT    NOT NULL,
+  attributed_avg   REAL        NOT NULL DEFAULT 0  -- the nameable subset of online_avg
+);
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                 WHERE table_name = 'presence_coverage_hourly' AND column_name = 'attributed_avg') THEN
+    ALTER TABLE presence_coverage_hourly ADD COLUMN attributed_avg REAL NOT NULL DEFAULT 0;
+  END IF;
+END $$;
+
 -- Migration: Add application overhaul columns
 DO $$
 BEGIN
@@ -779,3 +933,49 @@ CREATE TABLE IF NOT EXISTS snipe_settings (
 INSERT INTO snipe_settings (key, value)
 VALUES ('current_season', '30')
 ON CONFLICT DO NOTHING;
+
+-- =============================================================================
+-- Activity Event Timeline
+-- =============================================================================
+-- One timestamped shape over the three things the guild does at a specific
+-- moment, so the hour-of-day charts have a single source to group. Defined
+-- last because it depends on tables created throughout this file.
+--
+-- Unlike playtime, all three sources carry real timestamps going back through
+-- the imported history, so these charts are populated without waiting for
+-- presence sampling to accumulate.
+--
+-- 'capture' is TAq as the attacker only — territory_exchanges also records us
+-- losing land, which is a different question than when we choose to fight.
+-- Every snipe_logs row is one of ours (guild_tag is the HQ's owner, i.e. the
+-- target), so no guild filter applies there.
+
+-- participants is how many people the event took. A guild raid can be one
+-- player or a full party of four — 13 pct of logged raids are solo and 72 pct
+-- are four-strong, averaging 3.38 — so counting raids as events understates
+-- group activity by roughly that factor. Captures have no roster to count and
+-- carry 1. GREATEST(..., 1) keeps an event with no participant rows visible
+-- rather than weighting it to nothing.
+CREATE OR REPLACE VIEW guild_activity_events AS
+  SELECT exchange_time AS occurred_at,
+         'capture'     AS kind,
+         territory     AS label,
+         1             AS participants
+  FROM territory_exchanges
+  WHERE attacker_name = 'The Aquarium'
+  UNION ALL
+  SELECT g.completed_at,
+         'raid',
+         COALESCE(g.raid_type, 'Unknown'),
+         GREATEST(COUNT(p.log_id), 1)::int
+  FROM graid_logs g
+  LEFT JOIN graid_log_participants p ON p.log_id = g.id
+  GROUP BY g.id, g.completed_at, g.raid_type
+  UNION ALL
+  SELECT s.sniped_at,
+         'snipe',
+         s.hq,
+         GREATEST(COUNT(sp.snipe_id), 1)::int
+  FROM snipe_logs s
+  LEFT JOIN snipe_participants sp ON sp.snipe_id = s.id
+  GROUP BY s.id, s.sniped_at, s.hq;
