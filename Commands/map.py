@@ -19,7 +19,8 @@ def coordToPixel(x: int, z: int) -> Tuple[int, int]:
 
 def mapCreator(guild_prefix: Optional[str] = None):
     """Builds the territory map. If guild_prefix is provided, zooms to that guild's territories.
-    Returns (discord.File | None, discord.Embed). If file is None, only the embed should be sent.
+    Returns (discord.File, None) on success — the image is sent bare, no embed wrapper.
+    On failure returns (None, discord.Embed) and only the error embed should be sent.
     """
     map_img = Image.open("images/map/fruma_map.png").convert("RGBA")
     font = ImageFont.truetype("images/profile/minecraft_font.ttf", 40)
@@ -162,13 +163,7 @@ def mapCreator(guild_prefix: Optional[str] = None):
     buf.seek(0)
     file = discord.File(buf, filename="wynn_map.png")
 
-    # Embed
-    embed = discord.Embed(
-        title=f"Current Territory Map" + (f" for {guild_prefix}" if guild_prefix else ""),
-        color=discord.Color.green(),
-    )
-    embed.set_image(url="attachment://wynn_map.png")
-    return file, embed
+    return file, None
 
 
 class Map(commands.Cog):
@@ -185,12 +180,12 @@ class Map(commands.Cog):
         """Slash command to show territory map."""
         await ctx.defer()
         file, embed = await asyncio.to_thread(mapCreator, guild)
-        # if mapCreator returned (None, embed), send only the embed
+        # if mapCreator returned (None, embed), send only the error embed
         if file is None:
             return await ctx.followup.send(embed=embed)
 
-        # otherwise send image + embed
-        await ctx.followup.send(file=file, embed=embed)
+        # otherwise send the bare image
+        await ctx.followup.send(file=file)
 
     @commands.Cog.listener()
     async def on_ready(self):
