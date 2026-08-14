@@ -17,7 +17,7 @@ from collections import Counter
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from Helpers.database import DB
-from Helpers.playtime_daily import SOURCE_ROWS, UPSERT, build_rows, MAX_HOURS_PER_DAY  # noqa: F401
+from Helpers.playtime_daily import SOURCE_ROWS, build_rows, upsert_rows, MAX_HOURS_PER_DAY  # noqa: F401
 
 
 def main():
@@ -48,14 +48,9 @@ def main():
             print("\ndry run — nothing written")
             return
 
-        written = 0
-        for start in range(0, len(rows), 5000):
-            batch = rows[start:start + 5000]
-            db.cursor.executemany(UPSERT, batch)
-            written += len(batch)
-            print(f"  wrote {written}/{len(rows)}", end="\r")
+        upsert_rows(db, rows)
         db.connection.commit()
-        print(f"\nwrote {written} rows to playtime_daily")
+        print(f"wrote {len(rows)} rows to playtime_daily")
 
     finally:
         db.close()
