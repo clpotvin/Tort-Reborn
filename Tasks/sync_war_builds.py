@@ -1,4 +1,26 @@
+"""Keep the website's war builds and the Discord war roles in agreement.
+
+The two sides hold different amounts of detail. The database records which
+*build* a member runs (``guardian`` pinned to v2.0, say); Discord only records
+the coarse role that build implies. So the sync is asymmetric:
+
+* database -> Discord is a faithful projection: a member holds ``Tank`` exactly
+  when they have at least one build whose definition has role ``TANK``.
+* Discord -> database is lossy: someone adding ``Tank`` by hand can only mean
+  "give them the default tank build", and removing it means "drop their tank
+  builds".
+
+Both directions are supported, but only the reconciler writes anything. The
+gateway listener never touches the database -- it just flags the member so the
+next tick can re-derive both sides from authoritative state. Every role write
+the reconciler makes is registered with the echo suppressor first, so the
+gateway event it provokes is recognised as our own work rather than mistaken
+for a human edit. Without that, the two halves treat each other's writes as
+instructions and oscillate, deleting real build assignments on the way.
+"""
+
 import asyncio
+import time
 
 import discord
 from discord.ext import tasks, commands
@@ -15,58 +37,121 @@ DISCORD_TO_DB_ROLE = {
 }
 DB_TO_DISCORD_ROLE = {v: k for k, v in DISCORD_TO_DB_ROLE.items()}
 
-WAR_ROLE_NAMES = set(DISCORD_TO_DB_ROLE.keys())
+WAR_ROLE_NAMES = frozenset(DISCORD_TO_DB_ROLE)
+
+# How long a role write of ours stays "expected". Gateway echoes normally land
+# in well under a second; the generous window absorbs a lagging shard without
+# being long enough to swallow a genuine human edit made straight afterwards.
+ECHO_TTL_SECONDS = 30
+
+
+class EchoSuppressor:
+    """Remembers role writes the reconciler made.
+
+    Discord echoes every role change back over the gateway. Those echoes are
+    indistinguishable from a human edit unless we record what we did first,
+    which is what this class is for.
+    """
+
+    def __init__(self, ttl=ECHO_TTL_SECONDS, clock=time.monotonic):
+        self._ttl = ttl
+        self._clock = clock
+        self._pending = {}
+
+    def expect(self, member_id, role_names):
+        """Record role names we are about to write for ``member_id``."""
+        deadline = self._clock() + self._ttl
+        for name in role_names:
+            self._pending[(member_id, name)] = deadline
+
+    def consume(self, member_id, role_names):
+        """Return the subset of ``role_names`` we did not cause ourselves."""
+        now = self._clock()
+        unexplained = set()
+        for name in role_names:
+            deadline = self._pending.pop((member_id, name), None)
+            if deadline is None or deadline < now:
+                unexplained.add(name)
+        return unexplained
+
+    def purge(self):
+        """Drop expired entries so the table can't grow without bound."""
+        now = self._clock()
+        for key, deadline in list(self._pending.items()):
+            if deadline < now:
+                del self._pending[key]
+
+    def __len__(self):
+        return len(self._pending)
+
+
+def plan_role_changes(current_roles, desired_roles):
+    """Database -> Discord. Returns (roles_to_add, roles_to_remove)."""
+    return desired_roles - current_roles, current_roles - desired_roles
+
+
+def plan_build_changes(discord_roles, db_roles):
+    """Discord -> database.
+
+    Both arguments are sets of *Discord* role names. Returns the roles that
+    need a build assigning and the roles whose builds should be dropped.
+    """
+    return discord_roles - db_roles, db_roles - discord_roles
+
+
+def roles_to_discord_names(db_roles):
+    """Map DB role values onto Discord role names, dropping unknown values."""
+    return {DB_TO_DISCORD_ROLE[r] for r in db_roles if r in DB_TO_DISCORD_ROLE}
 
 
 # ── DB helpers (blocking, run via asyncio.to_thread) ─────────────────────
 
-def _get_desired_roles():
-    """Return {uuid: set(db_role)} from member_builds + build_definitions."""
-    db = DB()
-    db.connect()
-    try:
+def _fetch_state():
+    """Read everything the reconciler needs in one connection.
+
+    ``member_builds.uuid`` is a varchar while ``discord_links.uuid`` is a real
+    uuid column, so both are cast to text here. They happen to arrive as
+    equal strings today, but the cast means a future ``register_uuid()``
+    can't silently turn every lookup into a miss -- which would read as
+    "nobody has any builds" and strip the roles off the whole guild.
+
+    Linked rows are ordered last so that when an old unlinked row shares a
+    uuid with the current one, the live Discord id wins.
+    """
+    with DB() as db:
         db.cursor.execute("""
-            SELECT mb.uuid, bd.role
+            SELECT mb.uuid::text, bd.role
             FROM member_builds mb
             JOIN build_definitions bd ON mb.build_key = bd.key
         """)
-        result = {}
+        builds = {}
         for uuid, role in db.cursor.fetchall():
-            result.setdefault(uuid, set()).add(role)
-        return result
-    finally:
-        db.close()
+            builds.setdefault(uuid, set()).add(role)
 
-
-def _get_discord_links():
-    """Return {uuid: discord_id} and {discord_id: uuid} mappings."""
-    db = DB()
-    db.connect()
-    try:
-        db.cursor.execute("SELECT uuid, discord_id FROM discord_links")
+        db.cursor.execute("""
+            SELECT uuid::text, discord_id
+            FROM discord_links
+            WHERE uuid IS NOT NULL
+            ORDER BY linked ASC
+        """)
         uuid_to_discord = {}
         discord_to_uuid = {}
         for uuid, discord_id in db.cursor.fetchall():
             uuid_to_discord[uuid] = str(discord_id)
             discord_to_uuid[str(discord_id)] = uuid
-        return uuid_to_discord, discord_to_uuid
-    finally:
-        db.close()
+
+        return builds, uuid_to_discord, discord_to_uuid
 
 
 def _get_default_build_key(db_role):
     """Get the first build key for a role (by sort_order)."""
-    db = DB()
-    db.connect()
-    try:
+    with DB() as db:
         db.cursor.execute(
             "SELECT key FROM build_definitions WHERE role = %s ORDER BY sort_order LIMIT 1",
             (db_role,)
         )
         row = db.cursor.fetchone()
         return row[0] if row else None
-    finally:
-        db.close()
 
 
 def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
@@ -76,9 +161,7 @@ def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
     current latest from build_versions before inserting. If the build has no
     versions yet, we skip the insert and log a warning.
     """
-    db = DB()
-    db.connect()
-    try:
+    with DB() as db:
         db.cursor.execute(
             """SELECT major, minor FROM build_versions
                WHERE build_key = %s
@@ -90,7 +173,7 @@ def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
         if not row:
             log(WARN, f"No versions exist for build '{build_key}'; skipping auto-assign",
                 context="sync_war_builds")
-            return
+            return False
         major, minor = row
 
         db.cursor.execute(
@@ -100,109 +183,163 @@ def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
             (uuid, build_key, major, minor, assigned_by)
         )
         db.connection.commit()
-    finally:
-        db.close()
+        return True
 
 
 def _remove_member_builds_by_role(uuid, db_role):
-    """Remove all builds for a member that match a given role."""
-    db = DB()
-    db.connect()
-    try:
+    """Delete a member's builds for one role, returning what was removed.
+
+    The rows are returned so the caller can log them: an exec's assignment is
+    not recoverable from the database once it is gone, so the bot log is the
+    only restore trail there is.
+    """
+    with DB() as db:
         db.cursor.execute(
             """DELETE FROM member_builds
                WHERE uuid = %s AND build_key IN (
                    SELECT key FROM build_definitions WHERE role = %s
-               )""",
+               )
+               RETURNING build_key, version_major, version_minor""",
             (uuid, db_role)
         )
+        removed = db.cursor.fetchall()
         db.connection.commit()
-    finally:
-        db.close()
-
-
-def _get_member_roles_for_uuid(uuid):
-    """Return set of DB roles a member currently has builds for."""
-    db = DB()
-    db.connect()
-    try:
-        db.cursor.execute("""
-            SELECT DISTINCT bd.role
-            FROM member_builds mb
-            JOIN build_definitions bd ON mb.build_key = bd.key
-            WHERE mb.uuid = %s
-        """, (uuid,))
-        return {row[0] for row in db.cursor.fetchall()}
-    finally:
-        db.close()
+        return [(key, major, minor) for key, major, minor in removed]
 
 
 class SyncWarBuilds(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.echo = EchoSuppressor()
+        # Members whose war roles were changed in Discord by someone other than
+        # us, awaiting a reconcile against freshly fetched state.
+        self.dirty = set()
 
-    # ── Polling: Website DB -> Discord roles ─────────────────────────
+    # ── Event: notice human role changes, but don't act on them here ──
+
+    @commands.Cog.listener()
+    async def on_member_update(self, before: discord.Member, after: discord.Member):
+        if after.guild is None or after.guild.id != TAQ_GUILD_ID:
+            return
+
+        before_war = {r.name for r in before.roles if r.name in WAR_ROLE_NAMES}
+        after_war = {r.name for r in after.roles if r.name in WAR_ROLE_NAMES}
+        changed = before_war ^ after_war
+        if not changed:
+            return
+
+        unexplained = self.echo.consume(after.id, changed)
+        if not unexplained:
+            return
+
+        # Deliberately no database write here. This payload can race another
+        # update to the same member, and a delta computed from a raced pair
+        # used to delete builds that were never actually unassigned. Flag the
+        # member instead and let the next tick decide from fetched state.
+        self.dirty.add(after.id)
+        log(INFO,
+            f"{after.display_name} war roles changed outside the sync "
+            f"({sorted(unexplained)}); queued for reconcile",
+            context="sync_war_builds")
+
+    # ── Reconciler: the only thing that writes to either side ────────
 
     @tasks.loop(seconds=60)
     async def sync_builds_to_discord(self):
-        """Compare member_builds against Discord roles and reconcile."""
+        try:
+            await self._reconcile()
+        except Exception as e:
+            log(ERROR, f"Reconcile tick failed: {e}", context="sync_war_builds")
+
+    async def _reconcile(self):
         guild = self.client.get_guild(TAQ_GUILD_ID)
         if not guild:
             return
 
-        # Resolve Discord role objects by name
+        # Every war role has to resolve before we touch anything. Acting on a
+        # partial mapping means treating "role object missing" as "member
+        # shouldn't have it" and stripping it from the whole guild.
         role_objects = {}
         for role_name in WAR_ROLE_NAMES:
             role_obj = discord.utils.get(guild.roles, name=role_name)
             if role_obj:
                 role_objects[role_name] = role_obj
-
-        if not role_objects:
+        missing = WAR_ROLE_NAMES - set(role_objects)
+        if missing:
+            log(WARN, f"War role(s) {sorted(missing)} not found; skipping tick",
+                context="sync_war_builds")
             return
 
-        # Get desired state from DB
-        desired = await asyncio.to_thread(_get_desired_roles)
-        uuid_to_discord, discord_to_uuid = await asyncio.to_thread(_get_discord_links)
+        # A partially populated member cache would look like a guild full of
+        # people who suddenly hold no roles.
+        if not guild.chunked:
+            log(WARN, "Member cache not chunked yet; skipping tick",
+                context="sync_war_builds")
+            return
 
-        # Build desired Discord roles per discord_id
-        # desired_discord[discord_id] = set of Discord role names they should have
-        desired_discord = {}
-        for uuid, db_roles in desired.items():
+        self.echo.purge()
+
+        state = await asyncio.to_thread(_fetch_state)
+
+        # Phase 1: fold human edits into the database, so that the projection
+        # below agrees with them instead of reverting them.
+        claimed, self.dirty = self.dirty, set()
+        folded = 0
+        for member_id in claimed:
+            try:
+                folded += await self._apply_discord_intent(guild, member_id, state)
+            except Exception as e:
+                log(ERROR, f"Failed to apply Discord role change for {member_id}: {e}",
+                    context="sync_war_builds")
+
+        # Phase 2: project the database onto Discord. Only worth re-reading if
+        # phase 1 actually changed something.
+        if folded:
+            state = await asyncio.to_thread(_fetch_state)
+        builds, uuid_to_discord, _ = state
+
+        desired_by_discord = {}
+        for uuid, db_roles in builds.items():
             discord_id = uuid_to_discord.get(uuid)
-            if not discord_id:
-                continue
-            discord_role_names = set()
-            for db_role in db_roles:
-                discord_name = DB_TO_DISCORD_ROLE.get(db_role)
-                if discord_name:
-                    discord_role_names.add(discord_name)
-            desired_discord[discord_id] = discord_role_names
+            if discord_id:
+                desired_by_discord[discord_id] = roles_to_discord_names(db_roles)
 
-        # Also track members who have war roles but shouldn't (builds removed via website)
+        # Only members we can resolve to a Minecraft account are in scope. For
+        # anyone else the database holds no opinion, and "no opinion" must not
+        # be read as "remove their roles".
+        linked_discord_ids = set(uuid_to_discord.values())
+
         for member in guild.members:
-            member_id = str(member.id)
-            current_war_roles = {r.name for r in member.roles if r.name in WAR_ROLE_NAMES}
-            desired_war_roles = desired_discord.get(member_id, set())
-
-            if current_war_roles == desired_war_roles:
+            member_key = str(member.id)
+            if member_key not in linked_discord_ids:
+                continue
+            if member.id in self.dirty:
+                # Touched again while this tick was running; next pass has the
+                # fresher view.
                 continue
 
-            # Roles to add
-            to_add = desired_war_roles - current_war_roles
-            # Roles to remove
-            to_remove = current_war_roles - desired_war_roles
+            current = {r.name for r in member.roles if r.name in WAR_ROLE_NAMES}
+            desired = desired_by_discord.get(member_key, set())
+            to_add_names, to_remove_names = plan_role_changes(current, desired)
+            if not to_add_names and not to_remove_names:
+                continue
 
-            roles_to_add = [role_objects[name] for name in to_add if name in role_objects]
-            roles_to_remove = [role_objects[name] for name in to_remove if name in role_objects]
+            # Register before writing: the gateway event can otherwise arrive
+            # before we finish, and be read as a human edit.
+            self.echo.expect(member.id, to_add_names | to_remove_names)
 
             try:
-                if roles_to_add:
-                    await member.add_roles(*roles_to_add, reason="War build sync (website)")
-                    log(INFO, f"Added {[r.name for r in roles_to_add]} to {member.display_name}",
+                if to_add_names:
+                    await member.add_roles(
+                        *[role_objects[n] for n in to_add_names],
+                        reason="War build sync (website)")
+                    log(INFO, f"Added {sorted(to_add_names)} to {member.display_name}",
                         context="sync_war_builds")
-                if roles_to_remove:
-                    await member.remove_roles(*roles_to_remove, reason="War build sync (website)")
-                    log(INFO, f"Removed {[r.name for r in roles_to_remove]} from {member.display_name}",
+                if to_remove_names:
+                    await member.remove_roles(
+                        *[role_objects[n] for n in to_remove_names],
+                        reason="War build sync (website)")
+                    log(INFO, f"Removed {sorted(to_remove_names)} from {member.display_name}",
                         context="sync_war_builds")
             except discord.Forbidden:
                 log(WARN, f"Missing permissions to update roles for {member.display_name}",
@@ -211,59 +348,66 @@ class SyncWarBuilds(commands.Cog):
                 log(ERROR, f"Failed to update roles for {member.display_name}: {e}",
                     context="sync_war_builds")
 
-    # ── Event: Discord role changes -> Website DB ────────────────────
+        if folded:
+            log(INFO, f"Applied {folded} Discord-side role change(s) to the database",
+                context="sync_war_builds")
 
-    @commands.Cog.listener()
-    async def on_member_update(self, before: discord.Member, after: discord.Member):
-        if before.roles == after.roles:
-            return
+    async def _apply_discord_intent(self, guild, member_id, state):
+        """Make the database match Discord for one member a human edited.
 
-        # Only care about war role changes
-        before_war = {r.name for r in before.roles if r.name in WAR_ROLE_NAMES}
-        after_war = {r.name for r in after.roles if r.name in WAR_ROLE_NAMES}
+        The member is fetched from the API rather than read from the gateway
+        cache, because this is the path that deletes build assignments and a
+        raced cache entry is exactly how they got deleted spuriously before.
+        """
+        try:
+            member = await guild.fetch_member(member_id)
+        except discord.NotFound:
+            return 0
+        except discord.HTTPException as e:
+            log(WARN, f"Could not fetch member {member_id}: {e}",
+                context="sync_war_builds")
+            self.dirty.add(member_id)  # try again next tick
+            return 0
 
-        if before_war == after_war:
-            return
-
-        added = after_war - before_war
-        removed = before_war - after_war
-
-        if not added and not removed:
-            return
-
-        # Look up UUID for this Discord user
-        _, discord_to_uuid = await asyncio.to_thread(_get_discord_links)
-        uuid = discord_to_uuid.get(str(after.id))
+        builds, _, discord_to_uuid = state
+        uuid = discord_to_uuid.get(str(member_id))
         if not uuid:
-            return
+            log(WARN,
+                f"{member.display_name} has no linked account; "
+                f"ignoring their Discord war role change",
+                context="sync_war_builds")
+            return 0
 
-        # Handle added roles
-        for role_name in added:
-            db_role = DISCORD_TO_DB_ROLE.get(role_name)
-            if not db_role:
-                continue
+        current = {r.name for r in member.roles if r.name in WAR_ROLE_NAMES}
+        in_db = roles_to_discord_names(builds.get(uuid, set()))
+        need_build, drop_build = plan_build_changes(current, in_db)
 
-            # Check if they already have a build for this role
-            current_roles = await asyncio.to_thread(_get_member_roles_for_uuid, uuid)
-            if db_role in current_roles:
-                continue
-
-            # Add the default build for this role
+        changes = 0
+        for role_name in sorted(need_build):
+            db_role = DISCORD_TO_DB_ROLE[role_name]
             build_key = await asyncio.to_thread(_get_default_build_key, db_role)
-            if build_key:
-                await asyncio.to_thread(_add_member_build, uuid, build_key)
-                log(INFO, f"Added build '{build_key}' for {after.display_name} (Discord role: {role_name})",
+            if not build_key:
+                log(WARN, f"No build defined for {db_role}; cannot honour "
+                          f"{role_name} on {member.display_name}",
+                    context="sync_war_builds")
+                continue
+            if await asyncio.to_thread(_add_member_build, uuid, build_key):
+                changes += 1
+                log(INFO, f"{member.display_name} gained {role_name} in Discord "
+                          f"-> assigned default build '{build_key}'",
                     context="sync_war_builds")
 
-        # Handle removed roles
-        for role_name in removed:
-            db_role = DISCORD_TO_DB_ROLE.get(role_name)
-            if not db_role:
-                continue
+        for role_name in sorted(drop_build):
+            db_role = DISCORD_TO_DB_ROLE[role_name]
+            removed = await asyncio.to_thread(_remove_member_builds_by_role, uuid, db_role)
+            if removed:
+                changes += 1
+                detail = ", ".join(f"{k} v{maj}.{minor}" for k, maj, minor in removed)
+                log(INFO, f"{member.display_name} lost {role_name} in Discord "
+                          f"-> removed {detail}",
+                    context="sync_war_builds")
 
-            await asyncio.to_thread(_remove_member_builds_by_role, uuid, db_role)
-            log(INFO, f"Removed {db_role} builds for {after.display_name} (Discord role: {role_name})",
-                context="sync_war_builds")
+        return changes
 
     # ── Lifecycle ────────────────────────────────────────────────────
 
