@@ -13,7 +13,7 @@ from discord.ext import commands, pages
 
 from Helpers.classes import PlaceTemplate, Page
 from Helpers.database import DB, BatchBaselineQueryError, get_current_guild_data_with_db, get_player_activity_baselines_for_members_with_db
-from Helpers.functions import addLine, expand_image, generate_rank_badge
+from Helpers.functions import addLine, expand_image, generate_rank_badge, cap_playtime_window
 from Helpers.logger import log, ERROR
 from Helpers.variables import rank_map, discord_ranks, HOME_GUILD_IDS
 
@@ -187,6 +187,9 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
                 # would show their total as delta - cap to 0 instead
                 if warn_flag and base_val == 0 and contributed == curr_val and curr_val > 0:
                     contributed = 0
+                if order_key == 'playtime':
+                    # Cap at the window's physical maximum (TAQ-49)
+                    contributed = cap_playtime_window(contributed, days)
                 is_private = is_null  # Mark as private if current value is null
 
             else:
