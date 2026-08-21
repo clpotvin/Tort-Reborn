@@ -298,6 +298,7 @@ extensions = [
     'Tasks.graid_event_stop',
     'Tasks.recruitment_checker',
     'Tasks.cache_guild_colors',
+    'Tasks.sync_discord_colors',
     'Tasks.check_website_apps',
     'Tasks.sync_vote_counts',
     'Tasks.kick_list_tracker',

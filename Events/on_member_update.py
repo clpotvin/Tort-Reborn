@@ -4,7 +4,9 @@ import discord
 from discord.ext import commands
 
 from Helpers.database import DB
-from Helpers.variables import ERROR_CHANNEL_ID, is_home_guild
+from Helpers.logger import log, ERROR
+from Helpers.discord_colors import rendered_colors, write_member_colors
+from Helpers.variables import ERROR_CHANNEL_ID, TAQ_GUILD_ID, is_home_guild
 
 
 def _db_lookup_uuid(discord_id: int):
@@ -26,6 +28,21 @@ class OnMemberUpdate(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    async def _sync_colors(self, before: discord.Member, after: discord.Member):
+        # Ahead of the promotion checks below, which only see additions:
+        # losing a coloured role changes the rendered colour too.
+        if after.guild.id != TAQ_GUILD_ID:
+            return
+
+        colors = rendered_colors(after)
+        if colors == rendered_colors(before):
+            return
+
+        try:
+            await asyncio.to_thread(write_member_colors, [(after.id, colors)])
+        except Exception as e:
+            log(ERROR, f"Failed to store colours for {after.id}: {e}", context="on_member_update")
+
     @commands.Cog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
         # Ignore member updates from external (non-home) guilds
@@ -35,6 +52,8 @@ class OnMemberUpdate(commands.Cog):
         # Only care about role changes
         if before.roles == after.roles:
             return
+
+        await self._sync_colors(before, after)
 
         added_roles = set(after.roles) - set(before.roles)
         if not added_roles:
