@@ -5,7 +5,11 @@ The two sides hold different amounts of detail. The database records which
 the coarse role that build implies. So the sync is asymmetric:
 
 * database -> Discord is a faithful projection: a member holds ``Tank`` exactly
-  when they have at least one build whose definition has role ``TANK``.
+  when they have at least one *active* build whose definition has role
+  ``TANK``. Archived builds and archived versions (TAQ-29) don't count: the
+  assignment rows are kept as the record of who had them, but they produce no
+  role, receive no new assignments, and are ignored when a human removes a
+  role in Discord.
 * Discord -> database is lossy: someone adding ``Tank`` by hand can only mean
   "give them the default tank build", and removing it means "drop their tank
   builds".
@@ -119,10 +123,17 @@ def _fetch_state():
     uuid with the current one, the live Discord id wins.
     """
     with DB() as db:
+        # Only active assignments count: an archived definition or an archived
+        # pinned version produces no role, which is what actually retires it.
         db.cursor.execute("""
             SELECT mb.uuid::text, bd.role
             FROM member_builds mb
             JOIN build_definitions bd ON mb.build_key = bd.key
+            JOIN build_versions bv
+              ON bv.build_key = mb.build_key
+             AND bv.major = mb.version_major
+             AND bv.minor = mb.version_minor
+            WHERE NOT bd.archived AND NOT bv.archived
         """)
         builds = {}
         for uuid, role in db.cursor.fetchall():
@@ -144,10 +155,19 @@ def _fetch_state():
 
 
 def _get_default_build_key(db_role):
-    """Get the first build key for a role (by sort_order)."""
+    """Get the first assignable build key for a role (by sort_order).
+
+    Archived builds, and builds whose every version is archived, are skipped:
+    a human granting ``DPS`` in Discord means "give them a working build", and
+    before TAQ-29 this handed out whatever sorted first -- even a dead one.
+    """
     with DB() as db:
         db.cursor.execute(
-            "SELECT key FROM build_definitions WHERE role = %s ORDER BY sort_order LIMIT 1",
+            """SELECT bd.key FROM build_definitions bd
+               WHERE bd.role = %s AND NOT bd.archived
+                 AND EXISTS (SELECT 1 FROM build_versions bv
+                             WHERE bv.build_key = bd.key AND NOT bv.archived)
+               ORDER BY bd.sort_order LIMIT 1""",
             (db_role,)
         )
         row = db.cursor.fetchone()
@@ -155,23 +175,29 @@ def _get_default_build_key(db_role):
 
 
 def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
-    """Insert a member_builds row pinned to the build's latest version.
+    """Insert a member_builds row pinned to the build's latest active version.
 
     member_builds.version_major/minor are NOT NULL, so we must look up the
     current latest from build_versions before inserting. If the build has no
-    versions yet, we skip the insert and log a warning.
+    active versions, we skip the insert and log a warning.
+
+    If the member already holds this build pinned to an *archived* version,
+    the conflict clause upgrades the pin instead of doing nothing. A plain
+    DO NOTHING would leave the archived pin in place, the projection would
+    read it as "no role", and the human's role grant would be silently
+    reverted on the next tick -- forever.
     """
     with DB() as db:
         db.cursor.execute(
             """SELECT major, minor FROM build_versions
-               WHERE build_key = %s
+               WHERE build_key = %s AND NOT archived
                ORDER BY major DESC, minor DESC
                LIMIT 1""",
             (build_key,)
         )
         row = db.cursor.fetchone()
         if not row:
-            log(WARN, f"No versions exist for build '{build_key}'; skipping auto-assign",
+            log(WARN, f"No active versions exist for build '{build_key}'; skipping auto-assign",
                 context="sync_war_builds")
             return False
         major, minor = row
@@ -179,7 +205,19 @@ def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
         db.cursor.execute(
             """INSERT INTO member_builds (uuid, build_key, version_major, version_minor, assigned_by)
                VALUES (%s, %s, %s, %s, %s)
-               ON CONFLICT (uuid, build_key) DO NOTHING""",
+               ON CONFLICT (uuid, build_key) DO UPDATE
+                 SET prev_version_major = member_builds.version_major,
+                     prev_version_minor = member_builds.version_minor,
+                     version_major = EXCLUDED.version_major,
+                     version_minor = EXCLUDED.version_minor,
+                     assigned_by   = EXCLUDED.assigned_by
+                 WHERE EXISTS (
+                     SELECT 1 FROM build_versions bv
+                     WHERE bv.build_key = member_builds.build_key
+                       AND bv.major = member_builds.version_major
+                       AND bv.minor = member_builds.version_minor
+                       AND bv.archived
+                 )""",
             (uuid, build_key, major, minor, assigned_by)
         )
         db.connection.commit()
@@ -187,7 +225,12 @@ def _add_member_build(uuid, build_key, assigned_by='discord_sync'):
 
 
 def _remove_member_builds_by_role(uuid, db_role):
-    """Delete a member's builds for one role, returning what was removed.
+    """Delete a member's *active* builds for one role, returning what was
+    removed.
+
+    Archived assignments are left alone: they already produce no role, and
+    they are the record of who had the build (TAQ-29) -- a Discord role
+    removal must not erase history it wasn't expressing an opinion about.
 
     The rows are returned so the caller can log them: an exec's assignment is
     not recoverable from the database once it is gone, so the bot log is the
@@ -195,11 +238,15 @@ def _remove_member_builds_by_role(uuid, db_role):
     """
     with DB() as db:
         db.cursor.execute(
-            """DELETE FROM member_builds
-               WHERE uuid = %s AND build_key IN (
-                   SELECT key FROM build_definitions WHERE role = %s
-               )
-               RETURNING build_key, version_major, version_minor""",
+            """DELETE FROM member_builds mb
+               USING build_definitions bd, build_versions bv
+               WHERE mb.uuid = %s
+                 AND bd.key = mb.build_key AND bd.role = %s AND NOT bd.archived
+                 AND bv.build_key = mb.build_key
+                 AND bv.major = mb.version_major
+                 AND bv.minor = mb.version_minor
+                 AND NOT bv.archived
+               RETURNING mb.build_key, mb.version_major, mb.version_minor""",
             (uuid, db_role)
         )
         removed = db.cursor.fetchall()
