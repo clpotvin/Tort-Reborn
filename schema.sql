@@ -481,6 +481,15 @@ BEGIN
     ALTER TABLE discord_links ADD COLUMN app_channel BIGINT;
   END IF;
 
+  -- Secondary and tertiary are set only for gradient and holographic roles.
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'discord_links' AND column_name = 'color_primary') THEN
+    ALTER TABLE discord_links ADD COLUMN color_primary INT;
+    ALTER TABLE discord_links ADD COLUMN color_secondary INT;
+    ALTER TABLE discord_links ADD COLUMN color_tertiary INT;
+    ALTER TABLE discord_links ADD COLUMN color_role_name VARCHAR(100);
+    ALTER TABLE discord_links ADD COLUMN colors_synced_at TIMESTAMPTZ;
+  END IF;
+
   -- guild leave tracking for accepted applicants currently in another guild
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'new_app' AND column_name = 'guild_leave_pending') THEN
     ALTER TABLE new_app ADD COLUMN guild_leave_pending BOOLEAN DEFAULT FALSE;
@@ -949,6 +958,17 @@ CREATE TABLE IF NOT EXISTS snipe_settings (
 INSERT INTO snipe_settings (key, value)
 VALUES ('current_season', '30')
 ON CONFLICT DO NOTHING;
+
+-- ── Rank role colours (mirrored from Discord for the Verge mod) ─────────────
+
+CREATE TABLE IF NOT EXISTS rank_role_colors (
+  rank_key        VARCHAR(32)  PRIMARY KEY,
+  color_primary   INT          NOT NULL,
+  color_secondary INT,
+  color_tertiary  INT,
+  role_name       VARCHAR(100),
+  synced_at       TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
 
 -- =============================================================================
 -- Activity Event Timeline
