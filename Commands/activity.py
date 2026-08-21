@@ -13,7 +13,7 @@ from PIL import Image, ImageFont, ImageDraw
 
 from Helpers.classes import PlaceTemplate, Page
 from Helpers.database import DB, BatchBaselineQueryError, get_current_guild_data_with_db, get_player_activity_baselines_for_members_with_db
-from Helpers.functions import date_diff, isInCurrDay, expand_image, addLine, generate_rank_badge
+from Helpers.functions import date_diff, isInCurrDay, expand_image, addLine, generate_rank_badge, cap_playtime_window
 from Helpers.variables import rank_map as RANK_STARS_MAP, discord_ranks, HOME_GUILD_IDS
 
 from Helpers.pagination import add_paginator_buttons
@@ -324,8 +324,8 @@ class Activity(commands.Cog):
 
                     baseline_pt, _ = baseline_by_uuid.get(uuid, (0, True))
 
-                    # Compute actual playtime delta
-                    real_pt = max(0, float(playtime) - float(baseline_pt))
+                    # Compute actual playtime delta, capped at the window's max (TAQ-49)
+                    real_pt = cap_playtime_window(max(0, float(playtime) - float(baseline_pt)), days)
 
                     # New members (joined within 1 day) have no reliable baseline
                     if member_for < 2:

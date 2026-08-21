@@ -231,6 +231,20 @@ def getPlayerUUID(player, token=None):
             return False
 
 
+def cap_playtime_window(hours, days):
+    """Clamp a windowed playtime delta to the window's physical maximum (TAQ-49).
+
+    The snapshot-delta math ("baseline N calendar days ago" vs. live data) can
+    span slightly more than N*24 hours, so a very active player could show e.g.
+    25h in a 1-day window. Rather than tightening the window bookkeeping, the
+    value is simply capped at N*24 — inexact at the margin, never impossible.
+    Non-positive ``days`` (all-time views) are returned uncapped.
+    """
+    if not days or days <= 0:
+        return hours
+    return min(hours, days * 24)
+
+
 def determine_starting_rank(member):
     """Determine the starting rank for a new member based on their existing Discord roles.
 
