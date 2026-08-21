@@ -3,13 +3,29 @@
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS discord_links (
-  discord_id   BIGINT       PRIMARY KEY,
-  ign          VARCHAR(64)  NOT NULL,
-  uuid         UUID,
-  linked       BOOLEAN      NOT NULL DEFAULT FALSE,
-  rank         VARCHAR(32)  NOT NULL,
-  wars_on_join INT
+  discord_id        BIGINT       PRIMARY KEY,
+  ign               VARCHAR(64)  NOT NULL,
+  uuid              UUID,
+  linked            BOOLEAN      NOT NULL DEFAULT FALSE,
+  rank              VARCHAR(32)  NOT NULL,
+  wars_on_join      INT,
+  -- Honorific roles held at (re)registration, recorded before the bot strips
+  -- them, so member removal can hand them back (TAQ-51). On restore, Retired
+  -- Chief also grants Honored Fish (TAQ-67).
+  was_honored_fish  BOOLEAN      NOT NULL DEFAULT FALSE,
+  was_retired_chief BOOLEAN      NOT NULL DEFAULT FALSE
 );
+
+-- Migration: honorific tracking for member removal (TAQ-51 / TAQ-67)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'discord_links' AND column_name = 'was_honored_fish') THEN
+    ALTER TABLE discord_links ADD COLUMN was_honored_fish BOOLEAN NOT NULL DEFAULT FALSE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'discord_links' AND column_name = 'was_retired_chief') THEN
+    ALTER TABLE discord_links ADD COLUMN was_retired_chief BOOLEAN NOT NULL DEFAULT FALSE;
+  END IF;
+END $$;
 
 -- A Minecraft account may be linked to at most one Discord account at a time.
 -- Duplicate linked rows fan out every uuid join (bot and website), duplicating

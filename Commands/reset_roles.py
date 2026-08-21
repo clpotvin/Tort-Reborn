@@ -5,6 +5,7 @@ from discord import default_permissions
 
 from Helpers.classes import BasicPlayerStats
 from Helpers.database import DB
+from Helpers.member_roles import removal_role_names, resolve_roles
 from Helpers.variables import HOME_GUILD_IDS, discord_ranks
 
 
@@ -41,14 +42,15 @@ class ResetRolesCommand(commands.Cog):
             initiator_rank = initiator_row[0]
             initiator_index = list(discord_ranks).index(initiator_rank)
 
-            # Check target's rank
+            # Check target's rank and recorded honorific status
             db.cursor.execute(
-                'SELECT rank FROM discord_links WHERE discord_id = %s',
+                'SELECT rank, was_honored_fish, was_retired_chief FROM discord_links WHERE discord_id = %s',
                 (user.id,)
             )
             target_row = db.cursor.fetchone()
+            was_honored_fish = was_retired_chief = False
             if target_row:
-                target_rank = target_row[0]
+                target_rank, was_honored_fish, was_retired_chief = target_row
                 target_index = list(discord_ranks).index(target_rank)
 
                 # Only allow resetting roles of members with a lower rank
@@ -62,39 +64,24 @@ class ResetRolesCommand(commands.Cog):
                     return
 
             all_roles = message.interaction.guild.roles
-            to_remove = ['Member', 'The Aquarium [TAq]', '☆Reef', 'Starfish', 'Manatee', '★Coastal Waters', 'Piranha',
-                         '★★ Azure Ocean', 'Angler', 'Swordfish', '★☆☆ Blue Sea', 'Hammerhead', '★★☆Deep Sea',
-                         'Sailfish', '★★★Dark Sea', 'Dolphin', 'Narwhal', '★★★★Abyss Waters',
-                         '🛡️MODERATOR⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🛡️SR. MODERATOR⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-                         '🥇 RANKS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🛠️ PROFESSIONS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-                         '✨ COSMETIC ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🎖️MILITARY⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🏹Spearhead',
-                         '⚠️Standby', '🗡️FFA', 'DPS', 'Tank', 'Healer', 'Orca', 'War News', 'EcoFish',
-                         '🏆 CONTRIBUTION ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀']
-            roles_to_remove = []
-            to_add = ['Ex-Member']
-            roles_to_add = []
-
-            for add_role in to_add:
-                role = discord.utils.find(lambda r: r.name == add_role, all_roles)
-                if role and role not in user.roles:
-                    roles_to_add.append(role)
+            to_add, to_remove = removal_role_names(was_honored_fish, was_retired_chief)
+            roles_to_add = resolve_roles(all_roles, to_add, member=user, present=False)
+            roles_to_remove = resolve_roles(all_roles, to_remove, member=user, present=True)
 
             if roles_to_add:
                 await user.add_roles(*roles_to_add, reason=f'Roles reset (ran by {message.author.name})')
-
-            for remove_role in to_remove:
-                role = discord.utils.find(lambda r: r.name == remove_role, all_roles)
-                if role and role in user.roles:
-                    roles_to_remove.append(role)
-
             if roles_to_remove:
                 await user.remove_roles(*roles_to_remove, reason=f'Roles reset (ran by {message.author.name})')
             await user.edit(nick='')
         finally:
             db.close()
 
+        description = f'Roles were reset for <@{user.id}>'
+        restored = [r.name for r in roles_to_add if r.name != 'Ex-Member']
+        if restored:
+            description += '\nRestored: ' + ', '.join(f'`{r}`' for r in restored)
         embed = discord.Embed(title=':white_check_mark: Roles reset',
-                              description=f'Roles were reset for <@{user.id}>', color=0x3ed63e)
+                              description=description, color=0x3ed63e)
         await message.respond(embed=embed)
 
     @commands.Cog.listener()
