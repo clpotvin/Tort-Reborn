@@ -308,3 +308,126 @@ class ThreadVoteView(discord.ui.View):
                 return
             except Exception as e:
                 log(ERROR, f"Failed to sync poll embed from thread: {e}", context="views")
+
+
+class RecruitPaidView(discord.ui.View):
+    """'Mark Paid' button on recruiter payout embeds. Stateless like the vote
+    views above: resolves its target row from the message it's on, not from
+    anything baked into the view, so it survives a bot restart."""
+
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(
+        label="Mark Paid",
+        style=discord.ButtonStyle.success,
+        custom_id="recruit_mark_paid",
+        emoji="\U0001F4B0",
+    )
+    async def mark_paid_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        from Helpers.recruiting import get_credit_by_message, mark_recruit_paid
+
+        row = await asyncio.to_thread(get_credit_by_message, interaction.message.id)
+        if row is None:
+            await interaction.followup.send("Could not find this payout record.", ephemeral=True)
+            return
+
+        credit_id, already_paid, recruiter_ign, recruit_ign, payout_le = row
+        if already_paid:
+            await interaction.followup.send("Already marked paid.", ephemeral=True)
+            return
+
+        ok = await asyncio.to_thread(mark_recruit_paid, credit_id, interaction.user.display_name)
+        if not ok:
+            await interaction.followup.send("Already marked paid.", ephemeral=True)
+            return
+
+        embed = interaction.message.embeds[0]
+        embed.color = 0x808080
+        embed.add_field(name="Paid", value=f"✅ by {interaction.user.mention}", inline=False)
+        button.disabled = True
+        button.label = "Paid"
+        await interaction.message.edit(embed=embed, view=self)
+        await interaction.followup.send("Marked as paid.", ephemeral=True)
+
+
+class _SetRecruiterModal(discord.ui.Modal):
+    def __init__(self, default: str = ""):
+        super().__init__(title="Set Recruiter")
+        self.ign_input = discord.ui.InputText(
+            label="Recruiter IGN",
+            placeholder="e.g. Thunder",
+            value=default,
+            max_length=50,
+        )
+        self.add_item(self.ign_input)
+
+    async def callback(self, interaction: discord.Interaction):
+        text = self.ign_input.value.strip()
+        if not text:
+            await interaction.response.send_message("No IGN entered.", ephemeral=True)
+            return
+        await interaction.response.defer(ephemeral=True)
+
+        from Helpers.recruiting import resolve_recruiter, record_pending_recruit
+
+        matched, excluded = await resolve_recruiter(text)
+        recruiter_ign = matched or text
+
+        embed = interaction.message.embeds[0]
+        footer = embed.footer.text or ""
+        app_id_s, discord_id_s, recruit_ign = (footer.split("|", 2) + ["", "", ""])[:3]
+        if not app_id_s.isdigit():
+            await interaction.followup.send("Couldn't read this review message's data.", ephemeral=True)
+            return
+
+        ok = await asyncio.to_thread(
+            record_pending_recruit, int(app_id_s), recruiter_ign, recruit_ign,
+            int(discord_id_s) if discord_id_s else None, excluded,
+        )
+        if not ok:
+            await interaction.followup.send(
+                "This recruit was already finalized, can't change it anymore.", ephemeral=True,
+            )
+            return
+
+        embed.color = 0x3ED63E
+        value = f"{recruiter_ign} (by {interaction.user.mention})"
+        for i, field in enumerate(embed.fields):
+            if field.name == "Recruiter set":
+                embed.set_field_at(i, name="Recruiter set", value=value, inline=False)
+                break
+        else:
+            embed.add_field(name="Recruiter set", value=value, inline=False)
+        await interaction.message.edit(embed=embed)
+        await interaction.followup.send(f"Recruiter set to **{recruiter_ign}**.", ephemeral=True)
+
+
+class RecruiterReviewView(discord.ui.View):
+    """Button on manual-review embeds to set (or correct) the recruiter by hand."""
+
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(
+        label="Set Recruiter",
+        style=discord.ButtonStyle.primary,
+        custom_id="recruiter_review_set",
+        emoji="\u270F\ufe0F",
+    )
+    async def set_recruiter_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        if not interaction.user.guild_permissions.manage_roles:
+            await interaction.response.send_message("You need Manage Roles to do this.", ephemeral=True)
+            return
+
+        embed = interaction.message.embeds[0]
+        set_field = discord.utils.get(embed.fields, name="Recruiter set")
+        if set_field:
+            default = set_field.value.split(" (by ")[0]
+        else:
+            parsed_field = discord.utils.get(embed.fields, name="Parsed recruiter")
+            default = parsed_field.value if parsed_field and parsed_field.value != "*none*" else ""
+
+        await interaction.response.send_modal(_SetRecruiterModal(default=default))

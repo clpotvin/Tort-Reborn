@@ -67,6 +67,7 @@ def query(
     json_schema: type[BaseModel] | None = None,
     temperature: float | None = None,
     max_tokens: int = 500,
+    reasoning_effort: str | None = None,
 ) -> dict:
     client = _get_client()
     try:
@@ -78,6 +79,10 @@ def query(
         }
         if temperature is not None:
             kwargs["temperature"] = temperature
+        if reasoning_effort is not None:
+            # gpt-5 models spend max_output_tokens on hidden reasoning before the
+            # visible answer. "minimal" keeps that from eating the whole budget.
+            kwargs["reasoning"] = {"effort": reasoning_effort}
         if json_schema is not None:
             kwargs["text"] = {
                 "format": {
@@ -89,6 +94,17 @@ def query(
             }
         response = client.responses.create(**kwargs)
         text = response.output_text
+        if not text:
+            # json.loads("") below just says "Expecting value", log the real reason.
+            schema_name = json_schema.__name__ if json_schema is not None else None
+            log(
+                ERROR,
+                f"Empty output_text from model={model} schema={schema_name} "
+                f"status={getattr(response, 'status', None)} "
+                f"incomplete_details={getattr(response, 'incomplete_details', None)} "
+                f"usage={getattr(response, 'usage', None)}",
+                context="openai_helper",
+            )
         data = None
         if json_schema is not None:
             import json
@@ -153,7 +169,8 @@ def parse_recruiter_source(reference_text: str) -> dict:
         input_text=reference_text,
         json_schema=RecruiterSource,
         model="gpt-5-nano",
-        max_tokens=200,
+        max_tokens=500,
+        reasoning_effort="minimal",
     )
     if result["error"]:
         return {"recruiter": "", "certainty": 0.0, "error": result["error"]}
@@ -225,7 +242,8 @@ def match_recruiter_name(recruiter_input: str, member_names: list[str]) -> dict:
         input_text=input_text,
         json_schema=RecruiterMatch,
         model="gpt-5-nano",
-        max_tokens=100,
+        max_tokens=400,
+        reasoning_effort="minimal",
     )
     if result["error"]:
         return {"matched_name": "", "confidence": 0.0, "error": result["error"]}

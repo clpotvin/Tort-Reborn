@@ -220,23 +220,16 @@ class RankPromote(commands.Cog):
         finally:
             db.close()
 
-        # Update recruiter tracking sheet (non-fatal)
+        # Recruiter payout credit (non-fatal)
         try:
-            from Helpers.sheets import update_promo, find_by_ign, update_paid
             from Helpers.functions import getUsernameFromUUID
+            from Helpers.recruiting import credit_piranha_promotion
             import asyncio
             name_result = await asyncio.to_thread(getUsernameFromUUID, uuid)
             if name_result:
-                ign = name_result
                 ranks_keys = list(discord_ranks)
-                if new_index >= ranks_keys.index("Manatee"):
-                    await asyncio.to_thread(update_promo, ign, "manateePromo")
                 if new_index >= ranks_keys.index("Piranha"):
-                    await asyncio.to_thread(update_promo, ign, "piranhaPromo")
-                    sheet_row = await asyncio.to_thread(find_by_ign, ign)
-                    if sheet_row.get("success") and sheet_row.get("data"):
-                        if sheet_row["data"].get("paid") == "NYP":
-                            await asyncio.to_thread(update_paid, ign, "N")
+                    await credit_piranha_promotion(self.client, name_result)
         except Exception as e:
             err_ch = self.client.get_channel(ERROR_CHANNEL_ID)
             if err_ch:

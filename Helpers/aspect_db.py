@@ -11,6 +11,7 @@ import json
 
 from Helpers.database import DB, get_player_activity_baseline_with_db
 from Helpers.classes import Guild
+from Helpers.functions import cap_playtime_window
 from Helpers.logger import log, ERROR
 from Helpers.variables import IS_TEST_MODE
 
@@ -39,7 +40,7 @@ def get_weekly_playtime_from_db(db: DB, uuid: str, joined_date=None) -> float:
         # Get baseline from 7 calendar days ago using unified function
         baseline, _ = get_player_activity_baseline_with_db(db, uuid, 'playtime', 7, joined_date=joined_date)
 
-        return max(0.0, float(recent) - float(baseline))
+        return cap_playtime_window(max(0.0, float(recent) - float(baseline)), 7)
     except Exception as e:
         log(ERROR, f"Error getting weekly playtime for {uuid}: {e}", context="aspect_db")
         return 0.0

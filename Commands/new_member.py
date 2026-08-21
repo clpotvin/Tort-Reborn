@@ -9,7 +9,8 @@ from Helpers.classes import LinkAccount, PlayerStats, BasicPlayerStats
 from Helpers.database import DB
 from Helpers.functions import getPlayerUUID, determine_starting_rank
 from Helpers.links import LinkConflictError, assert_uuid_free
-from Helpers.variables import HOME_GUILD_IDS, discord_ranks
+from Helpers.member_roles import honorific_flags, registration_role_names
+from Helpers.variables import HOME_GUILD_IDS
 
 
 def _fetch_new_member_data(user_id, ign):
@@ -52,12 +53,8 @@ class NewMember(commands.Cog):
                 return
 
             starting_rank = determine_starting_rank(user)
-            rank_roles = discord_ranks[starting_rank]['roles']
-
-            to_remove = ['Land Crab', 'Honored Fish', 'Retired Chief', 'Ex-Member']
-            to_add = ['Member', 'The Aquarium [TAq]', *rank_roles, '🥇 RANKS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-                      '🛠️ PROFESSIONS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '✨ COSMETIC ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-                      'CONTRIBUTION ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀']
+            was_honored_fish, was_retired_chief = honorific_flags(r.name for r in user.roles)
+            to_add, to_remove = registration_role_names(starting_rank)
             roles_to_add = []
             roles_to_remove = []
             missing_roles = []
@@ -103,12 +100,14 @@ class NewMember(commands.Cog):
             try:
                 if len(rows) != 0:
                     db.cursor.execute(
-                        'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s, linked = TRUE WHERE discord_id = %s',
-                        (starting_rank, ign, pdata.wars, pdata.UUID, user.id))
+                        'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s, linked = TRUE, '
+                        'was_honored_fish = %s, was_retired_chief = %s WHERE discord_id = %s',
+                        (starting_rank, ign, pdata.wars, pdata.UUID, was_honored_fish, was_retired_chief, user.id))
                 else:
                     db.cursor.execute(
-                        'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES (%s, %s, %s, True, %s, %s)',
-                        (user.id, pdata.username, pdata.UUID, starting_rank, pdata.wars))
+                        'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join, was_honored_fish, was_retired_chief) '
+                        'VALUES (%s, %s, %s, True, %s, %s, %s, %s)',
+                        (user.id, pdata.username, pdata.UUID, starting_rank, pdata.wars, was_honored_fish, was_retired_chief))
                 db.connection.commit()
             finally:
                 db.close()

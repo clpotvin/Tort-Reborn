@@ -60,56 +60,29 @@ class OnMemberUpdate(commands.Cog):
             return
 
         added_names = {r.name for r in added_roles}
-
-        promo = None
-        if "Piranha" in added_names:
-            promo = "piranhaPromo"
-        elif "Manatee" in added_names:
-            promo = "manateePromo"
-
-        if promo is None:
+        if "Piranha" not in added_names:
             return
 
         try:
-            from Helpers.sheets import find_by_ign, update_promo, update_paid
-
             # Look up UUID from discord_links (blocking, run in thread)
             uuid = await asyncio.to_thread(_db_lookup_uuid, after.id)
             if not uuid:
                 return
 
             from Helpers.functions import getUsernameFromUUID
-            name_result = await asyncio.to_thread(getUsernameFromUUID, uuid)
-            if not name_result:
-                return
-            ign = name_result
-
-            # Check if already marked to avoid double-updates from rank_promote
-            sheet_row = await asyncio.to_thread(find_by_ign, ign)
-            if not sheet_row.get("success") or not sheet_row.get("data"):
+            ign = await asyncio.to_thread(getUsernameFromUUID, uuid)
+            if not ign:
                 return
 
-            already_done = sheet_row["data"].get(promo, False)
-            if already_done:
-                return
-
-            # Also mark manateePromo if this is a piranha promo
-            if promo == "piranhaPromo":
-                if not sheet_row["data"].get("manateePromo", False):
-                    await asyncio.to_thread(update_promo, ign, "manateePromo")
-            await asyncio.to_thread(update_promo, ign, promo)
-
-            # Update paid to "N" on Piranha promo if still "NYP"
-            if promo == "piranhaPromo":
-                if sheet_row["data"].get("paid") == "NYP":
-                    await asyncio.to_thread(update_paid, ign, "N")
+            from Helpers.recruiting import credit_piranha_promotion
+            await credit_piranha_promotion(self.client, ign)
 
         except Exception as e:
             err_ch = self.client.get_channel(ERROR_CHANNEL_ID)
             if err_ch:
                 await err_ch.send(
                     f"## Recruiter Tracker - Role Promo Fallback Error\n"
-                    f"**User:** <@{after.id}> | **Promo:** `{promo}`\n"
+                    f"**User:** <@{after.id}> | **Promo:** `piranhaPromo`\n"
                     f"```\n{str(e)[:500]}\n```"
                 )
 

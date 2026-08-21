@@ -19,6 +19,7 @@ from Helpers.database import (
     get_members_with_baseline_history_with_db,
     get_player_activity_baselines_for_members_with_db,
 )
+from Helpers.member_roles import CONTRIBUTION_HEADER
 from Helpers.variables import HOME_GUILD_IDS, TAQ_GUILD_ID, ANNOUNCEMENT_CHANNEL_ID, FAQ_CHANNEL_ID, VANITY_ROLE_IDS
 
 START_DATE_UTC = date(2025, 8, 31)  # first run date (YYYY, M, D)
@@ -238,11 +239,10 @@ class VanityRoles(commands.Cog):
                                     resolved: Dict[str, Dict[str, discord.Role]]) -> int:
         """Grant winners their roles using resolved Role objects.
         Also ensures the contribution bucket role is present for any winner."""
-        BUCKET_ROLE_NAME = "🏆 CONTRIBUTION ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
-        bucket_role = discord.utils.get(guild.roles, name=BUCKET_ROLE_NAME)
+        bucket_role = discord.utils.get(guild.roles, name=CONTRIBUTION_HEADER)
 
         if bucket_role is None:
-            log(WARN, f"Contribution bucket role not found: '{BUCKET_ROLE_NAME}'", context="vanity_roles")
+            log(WARN, f"Contribution bucket role not found: '{CONTRIBUTION_HEADER}'", context="vanity_roles")
 
         grants = 0
         unresolved: List[int] = []

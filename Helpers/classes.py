@@ -13,8 +13,9 @@ from Helpers.database import (
     get_current_guild_data_and_snapshot_count_with_db,
     get_player_activity_baselines_with_db,
 )
-from Helpers.functions import getPlayerUUID, getPlayerDatav3, getPlayerProfileDatav3, urlify, determine_starting_rank, timed_get
+from Helpers.functions import getPlayerUUID, getPlayerDatav3, getPlayerProfileDatav3, urlify, determine_starting_rank, timed_get, cap_playtime_window
 from Helpers.links import LinkConflictError, assert_uuid_free
+from Helpers.member_roles import honorific_flags, registration_role_names
 from discord.ext.pages import Page as _Page
 
 from Helpers.variables import wynn_ranks, WELCOME_CHANNEL_ID, discord_ranks
@@ -317,7 +318,7 @@ class PlayerStats:
         base_raids, warn_raids = baselines.get('raids', (0, True))
         warn_flag = warn_pt or warn_wars or warn_xp or warn_raids
 
-        self.real_pt = max(int(now_playtime) - int(base_pt), 0)
+        self.real_pt = cap_playtime_window(max(int(now_playtime) - int(base_pt), 0), days)
         self.real_xp = max(int(now_contrib) - int(base_xp), 0)
         self.real_wars = max(int(now_wars) - int(base_wars), 0)
         self.real_raids = max(int(now_raids) - int(base_raids), 0)
@@ -510,9 +511,6 @@ class NewMember(Modal):
     def __init__(self, user, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.user = user
-        self.to_remove = ['Land Crab', 'Honored Fish', 'Retired Chief', 'Ex-Member']
-        self.roles_to_add = []
-        self.roles_to_remove = []
         self.add_item(InputText(label="Player's Name", placeholder="Player's In-Game Name without rank"))
 
     async def callback(self, interaction: discord.Interaction):
@@ -540,11 +538,8 @@ class NewMember(Modal):
             return
 
         starting_rank = determine_starting_rank(self.user)
-        rank_roles = discord_ranks[starting_rank]['roles']
-
-        to_remove = ['Land Crab', 'Honored Fish', 'Retired Chief', 'Ex-Member']
-        to_add = ['Member', 'The Aquarium [TAq]', *rank_roles, '🥇 RANKS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-                  '🛠️ PROFESSIONS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '✨ COSMETIC ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀']
+        was_honored_fish, was_retired_chief = honorific_flags(r.name for r in self.user.roles)
+        to_add, to_remove = registration_role_names(starting_rank)
         roles_to_add = []
         roles_to_remove = []
         all_roles = interaction.guild.roles
@@ -569,14 +564,18 @@ class NewMember(Modal):
 
         if len(rows) != 0:
             db.cursor.execute(
-                'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s, linked = TRUE WHERE discord_id = %s',
-                (starting_rank, self.children[0].value, pdata.wars, pdata.UUID, self.user.id)
+                'UPDATE discord_links SET rank = %s, ign = %s, wars_on_join = %s, uuid = %s, linked = TRUE, '
+                'was_honored_fish = %s, was_retired_chief = %s WHERE discord_id = %s',
+                (starting_rank, self.children[0].value, pdata.wars, pdata.UUID,
+                 was_honored_fish, was_retired_chief, self.user.id)
             )
             db.connection.commit()
         else:
             db.cursor.execute(
-                'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join) VALUES (%s, %s, %s, %s, %s, %s)',
-                (self.user.id, pdata.username, pdata.UUID, True, starting_rank, pdata.wars)
+                'INSERT INTO discord_links (discord_id, ign, uuid, linked, rank, wars_on_join, was_honored_fish, was_retired_chief) '
+                'VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                (self.user.id, pdata.username, pdata.UUID, True, starting_rank, pdata.wars,
+                 was_honored_fish, was_retired_chief)
             )
             db.connection.commit()
         db.close()
