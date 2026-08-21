@@ -27,6 +27,7 @@ from Helpers.classes import Guild, DB, BasicPlayerStats
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import getPlayerDatav3, getNameFromUUID, getPlayerUUID, determine_starting_rank, create_progress_bar, addLine, round_corners
 from Helpers.links import LinkConflictError, assert_row_linkable
+from Helpers.member_roles import honorific_flags, registration_role_names
 from Helpers.playtime_daily import refresh_playtime_daily
 from Helpers.variables import (
     RAID_LOG_CHANNEL_ID,
@@ -1094,17 +1095,8 @@ class UpdateMemberData(commands.Cog):
 
         # Determine starting rank based on existing Discord roles
         starting_rank = determine_starting_rank(member)
-        rank_roles = discord_ranks[starting_rank]['roles']
-
-        # Assign roles (mirrors NewMember modal from Helpers/classes.py)
-        to_add = [
-            'Member', 'The Aquarium [TAq]', *rank_roles,
-            '\U0001F947 RANKS\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800',
-            '\U0001F6E0\uFE0F PROFESSIONS\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800',
-            '\u2728 COSMETIC ROLES\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800',
-            'CONTRIBUTION ROLES\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800\u2800',
-        ]
-        to_remove = ['Land Crab', 'Honored Fish', 'Retired Chief', 'Ex-Member']
+        was_honored_fish, was_retired_chief = honorific_flags(r.name for r in member.roles)
+        to_add, to_remove = registration_role_names(starting_rank)
 
         all_roles = discord_guild.roles
         roles_to_add = [discord.utils.get(all_roles, name=r) for r in to_add]
@@ -1133,9 +1125,10 @@ class UpdateMemberData(commands.Cog):
                 assert_row_linkable(db.cursor, did)
                 db.cursor.execute(
                     """UPDATE discord_links
-                       SET linked = TRUE, rank = %s, ign = %s, wars_on_join = %s
+                       SET linked = TRUE, rank = %s, ign = %s, wars_on_join = %s,
+                           was_honored_fish = %s, was_retired_chief = %s
                        WHERE discord_id = %s""",
-                    (rank, ign_val, wars, did)
+                    (rank, ign_val, wars, was_honored_fish, was_retired_chief, did)
                 )
                 # Clear guild_leave_pending if this user had a pending-leave application
                 db.cursor.execute(

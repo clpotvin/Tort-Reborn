@@ -5,6 +5,7 @@ from discord.ext import tasks, commands
 
 from Helpers.logger import log, INFO, ERROR
 from Helpers.database import DB
+from Helpers.member_roles import removal_role_names, resolve_roles
 from Helpers.variables import (
     TAQ_GUILD_ID,
     ERROR_CHANNEL_ID,
@@ -19,18 +20,6 @@ RATE_LIMIT_SLEEP_SECONDS = 0.5
 
 # Minimum rank index required to queue actions (Hammerhead = index 5)
 MIN_QUEUER_RANK_INDEX = 5
-
-# Full role list to strip on 'remove' action (mirrors Commands/reset_roles.py)
-REMOVE_ROLES = [
-    'Member', 'The Aquarium [TAq]', '☆Reef', 'Starfish', 'Manatee', '★Coastal Waters', 'Piranha',
-    '★★ Azure Ocean', 'Angler', 'Swordfish', '★☆☆ Blue Sea', 'Hammerhead', '★★☆Deep Sea',
-    'Sailfish', '★★★Dark Sea', 'Dolphin', 'Narwhal', '★★★★Abyss Waters',
-    '🛡️MODERATOR⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🛡️SR. MODERATOR⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    '🥇 RANKS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🛠️ PROFESSIONS⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-    '✨ COSMETIC ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🎖️MILITARY⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀', '🏹Spearhead',
-    '⚠️Standby', '🗡️FFA', 'DPS', 'Tank', 'Healer', 'Orca', 'War News', 'EcoFish',
-    '🏆 CONTRIBUTION ROLES⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
-]
 
 
 def _row_to_dict(row):
@@ -355,24 +344,39 @@ class PromotionQueueProcessor(commands.Cog):
 
         await asyncio.to_thread(self._update_rank_in_db, member.id, new_rank_key)
 
+    @staticmethod
+    def _lookup_honorific_flags(discord_id):
+        """(was_honored_fish, was_retired_chief) from discord_links. Blocking."""
+        db = DB()
+        db.connect()
+        try:
+            db.cursor.execute(
+                "SELECT was_honored_fish, was_retired_chief FROM discord_links WHERE discord_id = %s",
+                (discord_id,)
+            )
+            row = db.cursor.fetchone()
+            return (bool(row[0]), bool(row[1])) if row else (False, False)
+        finally:
+            db.close()
+
     async def _do_remove(self, entry, member, guild):
         reason = f"Website removal queue (queued by {entry['queued_by_ign']})"
         all_roles = guild.roles
 
-        # Strip all roles (same list as reset_roles command)
-        roles_to_remove = []
-        for role_name in REMOVE_ROLES:
-            role = discord.utils.find(lambda r, n=role_name: r.name == n, all_roles)
-            if role and role in member.roles:
-                roles_to_remove.append(role)
+        # Read the honorific record before the row is deleted below
+        was_honored_fish, was_retired_chief = await asyncio.to_thread(
+            self._lookup_honorific_flags, member.id
+        )
+        to_add, to_remove = removal_role_names(was_honored_fish, was_retired_chief)
 
+        roles_to_remove = resolve_roles(all_roles, to_remove, member=member, present=True)
         if roles_to_remove:
             await member.remove_roles(*roles_to_remove, reason=reason, atomic=True)
 
-        # Add Ex-Member role
-        ex_member_role = discord.utils.find(lambda r: r.name == 'Ex-Member', all_roles)
-        if ex_member_role and ex_member_role not in member.roles:
-            await member.add_roles(ex_member_role, reason=reason)
+        # Add Ex-Member plus any restored honorifics
+        roles_to_add = resolve_roles(all_roles, to_add, member=member, present=False)
+        if roles_to_add:
+            await member.add_roles(*roles_to_add, reason=reason, atomic=True)
 
         # Clear nickname
         try:
