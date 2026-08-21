@@ -20,8 +20,9 @@ TAQ_TAG_ROLE = 'The Aquarium [TAq]'
 LAND_CRAB_ROLE = 'Land Crab'
 EX_MEMBER_ROLE = 'Ex-Member'
 
-# Honorifics an ex-member may keep. They are independent: holding Retired
-# Chief does not imply Honored Fish, and vice versa.
+# Honorifics an ex-member may keep. Retired Chief is the higher honor and
+# implies Honored Fish: restoring it grants both (TAQ-67). Honored Fish on
+# its own implies nothing further.
 HONORED_FISH_ROLE = 'Honored Fish'
 RETIRED_CHIEF_ROLE = 'Retired Chief'
 
@@ -123,11 +124,11 @@ def registration_role_names(starting_rank):
 def removal_role_names(was_honored_fish=False, was_retired_chief=False):
     """(to_add, to_remove) role names for turning a member into an ex-member.
 
-    The honorifics are restored independently of each other, exactly as they
-    were held before the member (re)joined (TAQ-51, TAQ-67).
+    Honorifics held before the member (re)joined are given back (TAQ-51).
+    Retired Chief also grants Honored Fish (TAQ-67).
     """
     to_add = [EX_MEMBER_ROLE]
-    if was_honored_fish:
+    if was_honored_fish or was_retired_chief:
         to_add.append(HONORED_FISH_ROLE)
     if was_retired_chief:
         to_add.append(RETIRED_CHIEF_ROLE)

@@ -11,8 +11,8 @@ Worked examples:
 
 1. TAQ-51's report verbatim: brenzoned held Honored Fish, rejoined as
    Manatee, was later removed — and must end up with Honored Fish again.
-2. A Retired Chief does the same round trip and gets Retired Chief back —
-   and only that; the honorifics are independent.
+2. A Retired Chief does the same round trip and gets Retired Chief back,
+   which also brings Honored Fish with it (TAQ-67).
 3. A veteran holding the full guild stack (ranks, headers, new military
    block, staff roles, contribution awards) is stripped down to exactly
    Ex-Member + restored honorific + their non-guild roles.
@@ -251,12 +251,12 @@ def test_retired_chief_round_trip_via_user_command(monkeypatch):
     db = FakeDB([('Narwhal',), ('Piranha', 'some-uuid', False, True)])
     interaction = remove_via_user_command(chief, FakeMember(1, [], guild), db, monkeypatch)
 
-    # Retired Chief restored; Honored Fish NOT implied (user decision on TAQ-67).
+    # Retired Chief restored, and it brings Honored Fish with it (TAQ-67).
     assert chief.role_names == {mr.EX_MEMBER_ROLE, mr.RETIRED_CHIEF_ROLE,
-                                'Tortoise - Community'}
+                                mr.HONORED_FISH_ROLE, 'Tortoise - Community'}
     assert chief.nick_edits == ['']
     assert 'Retired Chief' in interaction.last_embed().description
-    assert 'Honored Fish' not in interaction.last_embed().description
+    assert 'Honored Fish' in interaction.last_embed().description
 
 
 # ── worked example 3: full guild stack stripped via the promotion queue ──

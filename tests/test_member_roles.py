@@ -48,10 +48,10 @@ def test_removal_restores_honored_fish_alone():
     assert to_add == [mr.EX_MEMBER_ROLE, mr.HONORED_FISH_ROLE]
 
 
-def test_removal_restores_retired_chief_alone():
-    # Retired Chief does not drag Honored Fish along: separate honors.
+def test_removal_of_retired_chief_also_grants_honored_fish():
+    # TAQ-67: Retired Chief is the higher honor and implies Honored Fish.
     to_add, _ = mr.removal_role_names(was_retired_chief=True)
-    assert to_add == [mr.EX_MEMBER_ROLE, mr.RETIRED_CHIEF_ROLE]
+    assert to_add == [mr.EX_MEMBER_ROLE, mr.HONORED_FISH_ROLE, mr.RETIRED_CHIEF_ROLE]
 
 
 def test_removal_restores_both_when_both_were_held():

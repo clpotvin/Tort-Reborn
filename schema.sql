@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS discord_links (
   rank              VARCHAR(32)  NOT NULL,
   wars_on_join      INT,
   -- Honorific roles held at (re)registration, recorded before the bot strips
-  -- them, so member removal can hand them back (TAQ-51). Independent flags:
-  -- Retired Chief does not imply Honored Fish.
+  -- them, so member removal can hand them back (TAQ-51). On restore, Retired
+  -- Chief also grants Honored Fish (TAQ-67).
   was_honored_fish  BOOLEAN      NOT NULL DEFAULT FALSE,
   was_retired_chief BOOLEAN      NOT NULL DEFAULT FALSE
 );
