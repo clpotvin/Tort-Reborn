@@ -24,6 +24,7 @@ else:
 
 from Helpers.logger import log, INFO, WARN, ERROR
 from Helpers.classes import Guild, DB, BasicPlayerStats
+from Helpers.database import get_current_guild_data_with_db, write_hourly_activity_snapshot_with_db, prune_hourly_activity_snapshots_with_db
 from Helpers.embed_updater import update_web_poll_embed
 from Helpers.functions import getPlayerDatav3, getNameFromUUID, getPlayerUUID, determine_starting_rank, create_progress_bar, addLine, round_corners
 from Helpers.links import LinkConflictError, assert_row_linkable
@@ -1414,6 +1415,26 @@ class UpdateMemberData(commands.Cog):
         else:
             log(ERROR, "Daily activity snapshot failed", context="update_member_data")
 
+    @tasks.loop(minutes=60)
+    async def hourly_activity_snapshot(self):
+        snapshot_at = datetime.datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
+        db = DB(); db.connect()
+        try:
+            guild_data = get_current_guild_data_with_db(db)
+            members = guild_data.get('members', [])
+            if not members:
+                log(WARN, "Hourly activity snapshot: no cached guild data, skipping", context="update_member_data")
+                return
+            write_hourly_activity_snapshot_with_db(db, members, snapshot_at)
+            prune_hourly_activity_snapshots_with_db(db)
+            db.connection.commit()
+            log(INFO, f"Hourly activity snapshot written ({len(members)} members) for {snapshot_at.isoformat()}", context="update_member_data")
+        except Exception as e:
+            log(ERROR, f"Hourly activity snapshot failed: {e}", context="update_member_data")
+            traceback.print_exc()
+        finally:
+            db.close()
+
     @slash_command(name="force_snapshot", description="Force retry the daily activity snapshot (admin only)", guild_ids=ALL_GUILD_IDS)
     @default_permissions(administrator=True)
     async def force_snapshot(self, ctx: discord.ApplicationContext):
@@ -1484,12 +1505,17 @@ class UpdateMemberData(commands.Cog):
     async def before_snapshot(self):
         await self.client.wait_until_ready()
 
+    @hourly_activity_snapshot.before_loop
+    async def before_hourly_snapshot(self):
+        await self.client.wait_until_ready()
+
     @commands.Cog.listener()
     async def on_ready(self):
         if self._has_started: return
         self._has_started=True
         if not self.update_member_data.is_running(): self.update_member_data.start()
         if not self.daily_activity_snapshot.is_running(): self.daily_activity_snapshot.start()
+        if not self.hourly_activity_snapshot.is_running(): self.hourly_activity_snapshot.start()
 
     @update_member_data.error
     async def on_update_member_data_error(self, error):

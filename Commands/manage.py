@@ -11,14 +11,14 @@ from discord.ui import Modal, InputText
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from Helpers.classes import LinkAccount, PlayerStats, PlayerShells
-from Helpers.database import DB
+from Helpers.database import DB, apply_shell_delta
 from Helpers.links import LinkConflictError, assert_uuid_free
 from Helpers.functions import addLine, split_sentence, expand_image, getPlayerUUID, timed_get
 from Helpers.logger import log, ERROR
 from Helpers.variables import HOME_GUILD_IDS, discord_ranks, discord_rank_roles
 
 
-def _build_shell_modal_card(ign, operation, amount, reason, user_id):
+def _build_shell_modal_card(ign, operation, amount, reason, user_id, actor_name, actor_id):
     """Build the shell-adjustment card for the link-and-set modal path, and
     write the resulting link/balance rows. Blocking (HTTP + Pillow + DB) —
     always call via asyncio.to_thread so it never stalls the event loop."""
@@ -37,13 +37,7 @@ def _build_shell_modal_card(ign, operation, amount, reason, user_id):
         skin = Image.open('images/profile/x-steve.webp')
     img.paste(skin, (10, 10), skin)
 
-    if operation == 'add':
-        new_amount = player.shells + amount
-        diff = f'+{amount}'
-    else:
-        new_amount = player.shells - amount
-        diff = f'-{amount}'
-    addLine(f'&7All-Time: &f{new_amount} &7({diff}&7)', draw, font, 95, 61)
+    diff = f'+{amount}' if operation == 'add' else f'-{amount}'
 
     # Connect only now that all external HTTP has completed.
     db = DB(); db.connect()
@@ -52,16 +46,32 @@ def _build_shell_modal_card(ign, operation, amount, reason, user_id):
             "INSERT INTO discord_links (discord_id, ign, linked, rank) VALUES (%s, %s, 0, '') ON CONFLICT (discord_id) DO UPDATE SET ign=EXCLUDED.ign;",
             (user_id, ign)
         )
+        if operation == 'add':
+            new_total, new_balance = apply_shell_delta(
+                db, user_id, amount, amount, source='manage_shells', ign=ign,
+                actor_id=actor_id, actor_name=actor_name, reason=reason or None,
+            )
+        else:
+            new_total, new_balance = apply_shell_delta(
+                db, user_id, -amount, 0, source='manage_shells', ign=ign,
+                actor_id=actor_id, actor_name=actor_name, reason=reason or None,
+            )
         db.cursor.execute(
-            "INSERT INTO shells (\"user\", shells) VALUES (%s, %s) ON CONFLICT (\"user\") DO UPDATE SET shells=EXCLUDED.shells;",
-            (str(user_id), new_amount)
+            "INSERT INTO audit_log (log_type, actor_name, actor_id, action) VALUES (%s, %s, %s, %s)",
+            ('shell', actor_name, actor_id,
+             f'added {amount} to {player.username}.' if operation == 'add'
+             else f'removed {amount} from {player.username}.')
         )
         db.connection.commit()
     finally:
         db.close()
 
     addLine(f'&f{player.username}', draw, font, 95, 15)
-    addLine(f'&7Balance: &f{new_amount} &7({diff}&7)', draw, font, 95, 40)
+    addLine(f'&7Balance: &f{new_balance} &7({diff}&7)', draw, font, 95, 40)
+    if operation == 'add':
+        addLine(f'&7All-Time: &f{new_total} &7({diff}&7)', draw, font, 95, 61)
+    else:
+        addLine(f'&7All-Time: &f{new_total}', draw, font, 95, 61)
 
     if reason:
         for line in split_sentence(reason):
@@ -182,36 +192,17 @@ def _build_shells_card(user_id, ign, operation, amount, actor_name, actor_id):
     # Connect only now that all external HTTP has completed.
     db = DB(); db.connect()
     try:
-        # Ensure user exists in shells table
-        db.cursor.execute('SELECT shells, balance FROM shells WHERE "user" = %s', (str(user_id),))
-        row2 = db.cursor.fetchone()
-
-        if row2:
-            current_shells, current_balance = row2
-        else:
-            current_shells, current_balance = 0, 0
-            db.cursor.execute(
-                'INSERT INTO shells ("user", shells, balance, ign) VALUES (%s, %s, %s, %s)',
-                (str(user_id), 0, 0, ign)
-            )
-            db.connection.commit()
-
+        diff = f'+{amount}' if operation == 'add' else f'-{amount}'
         if operation == 'add':
-            new_total = current_shells + amount
-            new_balance = current_balance + amount
-            diff = f'+{amount}'
-            db.cursor.execute(
-                'UPDATE shells SET shells = %s, balance = %s, ign = %s WHERE "user" = %s',
-                (new_total, new_balance, ign, str(user_id))
+            new_total, new_balance = apply_shell_delta(
+                db, user_id, amount, amount, source='manage_shells', ign=ign,
+                actor_id=actor_id, actor_name=actor_name,
             )
         else:
-            new_balance = current_balance - amount
-            diff = f'-{amount}'
-            db.cursor.execute(
-                'UPDATE shells SET balance = %s, ign = %s WHERE "user" = %s',
-                (new_balance, ign, str(user_id))
+            new_total, new_balance = apply_shell_delta(
+                db, user_id, -amount, 0, source='manage_shells', ign=ign,
+                actor_id=actor_id, actor_name=actor_name,
             )
-            new_total = current_shells
 
         addLine(f'&f{player.username}', draw, font, 95, 15)
         addLine(f'&7Balance: &f{new_balance} &7({diff}&7)', draw, font, 95, 40)
@@ -269,6 +260,8 @@ class ShellModalName(Modal):
                 self.amount,
                 self.reason,
                 self.user.id,
+                interaction.user.name,
+                interaction.user.id,
             )
         except Exception as e:
             log(ERROR, f"Shell modal card failed for '{self.children[0].value}': {e}", context="manage")

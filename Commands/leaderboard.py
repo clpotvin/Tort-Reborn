@@ -1,7 +1,7 @@
 import json
 import math
 import time
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from dateutil import parser as dateutil_parser
 from io import BytesIO
 from typing import Dict, List, Any
@@ -12,7 +12,7 @@ from discord import SlashCommandGroup
 from discord.ext import commands, pages
 
 from Helpers.classes import PlaceTemplate, Page
-from Helpers.database import DB, BatchBaselineQueryError, get_current_guild_data_with_db, get_player_activity_baselines_for_members_with_db
+from Helpers.database import DB, BatchBaselineQueryError, get_current_guild_data_with_db, get_recent_activity_baselines_for_members_with_db, get_shell_gains_for_members_with_db
 from Helpers.functions import addLine, expand_image, generate_rank_badge, cap_playtime_window
 from Helpers.logger import log, ERROR
 from Helpers.variables import rank_map, discord_ranks, HOME_GUILD_IDS
@@ -59,7 +59,7 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
         current_by_uuid = {m['uuid']: m for m in current_members}
 
         # Check data availability — if requested days exceed our earliest snapshot, fall back to all-time
-        if days > 0:
+        if days > 0 and order_key not in ('shells', 'raids'):
             db.cursor.execute("SELECT MIN(snapshot_date) FROM player_activity")
             row = db.cursor.fetchone()
             if row and row[0]:
@@ -94,13 +94,18 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
                 joined_dates_by_uuid[member['uuid']] = None
 
         baseline_by_uuid = {}
-        if days > 0 and order_key in CUMULATIVE_KEYS:
-            baseline_by_uuid = get_player_activity_baselines_for_members_with_db(
+        if days > 0 and order_key in CUMULATIVE_KEYS and order_key not in ('shells', 'raids'):
+            baseline_by_uuid = get_recent_activity_baselines_for_members_with_db(
                 db,
                 order_key,
                 days,
                 joined_dates_by_uuid,
             )
+
+        # Shells gained in the window come from the shell transaction ledger, not a snapshot diff
+        shell_gains_by_uuid: Dict[str, int] = {}
+        if days > 0 and order_key == 'shells':
+            shell_gains_by_uuid = get_shell_gains_for_members_with_db(db, days)
 
         # ---------------------------
         # Helpers
@@ -123,24 +128,34 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
                 return 0, False
 
         # ---------------------------
-        # For all-time raids, use graid_logs as source of truth (consistent with /graid leaderboard)
+        # Raids use graid_logs as source of truth (consistent with /graid leaderboard).
+        # Offsets are historical corrections and only apply all-time.
         # ---------------------------
         graid_totals: Dict[str, int] = {}
-        if order_key == 'raids' and days <= 0:
-            # Count raids from graid_log_participants (same source as /graid leaderboard)
-            db.cursor.execute("""
-                SELECT glp.uuid, COUNT(*) as cnt
-                FROM graid_log_participants glp
-                JOIN graid_logs gl ON glp.log_id = gl.id
-                GROUP BY glp.uuid
-            """)
-            graid_totals = {str(row[0]): row[1] for row in db.cursor.fetchall()}
+        if order_key == 'raids':
+            if days <= 0:
+                db.cursor.execute("""
+                    SELECT glp.uuid, COUNT(*) as cnt
+                    FROM graid_log_participants glp
+                    JOIN graid_logs gl ON glp.log_id = gl.id
+                    GROUP BY glp.uuid
+                """)
+                graid_totals = {str(row[0]): row[1] for row in db.cursor.fetchall()}
 
-            # Apply offsets
-            db.cursor.execute("SELECT uuid, raid_offset FROM graid_raid_offsets")
-            for uuid_val, offset in db.cursor.fetchall():
-                key = str(uuid_val)
-                graid_totals[key] = graid_totals.get(key, 0) + offset
+                db.cursor.execute("SELECT uuid, raid_offset FROM graid_raid_offsets")
+                for uuid_val, offset in db.cursor.fetchall():
+                    key = str(uuid_val)
+                    graid_totals[key] = graid_totals.get(key, 0) + offset
+            else:
+                since = datetime.now(timezone.utc) - timedelta(days=days)
+                db.cursor.execute("""
+                    SELECT glp.uuid, COUNT(*) as cnt
+                    FROM graid_log_participants glp
+                    JOIN graid_logs gl ON glp.log_id = gl.id
+                    WHERE gl.completed_at >= %s
+                    GROUP BY glp.uuid
+                """, (since,))
+                graid_totals = {str(row[0]): row[1] for row in db.cursor.fetchall()}
 
         # ---------------------------
         # Load raid offsets for time-windowed raids (non-all-time)
@@ -162,17 +177,21 @@ def create_leaderboard(order_key: str, key_icon: str, header: str, days: int = 7
 
             is_private = False  # Track if the relevant metric is private/null
 
+            if order_key == 'raids':
+                contributed = graid_totals.get(uuid, 0)
+                warn_flag = False
+                is_private = False
+
+            elif order_key == 'shells' and days > 0:
+                contributed = shell_gains_by_uuid.get(uuid, 0)
+                warn_flag = False
+                is_private = False
+
             # All-time cumulative leaderboards show totals directly
-            # Raids are the only source exception: they come from graid_logs totals
-            if days <= 0 and order_key in CUMULATIVE_KEYS:
-                if order_key == 'raids':
-                    contributed = graid_totals.get(uuid, 0)
-                    warn_flag = False
-                    is_private = False
-                else:
-                    contributed, is_null = get_current_value(uuid, order_key)
-                    warn_flag = False
-                    is_private = is_null
+            elif days <= 0 and order_key in CUMULATIVE_KEYS:
+                contributed, is_null = get_current_value(uuid, order_key)
+                warn_flag = False
+                is_private = is_null
 
             # Time-windowed cumulative stats use snapshot deltas
             elif order_key in CUMULATIVE_KEYS:

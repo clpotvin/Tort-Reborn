@@ -16,7 +16,7 @@ from discord.commands import SlashCommandGroup
 from discord.ui import View, button
 from discord import Permissions
 
-from Helpers.database import DB
+from Helpers.database import DB, apply_shell_delta, record_shell_transaction
 from Helpers.logger import log, ERROR
 from Helpers.variables import (
     HOME_GUILD_IDS,
@@ -420,14 +420,11 @@ class ConvertView(View):
         ign_row = db.cursor.fetchone()
         ign = ign_row[0] if ign_row else "Unknown"
 
-        db.cursor.execute("""
-            INSERT INTO shells AS sh ("user", shells, balance, ign)
-                VALUES (%s, %s, %s, %s)
-            ON CONFLICT ("user") DO UPDATE SET
-                shells  = sh.shells + EXCLUDED.shells,
-                balance = sh.balance + EXCLUDED.balance,
-                ign     = EXCLUDED.ign
-        """, (str(interaction.user.id), self.count, self.count, ign))
+        apply_shell_delta(
+            db, interaction.user.id, self.count, self.count,
+            source='raid_conversion', ign=ign,
+            reason=f"Converted {self.count} raid(s)",
+        )
 
         db.connection.commit()
         db.close()
@@ -657,14 +654,23 @@ class ShellConfirmView(View):
                    SET balance                = balance - %s,
                        last_aspect_convert_at = NOW()
                  WHERE "user" = %s AND balance >= %s
+             RETURNING shells, balance
             """, (self.cost, str(self.discord_id), self.cost))
+            row = db.cursor.fetchone()
 
-            if db.cursor.rowcount == 0:
+            if row is None:
                 db.connection.rollback()
                 db.close()
                 await interaction.edit_original_response(embed=None, view=None,
                     content="You no longer have enough shells for this conversion.")
                 return
+
+            shells_after, balance_after = row
+            record_shell_transaction(
+                db, self.discord_id, -self.cost, 0, balance_after, shells_after,
+                source='aspect_conversion', actor_id=self.discord_id,
+                reason=f"Converted {self.cost} shells into {self.amount} aspect(s)",
+            )
 
             # UPSERT handles both existing and new uncollected_raids rows
             db.cursor.execute("""
