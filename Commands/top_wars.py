@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from discord.commands import slash_command
 
-from Helpers.database import DB, get_current_guild_data
+from Helpers.database import DB, get_current_guild_data, apply_shell_delta
 from Helpers.variables import IS_TEST_MODE, HOME_GUILD_IDS, SHELL_EMOJI, ANNOUNCEMENT_CHANNEL_ID
 
 # Leadership ranks that are deprioritized
@@ -171,25 +171,24 @@ class ConfirmView(discord.ui.View):
             awarded = []
             failed = []
 
+            period = f"{self.start_date} to {self.end_date}"
             for winner in self.winners:
                 discord_id = winner.get('discord_id')
                 if not discord_id:
                     failed.append(f"{discord.utils.escape_markdown(winner['name'])} (no Discord link)")
                     continue
 
-                db.cursor.execute('SELECT balance FROM shells WHERE "user" = %s', (discord_id,))
-                row = db.cursor.fetchone()
-
-                if row:
-                    db.cursor.execute(
-                        'UPDATE shells SET balance = balance + %s WHERE "user" = %s',
-                        (SHELLS_REWARD, discord_id)
-                    )
-                else:
-                    db.cursor.execute(
-                        'INSERT INTO shells ("user", shells, balance, ign) VALUES (%s, 0, %s, %s)',
-                        (discord_id, SHELLS_REWARD, winner['name'])
-                    )
+                apply_shell_delta(
+                    db, discord_id, SHELLS_REWARD, SHELLS_REWARD,
+                    source='top_war_payout', ign=winner['name'],
+                    actor_id=interaction.user.id, actor_name=interaction.user.name,
+                    reason=f"Top war payout {period}",
+                )
+                db.cursor.execute(
+                    "INSERT INTO audit_log (log_type, actor_name, actor_id, action) VALUES (%s, %s, %s, %s)",
+                    ('shell', interaction.user.name, interaction.user.id,
+                     f"awarded {SHELLS_REWARD} to {winner['name']} (top war payout {period}).")
+                )
 
                 awarded.append({'discord_id': discord_id, 'name': winner['name']})
 

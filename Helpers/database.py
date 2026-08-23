@@ -606,6 +606,99 @@ def _get_member_baselines_from_db(db: DB, key: str, days: int, joined_dates_by_u
     return results
 
 
+HOURLY_ACTIVITY_KEYS = {"playtime", "contributed", "wars"}
+HOURLY_RETENTION_DAYS = 35
+
+
+def write_hourly_activity_snapshot_with_db(db: 'DB', members: list[dict], snapshot_at: datetime.datetime):
+    for m in members:
+        uuid = m.get('uuid')
+        if not uuid:
+            continue
+        db.cursor.execute("""
+            INSERT INTO player_activity_hourly (uuid, snapshot_at, playtime, contributed, wars)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (uuid, snapshot_at) DO UPDATE SET
+                playtime    = EXCLUDED.playtime,
+                contributed = EXCLUDED.contributed,
+                wars        = EXCLUDED.wars
+        """, (uuid, snapshot_at, m.get('playtime'), m.get('contributed'), m.get('wars')))
+
+
+def prune_hourly_activity_snapshots_with_db(db: 'DB', retention_days: int = HOURLY_RETENTION_DAYS):
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=retention_days)
+    db.cursor.execute("DELETE FROM player_activity_hourly WHERE snapshot_at < %s", (cutoff,))
+
+
+def get_recent_activity_baselines_for_members_with_db(db: 'DB', key: str, days: int, joined_dates_by_uuid: dict) -> dict[str, tuple[int, bool]]:
+    """Prefers hourly baselines, falls back to daily."""
+    daily_results = _get_member_baselines_from_db(db, key, days, joined_dates_by_uuid)
+
+    if key not in HOURLY_ACTIVITY_KEYS or days <= 0 or days > HOURLY_RETENTION_DAYS:
+        return daily_results
+
+    hourly_results = _get_member_hourly_baselines_from_db(db, key, days, joined_dates_by_uuid)
+    for uuid, value in hourly_results.items():
+        if value is not None:
+            daily_results[uuid] = value
+    return daily_results
+
+
+def _get_member_hourly_baselines_from_db(db: 'DB', key: str, days: int, joined_dates_by_uuid: dict) -> dict:
+    """Like _get_member_baselines_from_db, against the hourly table. None = no row."""
+    if key not in HOURLY_ACTIVITY_KEYS or not joined_dates_by_uuid:
+        return {}
+
+    target_at = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+    values_sql = []
+    params = []
+    for uuid, joined_date in joined_dates_by_uuid.items():
+        joined_at = (
+            datetime.datetime.combine(joined_date, datetime.time.min, tzinfo=datetime.timezone.utc)
+            if joined_date else None
+        )
+        effective_target = joined_at if joined_at is not None and joined_at > target_at else target_at
+        values_sql.append("(%s::uuid, %s::timestamptz, %s::timestamptz)")
+        params.extend((uuid, joined_at, effective_target))
+
+    db.cursor.execute(f"""
+        WITH input(uuid, joined_at, target_at) AS (
+            VALUES {", ".join(values_sql)}
+        )
+        SELECT
+            i.uuid,
+            COALESCE(nearest.value, earliest.value) AS value,
+            (nearest.snapshot_at IS NULL AND earliest.snapshot_at IS NOT NULL) AS warn_default,
+            (nearest.snapshot_at IS NOT NULL OR earliest.snapshot_at IS NOT NULL) AS has_data
+        FROM input i
+        LEFT JOIN LATERAL (
+            SELECT pah.{key} AS value, pah.snapshot_at
+            FROM player_activity_hourly pah
+            WHERE pah.uuid = i.uuid
+              AND pah.{key} IS NOT NULL
+              AND pah.snapshot_at <= i.target_at
+              AND (i.joined_at IS NULL OR pah.snapshot_at >= i.joined_at)
+            ORDER BY pah.snapshot_at DESC
+            LIMIT 1
+        ) nearest ON TRUE
+        LEFT JOIN LATERAL (
+            SELECT pah.{key} AS value, pah.snapshot_at
+            FROM player_activity_hourly pah
+            WHERE pah.uuid = i.uuid
+              AND pah.{key} IS NOT NULL
+              AND (i.joined_at IS NULL OR pah.snapshot_at >= i.joined_at)
+            ORDER BY pah.snapshot_at ASC
+            LIMIT 1
+        ) earliest ON nearest.snapshot_at IS NULL
+    """, tuple(params))
+
+    results = {}
+    for uuid, value, warn_default, has_data in db.cursor.fetchall():
+        uuid_str = str(uuid)
+        results[uuid_str] = (int(value), bool(warn_default)) if (has_data and value is not None) else None
+    return results
+
+
 def get_last_online() -> dict:
     """Load last online/crash data from cache_entries."""
     db = DB()
@@ -734,6 +827,59 @@ def save_recruitment_data(data: dict):
         log(ERROR, f"Save failed: {e}", context="database")
     finally:
         db.close()
+
+
+def apply_shell_delta(db: 'DB', user_id, delta_balance: int, delta_shells: int = 0, *, source: str,
+                       ign: str = None, actor_id=None, actor_name: str = None, reason: str = None) -> tuple[int, int]:
+    """Only place that should write to `shells`. Returns (shells_after, balance_after)."""
+    if delta_shells < 0:
+        raise ValueError("delta_shells must not be negative")
+
+    user_id = str(user_id)
+    db.cursor.execute("""
+        INSERT INTO shells AS sh ("user", shells, balance, ign)
+             VALUES (%s, %s, %s, %s)
+        ON CONFLICT ("user") DO UPDATE SET
+            shells  = sh.shells + EXCLUDED.shells,
+            balance = sh.balance + EXCLUDED.balance,
+            ign     = COALESCE(EXCLUDED.ign, sh.ign)
+        RETURNING sh.shells, sh.balance
+    """, (user_id, delta_shells, delta_balance, ign))
+    shells_after, balance_after = db.cursor.fetchone()
+
+    record_shell_transaction(
+        db, user_id, delta_balance, delta_shells, balance_after, shells_after,
+        source=source, actor_id=actor_id, actor_name=actor_name, reason=reason
+    )
+    return shells_after, balance_after
+
+
+def record_shell_transaction(db: 'DB', user_id, delta_balance: int, delta_shells: int,
+                              balance_after: int, shells_after: int, *, source: str,
+                              actor_id=None, actor_name: str = None, reason: str = None):
+    """Use directly when balance/shells were already updated via custom SQL."""
+    db.cursor.execute("""
+        INSERT INTO shell_transactions
+            ("user", delta_balance, delta_shells, balance_after, shells_after, source, reason, actor_id, actor_name)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """, (str(user_id), delta_balance, delta_shells, balance_after, shells_after,
+          source, reason, str(actor_id) if actor_id is not None else None, actor_name))
+
+
+def get_shell_gains_for_members_with_db(db: 'DB', days: int) -> dict[str, int]:
+    """Returns {uuid: gained} for the last N days; absent if no gain."""
+    if days <= 0:
+        return {}
+
+    since = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=days)
+    db.cursor.execute("""
+        SELECT dl.uuid, SUM(st.delta_shells) AS gained
+        FROM shell_transactions st
+        JOIN discord_links dl ON dl.discord_id = st."user"
+        WHERE st.created_at >= %s AND st.delta_shells > 0
+        GROUP BY dl.uuid
+    """, (since,))
+    return {str(row[0]): int(row[1]) for row in db.cursor.fetchall()}
 
 
 def get_shell_exchange_config() -> dict:
