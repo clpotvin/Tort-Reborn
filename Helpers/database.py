@@ -665,14 +665,10 @@ def _get_member_hourly_baselines_from_db(db: 'DB', key: str, days: int, joined_d
         WITH input(uuid, joined_at, target_at) AS (
             VALUES {", ".join(values_sql)}
         )
-        SELECT
-            i.uuid,
-            COALESCE(nearest.value, earliest.value) AS value,
-            (nearest.snapshot_at IS NULL AND earliest.snapshot_at IS NOT NULL) AS warn_default,
-            (nearest.snapshot_at IS NOT NULL OR earliest.snapshot_at IS NOT NULL) AS has_data
+        SELECT i.uuid, nearest.value
         FROM input i
         LEFT JOIN LATERAL (
-            SELECT pah.{key} AS value, pah.snapshot_at
+            SELECT pah.{key} AS value
             FROM player_activity_hourly pah
             WHERE pah.uuid = i.uuid
               AND pah.{key} IS NOT NULL
@@ -681,21 +677,11 @@ def _get_member_hourly_baselines_from_db(db: 'DB', key: str, days: int, joined_d
             ORDER BY pah.snapshot_at DESC
             LIMIT 1
         ) nearest ON TRUE
-        LEFT JOIN LATERAL (
-            SELECT pah.{key} AS value, pah.snapshot_at
-            FROM player_activity_hourly pah
-            WHERE pah.uuid = i.uuid
-              AND pah.{key} IS NOT NULL
-              AND (i.joined_at IS NULL OR pah.snapshot_at >= i.joined_at)
-            ORDER BY pah.snapshot_at ASC
-            LIMIT 1
-        ) earliest ON nearest.snapshot_at IS NULL
     """, tuple(params))
 
     results = {}
-    for uuid, value, warn_default, has_data in db.cursor.fetchall():
-        uuid_str = str(uuid)
-        results[uuid_str] = (int(value), bool(warn_default)) if (has_data and value is not None) else None
+    for uuid, value in db.cursor.fetchall():
+        results[str(uuid)] = (int(value), False) if value is not None else None
     return results
 
 
