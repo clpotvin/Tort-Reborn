@@ -179,7 +179,7 @@ HOME_GUILD_IDS = ALL_GUILD_IDS
 
 # ---- Public Command Allowlist (everything NOT listed here is admin-only) ----
 PUBLIC_COMMANDS = {
-    'online', 'profile', 'progress', 'raids',
+    'online', 'profile', 'priv-check', 'progress', 'raids',
     'worlds', 'map', 'treasury', 'lootpool',
     'snipe',
 }
