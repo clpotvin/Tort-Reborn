@@ -180,12 +180,12 @@ class RankCheck(commands.Cog):
         stale = stale_taq_links(rows, guild_members, discord_ids)
         text = render_stale_taq_links(stale)
         chunks = split_stale_report(text)
-        view = StaleRolesView(self, stale) if stale else None
+        view = StaleRolesView(self, stale) if stale else discord.utils.MISSING
 
         for i, chunk in enumerate(chunks):
             await ctx.followup.send(
                 f"```text\n{chunk}\n```",
-                view=view if i == 0 else None,
+                view=view if i == 0 else discord.utils.MISSING,
                 ephemeral=True,
             )
 
