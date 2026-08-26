@@ -756,7 +756,7 @@ CREATE TABLE IF NOT EXISTS applications (
   discord_id        VARCHAR(30)  NOT NULL,
   discord_username  VARCHAR(50)  NOT NULL,
   discord_avatar    VARCHAR(255),
-  status            VARCHAR(20)  DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'denied')),
+  status            VARCHAR(20)  DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'denied', 'expired')),
   answers           JSONB        NOT NULL,
   submitted_at      TIMESTAMPTZ  DEFAULT NOW(),
   reviewed_at       TIMESTAMPTZ,
