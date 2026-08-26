@@ -243,6 +243,7 @@ extensions = [
     'Commands.online',
     'Commands.activity',
     'Commands.profile',
+    'Commands.priv_check',
     'Commands.progress',
     'Commands.worlds',
     'Commands.leaderboard',

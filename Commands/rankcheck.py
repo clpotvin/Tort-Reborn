@@ -8,7 +8,9 @@ import asyncio
 from Helpers.classes import Guild
 from Helpers.database import DB
 from Helpers.functions import getNameFromUUID
-from Helpers.variables import discord_ranks, HOME_GUILD_IDS
+from Helpers.member_roles import removal_role_names, resolve_roles
+from Helpers.stale_links import render_stale_taq_links, split_stale_report, stale_taq_links
+from Helpers.variables import discord_ranks, HOME_GUILD_IDS, TAQ_GUILD_ID
 
 
 class ReportPaginator(discord.ui.View):
@@ -33,12 +35,159 @@ class ReportPaginator(discord.ui.View):
         await interaction.response.edit_message(embed=self.embeds["usernames"], view=self)
 
 
+class StaleRolesView(discord.ui.View):
+    def __init__(self, cog, rows):
+        super().__init__(timeout=300)
+        self.cog = cog
+        self.rows = rows
+
+    @discord.ui.button(label="Reset All?", style=ButtonStyle.danger)
+    async def reset_all(self, button: discord.ui.Button, interaction: discord.Interaction):
+        if not interaction.user.guild_permissions.manage_roles:
+            await interaction.response.send_message("You need to be a Moderator to run this.", ephemeral=True)
+            return
+
+        await interaction.response.defer(ephemeral=True)
+        result = await self.cog.reset_stale_roles(interaction, self.rows)
+        await interaction.followup.send(result, ephemeral=True)
+
+
 class RankCheck(commands.Cog):
     def __init__(self, client):
         self.client = client
         # cache for UUID→IGN, and a semaphore to limit concurrency
         self._name_cache = {}
         self._sem = asyncio.Semaphore(5)
+
+    def _fetch_linked_taq_rows(self):
+        ranks = list(discord_ranks)
+        placeholders = ", ".join(["%s"] * len(ranks))
+        db = DB()
+        db.connect()
+        try:
+            db.cursor.execute(
+                f"""
+                SELECT discord_id, ign, uuid, rank, was_honored_fish, was_retired_chief
+                FROM discord_links
+                WHERE linked = TRUE
+                  AND uuid IS NOT NULL
+                  AND rank IN ({placeholders})
+                """,
+                tuple(ranks),
+            )
+            return db.cursor.fetchall()
+        finally:
+            db.close()
+
+    async def _discord_member_ids(self, guild):
+        if guild is None:
+            return set()
+        try:
+            return {member.id async for member in guild.fetch_members(limit=None)}
+        except Exception:
+            return {member.id for member in guild.members}
+
+    def _rank_for_discord(self, discord_id):
+        db = DB()
+        db.connect()
+        try:
+            db.cursor.execute(
+                "SELECT rank FROM discord_links WHERE discord_id = %s",
+                (discord_id,),
+            )
+            row = db.cursor.fetchone()
+            return row[0] if row else None
+        finally:
+            db.close()
+
+    async def _member_for_id(self, guild, discord_id):
+        member = guild.get_member(discord_id)
+        if member:
+            return member
+        try:
+            return await guild.fetch_member(discord_id)
+        except (discord.NotFound, discord.Forbidden, discord.HTTPException):
+            return None
+
+    async def reset_stale_roles(self, interaction, rows):
+        guild = self.client.get_guild(TAQ_GUILD_ID) or interaction.guild
+        if guild is None:
+            return "Could not find the TAq Discord server."
+
+        actor_rank = await asyncio.to_thread(self._rank_for_discord, interaction.user.id)
+        if actor_rank not in discord_ranks:
+            return "Link your account first."
+
+        actor_index = list(discord_ranks).index(actor_rank)
+        done = []
+        skipped = []
+        failed = []
+
+        for row in rows:
+            if list(discord_ranks).index(row["rank"]) >= actor_index:
+                skipped.append(row["ign"])
+                continue
+
+            member = await self._member_for_id(guild, row["discord_id"])
+            if member is None:
+                skipped.append(row["ign"])
+                continue
+
+            to_add, to_remove = removal_role_names(
+                row.get("was_honored_fish", False),
+                row.get("was_retired_chief", False),
+            )
+            roles_to_add = resolve_roles(guild.roles, to_add, member=member, present=False)
+            roles_to_remove = resolve_roles(guild.roles, to_remove, member=member, present=True)
+
+            try:
+                if roles_to_add:
+                    await member.add_roles(*roles_to_add, reason=f"Stale role reset by {interaction.user.name}")
+                if roles_to_remove:
+                    await member.remove_roles(*roles_to_remove, reason=f"Stale role reset by {interaction.user.name}")
+                await member.edit(nick="")
+                done.append(row["ign"])
+            except (discord.Forbidden, discord.HTTPException):
+                failed.append(row["ign"])
+
+        parts = [f"Reset {len(done)} member(s)."]
+        if skipped:
+            parts.append(f"Skipped {len(skipped)}.")
+        if failed:
+            parts.append(f"Failed {len(failed)}.")
+        return " ".join(parts)
+
+    @slash_command(
+        name='stale-roles',
+        description='HR: List Ex Members that left the ingame guild but still have their rank and roles',
+        guild_ids=HOME_GUILD_IDS,
+        default_member_permissions=discord.Permissions(manage_roles=True),
+        dm_permission=False
+    )
+    async def stale_roles(self, ctx):
+        if not ctx.user.guild_permissions.manage_roles:
+            await ctx.respond("You need to be Moderator to run this.", ephemeral=True)
+            return
+
+        await ctx.defer(ephemeral=True)
+
+        discord_guild = self.client.get_guild(TAQ_GUILD_ID) or ctx.guild
+        rows, guild_members, discord_ids = await asyncio.gather(
+            asyncio.to_thread(self._fetch_linked_taq_rows),
+            asyncio.to_thread(lambda: Guild('The Aquarium').all_members),
+            self._discord_member_ids(discord_guild),
+        )
+        stale = stale_taq_links(rows, guild_members, discord_ids)
+        text = render_stale_taq_links(stale)
+        chunks = split_stale_report(text)
+        view = StaleRolesView(self, stale) if stale else None
+
+        for i, chunk in enumerate(chunks):
+            await ctx.followup.send(
+                f"```text\n{chunk}\n```",
+                view=view if i == 0 else None,
+                ephemeral=True,
+            )
 
     @slash_command(
         description='ADMIN: Check for game/discord rank & nickname consistency',
