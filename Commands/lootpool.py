@@ -86,12 +86,12 @@ class LootPool(commands.Cog):
         "ShamanAspect":   "shaman",
     }
 
-    # Friday resets: loot 19:00 UTC, raids/aspects 18:00 UTC; gambits reset daily at 18:00 UTC
+    # Friday resets: loot and raids/aspects at 18:00 UTC; gambits reset daily an hour earlier, at 17:00 UTC
     LOOT_RESET_WEEKDAY = 4
-    LOOT_RESET_HOUR_UTC = 19
+    LOOT_RESET_HOUR_UTC = 18
     RAID_RESET_WEEKDAY = 4
     RAID_RESET_HOUR_UTC = 18
-    GAMBIT_RESET_HOUR_UTC = 18
+    GAMBIT_RESET_HOUR_UTC = 17
 
     def _as_mapping(self, value):
         return value if isinstance(value, dict) else {}
@@ -423,7 +423,7 @@ class LootPool(commands.Cog):
                     name = item.get("name", "")
                     if not name:
                         continue
-                    if rarity in raid_aspects:
+                    if rarity in raid_aspects and name not in raid_aspects[rarity]:
                         raid_aspects[rarity].append(name)
                     cls = self.WYNNVENTORY_ASPECT_CLASS_MAP.get(item.get("type", ""))
                     if cls:
@@ -922,14 +922,16 @@ class LootPool(commands.Cog):
         self._cache_data('aspectData', raw_data if isinstance(raw_data, dict) else {"data": raw_data})
 
         last_raid_reset = self._last_reset(self.RAID_RESET_WEEKDAY, self.RAID_RESET_HOUR_UTC)
-        is_stale_aspects = True
-        for entry in (raw_data if isinstance(raw_data, list) else []):
+        raid_entries = raw_data if isinstance(raw_data, list) else []
+        is_stale_aspects = not raid_entries
+        for entry in raid_entries:
             try:
-                if parsedate_to_datetime(entry.get("timestamp", "")) >= last_raid_reset:
-                    is_stale_aspects = False
+                if parsedate_to_datetime(entry.get("timestamp", "")) < last_raid_reset:
+                    is_stale_aspects = True
                     break
             except Exception:
-                pass
+                is_stale_aspects = True
+                break
 
         gambit_entries = []
         is_stale_gambits = False
@@ -996,14 +998,16 @@ class LootPool(commands.Cog):
         ward_map = ward_map if isinstance(ward_map, dict) else {}
 
         last_reset = self._last_reset(self.LOOT_RESET_WEEKDAY, self.LOOT_RESET_HOUR_UTC)
-        is_stale = True
-        for entry in (lootpool_raw if isinstance(lootpool_raw, list) else []):
+        loot_entries = lootpool_raw if isinstance(lootpool_raw, list) else []
+        is_stale = not loot_entries
+        for entry in loot_entries:
             try:
-                if parsedate_to_datetime(entry.get("timestamp", "")) >= last_reset:
-                    is_stale = False
+                if parsedate_to_datetime(entry.get("timestamp", "")) < last_reset:
+                    is_stale = True
                     break
             except Exception:
-                pass
+                is_stale = True
+                break
 
         loot = self._extract_wynnventory_lootruns(lootpool_raw)
         for internal_name, wards in ward_map.items():
