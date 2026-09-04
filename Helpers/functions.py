@@ -24,40 +24,33 @@ def _cached_font(path, size):
     return ImageFont.truetype(path, size)
 
 
-# Shared session: keep-alive across all outbound GETs. Phase 0 measured fresh
-# TLS per call at 250-460ms/request; reuse cuts that to ~70-140ms. Session
-# request execution is thread-safe; pool sized for concurrent commands + tasks.
-_session = requests.Session()
-_session.mount("https://", requests.adapters.HTTPAdapter(pool_connections=16, pool_maxsize=16))
+_retry = requests.adapters.Retry(
+    total=2,
+    connect=2,
+    read=1,
+    backoff_factor=0.3,
+    status_forcelist=(502, 503, 504),
+    allowed_methods=frozenset({"GET"}),
+)
 
 
 class _BlockAllCookies(_cookiejar.CookiePolicy):
-    """Cookie policy: never store or send cookies.
-
-    The shared session is used concurrently by three distinct token
-    identities; a shared cookie jar (e.g. Cloudflare's __cf_bm from
-    api.wynncraft.com) would leak state between them, and jar writes
-    aren't thread-safe. Keeping the session stateless sidesteps both.
-    """
     return_ok = set_ok = domain_return_ok = path_return_ok = lambda self, *args, **kwargs: False
     netscape = True
     rfc2965 = hide_cookie2 = False
 
 
-_session.cookies.set_policy(_BlockAllCookies())
-
-
 def timed_get(url, **kwargs):
-    """GET with per-host timing (default 15s timeout), through the shared keep-alive session."""
     try:
         host = urlparse(url).hostname or "unknown"
     except Exception:
         host = "unknown"
-    # Default timeout: a hung upstream must fail loudly, not pin a session
-    # socket (and its caller's thread) forever. Explicit timeouts always win.
     kwargs.setdefault("timeout", 15)
     with telemetry.track(f"http.{host}"):
-        return _session.get(url, **kwargs)
+        with requests.Session() as session:
+            session.cookies.set_policy(_BlockAllCookies())
+            session.mount("https://", requests.adapters.HTTPAdapter(max_retries=_retry))
+            return session.get(url, **kwargs)
 
 
 def isInCurrDay(data, uuid):
