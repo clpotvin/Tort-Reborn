@@ -417,6 +417,7 @@ class LootPool(commands.Cog):
             for group_data in self._as_list(entry.get("group_items")):
                 if not isinstance(group_data, dict) or group_data.get("group") != "Aspects":
                     continue
+                raid_aspects = {"Mythic": [], "Fabled": [], "Legendary": []}
                 for item in self._as_list(group_data.get("loot_items")):
                     if not isinstance(item, dict):
                         continue
