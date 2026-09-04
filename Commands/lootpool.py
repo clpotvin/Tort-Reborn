@@ -59,6 +59,7 @@ class LootPool(commands.Cog):
 
     WYNNVENTORY_BASE_URL = "https://wynnventory.com"
     OFFICIAL_API_BASE_URL = "https://api.wynncraft.com"
+    FETCH_TIMEOUT = (3, 6)
 
     WYNNVENTORY_RAID_MAP = {
         "The Nameless Anomaly":    "TNA",
@@ -300,7 +301,7 @@ class LootPool(commands.Cog):
         resp = timed_get(
             f"{self.WYNNVENTORY_BASE_URL}/api/lootpool/items",
             headers=self._wynnventory_headers,
-            timeout=15,
+            timeout=self.FETCH_TIMEOUT,
         )
         resp.raise_for_status()
         return resp.json()
@@ -309,7 +310,7 @@ class LootPool(commands.Cog):
         try:
             resp = timed_get(
                 f"{self.OFFICIAL_API_BASE_URL}/v3/map/loot-pools",
-                timeout=10,
+                timeout=self.FETCH_TIMEOUT,
             )
             resp.raise_for_status()
             ward_map: dict[str, list[str]] = {}
@@ -896,13 +897,13 @@ class LootPool(commands.Cog):
                 timed_get,
                 f"{self.WYNNVENTORY_BASE_URL}/api/raidpool/items",
                 headers=self._wynnventory_headers,
-                timeout=15,
+                timeout=self.FETCH_TIMEOUT,
             ),
             asyncio.to_thread(
                 timed_get,
                 f"{self.WYNNVENTORY_BASE_URL}/api/raidpool/gambits/current",
                 headers=self._wynnventory_headers,
-                timeout=15,
+                timeout=self.FETCH_TIMEOUT,
             ),
             return_exceptions=True,
         )
