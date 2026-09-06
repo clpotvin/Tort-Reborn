@@ -253,6 +253,7 @@ extensions = [
     'Commands.new_member',
     'Commands.reset_roles',
     'Commands.raids',
+    'Commands.graids',
     'Commands.manage',
     'Commands.toggle',
     'Commands.blacklist',
